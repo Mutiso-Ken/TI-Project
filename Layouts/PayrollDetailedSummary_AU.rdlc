@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>2in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="No">
+          <DataField>No</DataField>
+        </Field>
+        <Field Name="Basic">
+          <DataField>Basic</DataField>
+        </Field>
+        <Field Name="BasicFormat">
+          <DataField>BasicFormat</DataField>
+        </Field>
+        <Field Name="HouseAllowance">
+          <DataField>HouseAllowance</DataField>
+        </Field>
+        <Field Name="HouseAllowanceFormat">
+          <DataField>HouseAllowanceFormat</DataField>
+        </Field>
+        <Field Name="CommuterAllowance">
+          <DataField>CommuterAllowance</DataField>
+        </Field>
+        <Field Name="CommuterAllowanceFormat">
+          <DataField>CommuterAllowanceFormat</DataField>
+        </Field>
+        <Field Name="OtherAllowance">
+          <DataField>OtherAllowance</DataField>
+        </Field>
+        <Field Name="OtherAllowanceFormat">
+          <DataField>OtherAllowanceFormat</DataField>
+        </Field>
+        <Field Name="Netpay">
+          <DataField>Netpay</DataField>
+        </Field>
+        <Field Name="NetpayFormat">
+          <DataField>NetpayFormat</DataField>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+        </Field>
+        <Field Name="Pic">
+          <DataField>Pic</DataField>
+        </Field>
+        <Field Name="Period">
+          <DataField>Period</DataField>
+        </Field>
+        <Field Name="NSSF">
+          <DataField>NSSF</DataField>
+        </Field>
+        <Field Name="NSSFFormat">
+          <DataField>NSSFFormat</DataField>
+        </Field>
+        <Field Name="PAYE">
+          <DataField>PAYE</DataField>
+        </Field>
+        <Field Name="PAYEFormat">
+          <DataField>PAYEFormat</DataField>
+        </Field>
+        <Field Name="Pension">
+          <DataField>Pension</DataField>
+        </Field>
+        <Field Name="PensionFormat">
+          <DataField>PensionFormat</DataField>
+        </Field>
+        <Field Name="IRelief">
+          <DataField>IRelief</DataField>
+        </Field>
+        <Field Name="IReliefFormat">
+          <DataField>IReliefFormat</DataField>
+        </Field>
+        <Field Name="PRelief">
+          <DataField>PRelief</DataField>
+        </Field>
+        <Field Name="PReliefFormat">
+          <DataField>PReliefFormat</DataField>
+        </Field>
+        <Field Name="NHIF">
+          <DataField>NHIF</DataField>
+        </Field>
+        <Field Name="NHIFFormat">
+          <DataField>NHIFFormat</DataField>
+        </Field>
+        <Field Name="ELIMU">
+          <DataField>ELIMU</DataField>
+        </Field>
+        <Field Name="ELIMUFormat">
+          <DataField>ELIMUFormat</DataField>
+        </Field>
+        <Field Name="HELB">
+          <DataField>HELB</DataField>
+        </Field>
+        <Field Name="HELBFormat">
+          <DataField>HELBFormat</DataField>
+        </Field>
+        <Field Name="ICEA">
+          <DataField>ICEA</DataField>
+        </Field>
+        <Field Name="ICEAFormat">
+          <DataField>ICEAFormat</DataField>
+        </Field>
+        <Field Name="MHASIBU">
+          <DataField>MHASIBU</DataField>
+        </Field>
+        <Field Name="MHASIBUFormat">
+          <DataField>MHASIBUFormat</DataField>
+        </Field>
+        <Field Name="SALADV">
+          <DataField>SALADV</DataField>
+        </Field>
+        <Field Name="SALADVFormat">
+          <DataField>SALADVFormat</DataField>
+        </Field>
+        <Field Name="Vouchers">
+          <DataField>Vouchers</DataField>
+        </Field>
+        <Field Name="VouchersFormat">
+          <DataField>VouchersFormat</DataField>
+        </Field>
+        <Field Name="SalArrears">
+          <DataField>SalArrears</DataField>
+        </Field>
+        <Field Name="SalArrearsFormat">
+          <DataField>SalArrearsFormat</DataField>
+        </Field>
+        <Field Name="WelfareMembership">
+          <DataField>WelfareMembership</DataField>
+        </Field>
+        <Field Name="WelfareMembershipFormat">
+          <DataField>WelfareMembershipFormat</DataField>
+        </Field>
+        <Field Name="HL">
+          <DataField>HL</DataField>
+        </Field>
+        <Field Name="HLFormat">
+          <DataField>HLFormat</DataField>
+        </Field>
+        <Field Name="RECOVERY">
+          <DataField>RECOVERY</DataField>
+        </Field>
+        <Field Name="RECOVERYFormat">
+          <DataField>RECOVERYFormat</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>

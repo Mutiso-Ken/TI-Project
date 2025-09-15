@@ -1,0 +1,284 @@
+#pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006 // ForNAV settings
+Report 80000 "Earnings Summary W_AU"
+{
+    RDLCLayout = 'Layouts/Earnings Summary W_AU.rdlc';
+    DefaultLayout = RDLC;
+
+    dataset
+    {
+        dataitem("Payroll Employee_AU"; "Payroll Employee_AU")
+        {
+
+            column(payelbl; 'PAYE.')
+            {
+            }
+            column(nssflbl; 'NSSF')
+            {
+            }
+            column(nhiflbl; 'NHIF')
+            {
+            }
+            column(Netpaylbl; 'Net Pay')
+            {
+            }
+            column(payeamount; payeamount)
+            {
+            }
+            column(companyinfo_Picture1; companyinfo.Picture)
+            {
+            }
+            column(nssfam; nssfam)
+            {
+            }
+            column(nhifamt; nhifamt)
+            {
+            }
+            column(NetPay; NetPay)
+            {
+            }
+            column(BasicPay; BasicPay)
+            {
+            }
+            column(periods; 'Earning Summary for ' + Format(periods, 0, 4))
+            {
+            }
+            column(empName; Name)
+            {
+            }
+            column(TransName_1_1; TransName[1, 1])
+            {
+            }
+            column(TransName_1_2; TransName[1, 2])
+            {
+            }
+            column(TransName_1_3; TransName[1, 3])
+            {
+            }
+            column(TransName_1_4; TransName[1, 4])
+            {
+            }
+            column(TransName_1_17; TransName[1, 17])
+            {
+            }
+            column(TranscAmount_1_1; TranscAmount[1, 1])
+            {
+            }
+            column(TranscAmount_1_2; TranscAmount[1, 2])
+            {
+            }
+            column(TranscAmount_1_3; TranscAmount[1, 3])
+            {
+            }
+            column(TranscAmount_1_4; TranscAmount[1, 4])
+            {
+            }
+            column(TranscAmount_1_17; TranscAmount[1, 17])
+            {
+            }
+            trigger OnPreDataItem();
+            begin
+                if companyinfo.Get() then
+                    companyinfo.CalcFields(companyinfo.Picture);
+                CompName := companyinfo.Name;
+                Addr1 := companyinfo.Address;
+                Addr2 := companyinfo.City;
+                Email := companyinfo."E-Mail";
+                if periods = 0D then Error('Please Specify the Period First.');
+                counts := 0;
+                NetPayTotal := 0;
+                BasicPayTotal := 0;
+                payeamountTotal := 0;
+                nssfamTotal := 0;
+                nhifamtTotal := 0;
+                Clear(TranscAmountTotal);
+                // Make Headers
+                // Pick The Earnings First
+                prtransCodes.Reset;
+                prtransCodes.SetFilter(prtransCodes."Transaction Type", '=%1', prtransCodes."transaction type"::Income);
+                if prtransCodes.Find('-') then begin
+                    repeat
+                    begin
+                        prPeriodTransactions.Reset;
+                        prPeriodTransactions.SetRange(prPeriodTransactions."Transaction Code", prtransCodes."Transaction Code");
+                        prPeriodTransactions.SetRange(prPeriodTransactions."Payroll Period", periods);
+                        if prPeriodTransactions.Find('-') then begin
+                            counts := counts + 1;
+                            TransName[1, counts] := prtransCodes."Transaction Name";
+                            Transcode[1, counts] := prtransCodes."Transaction Code";
+                        end;
+                    end;
+                    until prtransCodes.Next = 0;
+                end;
+                /*ick the deductions Here
+               prtransCodes.RESET;
+               prtransCodes.SETFILTER(prtransCodes."Transaction Type",'=%1',prtransCodes."Transaction Type"::Deduction);
+               IF prtransCodes.FIND('-') THEN BEGIN
+               REPEAT
+               BEGIN
+                 prPeriodTransactions.RESET;
+                prPeriodTransactions.SETRANGE(prPeriodTransactions."Transaction Code",prtransCodes."Transaction Code");
+                prPeriodTransactions.SETRANGE(prPeriodTransactions."Payroll Period",periods);
+                IF prPeriodTransactions.FIND('-') THEN BEGIN
+                  counts:=counts+1;
+                  TransName[1,counts]:=prtransCodes."Transaction Name";
+                  Transcode[1,counts]:=prtransCodes."Transaction Code";
+                END;
+                END;
+                UNTIL prtransCodes.NEXT=0;
+               END;  */
+                info.Reset;
+                if info.Find('-') then info.CalcFields(info.Picture);
+
+
+            end;
+
+            trigger OnAfterGetRecord();
+            begin
+                NetPay := 0; // Inserted by ForNAV
+                nhifamt := 0; // Inserted by ForNAV
+                nssfam := 0; // Inserted by ForNAV
+                payeamount := 0; // Inserted by ForNAV
+                BasicPay := 0; // Inserted by ForNAV
+                Name := '';
+                Name := HrEmp.Firstname + ' ' + HrEmp.Lastname + ' ' + HrEmp.Surname;
+                TransCount := 0;
+                showdet := true;
+                NetPay := 0;
+                BasicPay := 0;
+                Clear(TranscAmount);
+                payeamount := 0;
+                nssfam := 0;
+                nhifamt := 0;
+                repeat
+                begin
+                    TransCount := TransCount + 1;
+                    prPeriodTransactions.Reset;
+                    prPeriodTransactions.SetRange(prPeriodTransactions."Payroll Period", periods);
+                    prPeriodTransactions.SetRange(prPeriodTransactions."No.", "Payroll Employee_AU"."No.");
+                    prPeriodTransactions.SetRange(prPeriodTransactions."Transaction Code", Transcode[1, TransCount]);
+                    if prPeriodTransactions.Find('-') then begin
+                        TranscAmount[1, TransCount] := prPeriodTransactions.Amount;
+                    end;
+                    repeat
+                    begin
+                        TranscAmountTotal[1, TransCount] := ((TranscAmountTotal[1, TransCount]) + TranscAmount[1, TransCount]);
+                    end;
+                    until prPeriodTransactions.Next = 0;
+                end;
+                until TransCount = 70;//COMPRESSARRAY(TransName);
+                prPeriodTransactions.Reset;
+                prPeriodTransactions.SetRange(prPeriodTransactions."Payroll Period", periods);
+                prPeriodTransactions.SetRange(prPeriodTransactions."No.", "Payroll Employee_AU"."No.");
+                prPeriodTransactions.SetRange(prPeriodTransactions."Transaction Name", 'Net Pay');
+                if prPeriodTransactions.Find('-') then begin
+                    NetPay := prPeriodTransactions.Amount;
+                    //NetPayTotal:=(NetPayTotal+(prPeriodTransactions.Amount));
+                end;
+                prPeriodTransactions.Reset;
+                prPeriodTransactions.SetRange(prPeriodTransactions."Payroll Period", periods);
+                prPeriodTransactions.SetRange(prPeriodTransactions."No.", "Payroll Employee_AU"."No.");
+                //prPeriodTransactions.SETRANGE(prPeriodTransactions."Transaction Name",'Net Pay');
+                if prPeriodTransactions.Find('-') then begin
+                    repeat
+                    begin
+                        if prPeriodTransactions."Transaction Code" = 'NPAY' then begin
+                            NetPay := prPeriodTransactions.Amount;
+                            NetPayTotal := (NetPayTotal + (prPeriodTransactions.Amount));
+                        end else if prPeriodTransactions."Transaction Code" = 'PAYE' then begin
+                            payeamount := prPeriodTransactions.Amount;
+                            ;
+                            payeamountTotal := (payeamountTotal + (prPeriodTransactions.Amount));
+                        end else if prPeriodTransactions."Transaction Code" = 'NSSF' then begin
+                            nssfam := prPeriodTransactions.Amount;
+                            ;
+                            nssfamTotal := (nssfamTotal + (prPeriodTransactions.Amount));
+                        end else if prPeriodTransactions."Transaction Code" = 'NHIF' then begin
+                            nhifamt := prPeriodTransactions.Amount;
+                            ;
+                            nhifamtTotal := (nhifamtTotal + (prPeriodTransactions.Amount));
+                        end else if prPeriodTransactions."Transaction Code" = 'BPAY' then begin
+                            BasicPay := prPeriodTransactions.Amount;
+                            ;
+                            BasicPayTotal := (BasicPayTotal + (prPeriodTransactions.Amount));
+                            ;
+                        end;
+                    end;
+                    until prPeriodTransactions.Next = 0;
+                end;
+                if "Payroll Employee_AU"."No." = '' then showdet := false;
+                if ((BasicPay = 0) or ("Payroll Employee_AU"."No." = '')) then //showdet:=FALSE;
+                    CurrReport.Skip;
+            end;
+
+        }
+    }
+    requestpage
+    {
+        SaveValues = false;
+        layout
+        {
+            area(Content)
+            {
+                field(Period; periods)
+                {
+                    ApplicationArea = Basic;
+                    Caption = 'Period:';
+                    TableRelation = "Payroll Calender_AU"."Date Opened";
+                }
+
+            }
+        }
+
+    }
+
+    trigger OnPreReport()
+    begin
+        if UserSetup.Get(UserId) then begin
+            if UserSetup."View Payroll" = false then Error('You dont have permissions for payroll, Contact your system administrator! ')
+        end else begin
+            Error('You have been setup in the user setup!');
+        end;
+
+
+    end;
+
+    var
+        Name: Text[100];
+        UserSetup: Record "User Setup";
+        prPayrollPeriods: Record "Payroll Calender_AU";
+        periods: Date;
+        counts: Integer;
+        prPeriodTransactions: Record "Payroll Monthly Trans_AU";
+        TransName: array[1, 200] of Text[200];
+        Transcode: array[1, 200] of Code[100];
+        TransCount: Integer;
+        TranscAmount: array[1, 200] of Decimal;
+        TranscAmountTotal: array[1, 200] of Decimal;
+        NetPay: Decimal;
+        NetPayTotal: Decimal;
+        showdet: Boolean;
+        payeamount: Decimal;
+        payeamountTotal: Decimal;
+        nssfam: Decimal;
+        nssfamTotal: Decimal;
+        nhifamt: Decimal;
+        nhifamtTotal: Decimal;
+        CompName: Text[50];
+        Addr1: Text[50];
+        Addr2: Text[50];
+        Email: Text[50];
+        BasicPay: Decimal;
+        BasicPayTotal: Decimal;
+        GrossPay: Decimal;
+        GrosspayTotal: Decimal;
+        prtransCodes: Record "Payroll Transaction Code_AU";
+        info: Record "Company Information";
+        companyinfo: Record "Company Information";
+        HrEmp: Record "Payroll Employee_AU";
+
+    trigger OnInitReport();
+    begin
+
+    end;
+
+}
