@@ -63,8 +63,21 @@ Page 80005 "Payroll Calender_AU"
 
     actions
     {
+        area(Processing)
+        {
+            action("Project Allocation")
+            {
+                ApplicationArea = Basic;
+                Image = Allocations;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                RunObject = page "Payroll Project Allocation";
+            }
+        }
         area(creation)
         {
+
             action("Close Period")
             {
                 ApplicationArea = Basic;

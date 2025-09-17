@@ -352,21 +352,11 @@ Codeunit 80008 "Custom Approvals Codeunit"
         end;
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterPostItemJnlLine', '', false, false)]
-
-    procedure fnUpdateItemJournal(var ItemJournalLine: Record "Item Journal Line")
-    var
-        ItemJournalBatch: Record "Item Journal Batch";
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeCheckPurchLines', '', false, false)]
+    local procedure SkipCheckPurchLines(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
     begin
-        /*ItemJournalBatch.RESET;
-        ItemJournalBatch.SETRANGE("Journal Template Name",ItemJournalLine."Journal Template Name");
-        ItemJournalBatch.SETRANGE(Name,ItemJournalLine."Journal Batch Name");
-        IF ItemJournalBatch.FINDFIRST THEN
-        BEGIN
-          ItemJournalBatch.Status := ItemJournalBatch.Status::Open;
-          ItemJournalBatch.MODIFY;
-        END*/
-
+        IsHandled := true;
     end;
+
 }
 

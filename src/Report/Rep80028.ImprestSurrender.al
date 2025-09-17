@@ -1,8 +1,8 @@
 #pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006 // ForNAV settings
 Report 80028 "Imprest Surrender"
 {
-    WordLayout = 'Layouts/ImprestSurrender.docx';
-    DefaultLayout = Word;
+    DefaultLayout = RDLC;
+    RDLCLayout = './Layouts/Imprest Surrender.rdlc';
 
     dataset
     {
@@ -39,6 +39,7 @@ Report 80028 "Imprest Surrender"
             column(USERID; "Purchase Header"."User ID")
             {
             }
+
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -105,6 +106,7 @@ Report 80028 "Imprest Surrender"
                 column(LastDateTimeModified_ApprovalEntry; "Approval Entry"."Last Date-Time Modified")
                 {
                 }
+                column(SequenceNo_ApprovalEntry; "Sequence No.") { }
                 trigger OnPreDataItem();
                 begin
 

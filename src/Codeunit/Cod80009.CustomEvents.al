@@ -14,16 +14,16 @@ codeunit 80009 CustomEvents
 #pragma warning restore AL0432
         UserMgt: Codeunit "User Setup Management";
     begin
-        // Load setup
         RunTrigger := true;
         PurchasesPayablesSetup.Get;
-        // Assign default No. from Imprest No. Series
+
         if rec.IM then begin
             Rec."No." := NoSeriesManagement.GetNextNo(PurchasesPayablesSetup."Imprest Nos.", Today, true);
         end else if rec.SR then begin
             Rec."No." := NoSeriesManagement.GetNextNo(PurchasesPayablesSetup."Surrender Nos.", Today, true);
         end else if Rec.PM then begin
             Rec."No." := NoSeriesManagement.GetNextNo(PurchasesPayablesSetup."Payment Memo Nos.", Today, true);
+            
         end;
 
 
@@ -42,10 +42,10 @@ codeunit 80009 CustomEvents
         if Rec."Requested Receipt Date" = 0D then
             Rec."Requested Receipt Date" := Today;
         Rec."Document Type" := Rec."Document Type"::Quote;
+        if Rec."Buy-from Vendor No." = '' then
+            Rec."Buy-from Vendor No." := 'FM-V00052';
         if Rec."Vendor Posting Group" = '' then
             Rec."Vendor Posting Group" := 'TRADERS';
-        if Rec."Posting Description" = '' then
-            Rec."Posting Description" := '';
     end;
 
     var

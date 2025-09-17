@@ -50,6 +50,9 @@ codeunit 50047 PortalEntry
         if (OptionType = 'imprestrequesttypes') then
             exit(ImprestElements());
 
+        if (OptionType = 'imprestsurrendertypes') then
+            exit(ImprestSurrenderElements(EmployeeNumber));
+
         exit(Format(AddResponseHead(OutputJson, false)));
     end;
 
@@ -87,11 +90,8 @@ codeunit 50047 PortalEntry
         //In use
         if ((RequestType = 'payment_memos_details') and ((IdentifierType = 'EMAIL') or (IdentifierType = 'NUMBER'))) then
             exit(GetPaymentMemos(RequestEmployeeID, IdentifierType));
-
         if ((RequestType = 'request_forms_details') and ((IdentifierType = 'EMAIL') or (IdentifierType = 'NUMBER'))) then
             exit(GetRequestFormRequests(RequestEmployeeID, IdentifierType));
-
-
         //In use
         if ((RequestType = 'purchase_requisitions_details') and ((IdentifierType = 'EMAIL') or (IdentifierType = 'NUMBER'))) then
             exit(GetPurchaseRequisitions(RequestEmployeeID, IdentifierType));
@@ -133,10 +133,22 @@ codeunit 50047 PortalEntry
             exit(NewLeaveApplication(ElementInformation));
         end;
 
+        //Imprest Request
         if (SubmissionType = 'imprest_request_submission') then begin
             RequestJson.Get('imprest_application', JsonToken);
             ElementInformation := JsonToken.AsObject();
             exit(NewImprestRequest(ElementInformation));
+        end;
+        if (SubmissionType = 'imprest_request_line_submission') then begin
+            RequestJson.Get('imprest_request_line', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(SaveImprestRequestLine(ElementInformation));
+        end;
+
+        if (SubmissionType = 'imprest_surrender_submission') then begin
+            RequestJson.Get('imprest_application', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(NewImprestSurrender(ElementInformation));
         end;
 
         if (SubmissionType = 'mission_proposal_submission') then begin
@@ -151,6 +163,12 @@ codeunit 50047 PortalEntry
             exit(AmendMissionProposal(ElementInformation));
         end;
 
+        if (SubmissionType = 'mission_proposal_lines_amendment') then begin
+            RequestJson.Get('mission_proposal_line', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(UpdateMissionProposalLines(ElementInformation));
+        end;
+
     end;
 
     procedure ModifyElements(args: Text): Text
@@ -159,7 +177,7 @@ codeunit 50047 PortalEntry
         JsonToken: JsonToken;
 
         ModificationType: Text;
-        LeaveInformation: JsonObject;
+        ElementInformation: JsonObject;
     begin
         Clear(RequestJson);
         if not RequestJson.ReadFrom(args) then
@@ -168,13 +186,19 @@ codeunit 50047 PortalEntry
         RequestJson.Get('modification_type', JsonToken);
         ModificationType := JsonToken.AsValue().AsText();
 
-        //Leave Application
-        RequestJson.Get('leave_application', JsonToken);
-        LeaveInformation := JsonToken.AsObject();
+        //Leave Modification
+        if (ModificationType = 'leave_modification') then begin
+            RequestJson.Get('leave_application', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(AmendLeaveApplication(ElementInformation));
+        end;
 
-        //exit(Format(AddResponseHead(RequestJson, true)));
-        if (ModificationType = 'leave_modification') then
-            exit(AmendLeaveApplication(LeaveInformation));
+        //Imprest Request Modification
+        if (ModificationType = 'imprest_request_modification') then begin
+            RequestJson.Get('imprest_application', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(AmendImprestRequest(ElementInformation));
+        end;
     end;
 
 
@@ -275,6 +299,26 @@ codeunit 50047 PortalEntry
         exit((jarray));
     END;
 
+    local procedure GetGLAccounts(filter: Code[60]): JsonArray;
+    VAR
+        jarray: JsonArray;
+        jobject: JsonObject;
+        AccountsTable: Record 15;
+    BEGIN
+        Clear(jarray);
+        AccountsTable.RESET;
+        AccountsTable.SETCURRENTKEY("No.");
+        AccountsTable.ASCENDING(TRUE);
+        IF AccountsTable.FINDFIRST THEN
+            REPEAT
+                Clear(jobject);
+                jobject.Add('Code', AccountsTable."No.");
+                jobject.Add('Name', AccountsTable.Name);
+                jarray.Add(jobject);
+            UNTIL AccountsTable.NEXT = 0;
+        exit((jarray));
+    END;
+
     local procedure GetStandardTexts(filterType: Text): JsonArray;
     VAR
         jarray: JsonArray;
@@ -287,6 +331,8 @@ codeunit 50047 PortalEntry
             standardoption := StandardTextTable.Type::"Sub Pillar";
         if filterType = 'Department' then
             standardoption := StandardTextTable.Type::Department;
+        if filterType = 'GL Category' then
+            standardoption := StandardTextTable.Type::"GL Category";
         // if filterType = 'Focus Area' then
         //     standardoption := StandardTextTable.Type::"Focus Area";
         Clear(jarray);
@@ -592,6 +638,34 @@ codeunit 50047 PortalEntry
         exit(format(OutputJson));
     end;
 
+    local procedure ImprestSurrenderElements(EmployeeNumber: Code[50]): Text
+    var
+        OutputJson: JsonObject;
+        element: JsonObject;
+        elements: JsonArray;
+    begin
+        PurchasesHeaderTable.Reset();
+        PurchasesHeaderTable.SetRange(IM, true);
+        PurchasesHeaderTable.SetRange("Employee No", EmployeeNumber);
+        // PurchasesHeaderTable.SetRange(Status, PurchasesHeaderTable.Status::Released);
+        if PurchasesHeaderTable.FindSet() then begin
+            Clear(OutputJson);
+            Clear(elements);
+            OutputJson := AddResponseHead(OutputJson, true);
+            repeat
+                PurchasesHeaderTable.CalcFields(Amount);
+                Clear(element);
+                element.add('imprest_number', PurchasesHeaderTable."No.");
+                element.add('imprest_amount', PurchasesHeaderTable.Amount);
+                elements.add(element);
+            until PurchasesHeaderTable.Next() = 0;
+            OutputJson.Add('imprest_requests', elements);
+            outputjson.add('expensecategories', GetStandardTexts('GL Category'));
+            exit(Format(OutputJson));
+        end;
+        exit(Format(AddResponseHead(OutputJson, false)));
+    end;
+
     local procedure ImprestElements(): Text
     var
         OutputJson: JsonObject;
@@ -607,6 +681,8 @@ codeunit 50047 PortalEntry
         outputjson.add('sub_pillars', GetStandardTexts('Sub Pillar'));
         outputjson.add('countries', GetCountryRegions('Country'));
         outputjson.add('counties', GetCountryRegions('County'));
+        outputjson.add('expensecategories', GetStandardTexts('GL Category'));
+        outputjson.Add('gl_accounts', GetGLAccounts('5'));
         exit(format(OutputJson));
     end;
 
@@ -995,13 +1071,17 @@ codeunit 50047 PortalEntry
         element: JsonObject;
         line: JsonObject;
         lines: JsonArray;
+
+        ImprestAmount: Decimal;
     begin
         PurchasesHeaderTable.Reset();
         PurchasesHeaderTable.SetRange("No.", requestnumber);
         if PurchasesHeaderTable.Find('-') then begin
             outputjson := AddResponseHead(outputjson, true);
 
-            element.add('imprest_number', PurchasesHeaderTable."No.");
+            element.add('request_number', requestnumber);
+            element.add('imprest_number', PurchasesHeaderTable."Imprest No");
+            element.add('mission_proposal_no', PurchasesHeaderTable."Mission Proposal No");
             element.add('posting_date', PurchasesHeaderTable."Posting Date");
             element.add('purpose', PurchasesHeaderTable."Posting Description");
             element.add('fund_code', PurchasesHeaderTable."Shortcut Dimension 1 Code");
@@ -1012,24 +1092,31 @@ codeunit 50047 PortalEntry
             element.add('status', Format(PurchasesHeaderTable.Status));
             element.add('employee_id', Format(PurchasesHeaderTable."Employee No"));
             element.add('employee_name', Format(PurchasesHeaderTable."Employee Name"));
-            element.add('mission_proposal_no', Format(PurchasesHeaderTable."Mission Proposal No"));
-            element.add('imprest_amount', PurchasesHeaderTable.Amount);
+            // element.add('mission_proposal_no', Format(PurchasesHeaderTable."Mission Proposal No"));
+            ImprestAmount := 0;
             Clear(lines);
             PurchasesLineTable.Reset();
             PurchasesLineTable.SetRange("Document No.", PurchasesHeaderTable."No.");
             if PurchasesLineTable.FindSet() then begin
                 repeat
                     Clear(line);
-                    line.Add('transaction_type', Format(PurchasesLineTable.Type));
+                    line.Add('transaction_type', Format(PurchasesLineTable."Expense Category"));
+                    line.Add('line_no', PurchasesLineTable."Line No.");
+                    line.Add('account_no', PurchasesLineTable."No.");
+                    line.Add('expense_category', PurchasesLineTable."Expense Category");
                     line.Add('description', PurchasesLineTable.Description);
-                    line.Add('unit_cost', PurchasesLineTable."Unit Cost");
-                    line.Add('currency_code', PurchasesLineTable."Currency Code");
+                    line.Add('item_specification', PurchasesLineTable."Description 2");
                     line.Add('quantity', PurchasesLineTable.Quantity);
+                    line.Add('currency_code', PurchasesLineTable."Currency Code");
+                    line.Add('unit_cost', PurchasesLineTable."Direct Unit Cost");
+                    line.Add('amount', PurchasesLineTable."Line Amount");
+                    line.Add('amount_spent', PurchasesLineTable."Amount Spent");
                     lines.Add(line);
+                    ImprestAmount += PurchasesLineTable."Line Amount";
                 until PurchasesLineTable.Next() = 0;
                 element.Add('impres_request_lines', lines);
             end;
-
+            element.add('imprest_amount', ImprestAmount);
             outputjson.Add('imprest_request', element);
 
             outputjson.Add('fund_codes', GetDimensionValues('1', ''));
@@ -1037,7 +1124,9 @@ codeunit 50047 PortalEntry
             outputjson.Add('budget_codes', GetDimensionValues('3', ''));
             outputjson.Add('shortcut_4_codes', GetDimensionValues('4', ''));
             outputjson.Add('department_codes', GetDimensionValues('5', ''));
+            outputjson.Add('gl_accounts', GetGLAccounts('5'));
             outputjson.add('currencies', GetCurrencies());
+            outputjson.add('expensecategories', GetStandardTexts('GL Category'));
             exit(format(outputjson));
         end;
         exit(Format(AddResponseHead(outputjson, false)));
@@ -1072,33 +1161,296 @@ codeunit 50047 PortalEntry
         RequestJson.Get('currency_code', JsonToken);
         CurrencyCode := JsonToken.AsValue().AsText();
 
-        PurchasesandPayablesSetup.Get();
-        PurchasesHeaderTable.Init();
-        PurchasesHeaderTable."No." := NumberSeries.GetNextNo(PurchasesandPayablesSetup."Imprest Nos.", Today, true);
-        PurchasesHeaderTable."Employee No" := StaffID;
-        PurchasesHeaderTable.Validate("Employee No");
-        PurchasesHeaderTable."Document Type" := PurchasesHeaderTable."Document Type"::Quote;
-        PurchasesHeaderTable.IM := true;
-        PurchasesHeaderTable."Posting Date" := Today;
-        PurchasesHeaderTable."Posting Description" := Purpose;
-        PurchasesHeaderTable."Shortcut Dimension 1 Code" := FundCode;
-        PurchasesHeaderTable."Shortcut Dimension 2 Code" := ProgramCode;
-        PurchasesHeaderTable."Shortcut Dimension 3 Code" := BudgetCode;
-        PurchasesHeaderTable."Shortcut Dimension 5 Code" := DepartmentCode;
-        PurchasesHeaderTable.Status := PurchasesHeaderTable.Status::Open;
+        EmployeeTable.Reset();
+        EmployeeTable.SetRange("No.", StaffID);
+        if EmployeeTable.Find('-') then begin
+            PurchasesandPayablesSetup.Get();
+            PurchasesHeaderTable.Init();
+            PurchasesHeaderTable."No." := NumberSeries.GetNextNo(PurchasesandPayablesSetup."Imprest Nos.", Today, true);
+            PurchasesHeaderTable."Employee No" := StaffID;
+            PurchasesHeaderTable.Validate("Employee No");
+            PurchasesHeaderTable."Document Type" := PurchasesHeaderTable."Document Type"::Quote;
+            PurchasesHeaderTable.IM := true;
+            PurchasesHeaderTable."Posting Date" := Today;
+            PurchasesHeaderTable."Posting Description" := Purpose;
+            PurchasesHeaderTable."Shortcut Dimension 1 Code" := FundCode;
+            PurchasesHeaderTable."Shortcut Dimension 2 Code" := ProgramCode;
+            PurchasesHeaderTable."Shortcut Dimension 3 Code" := BudgetCode;
+            PurchasesHeaderTable."Shortcut Dimension 5 Code" := DepartmentCode;
+            PurchasesHeaderTable.Status := PurchasesHeaderTable.Status::Open;
+            PurchasesHeaderTable."Account No" := EmployeeTable.Travelaccountno;
+            PurchasesHeaderTable."Responsibility Center" := EmployeeTable."User ID";
+            PurchasesHeaderTable."Assigned User ID" := EmployeeTable."User ID";
+            PurchasesHeaderTable."User ID" := EmployeeTable."User ID";
+            PurchasesHeaderTable."Requested Receipt Date" := Today;
+            PurchasesHeaderTable."Buy-from Vendor No." := 'FM-V00052';
+            PurchasesHeaderTable."Vendor Posting Group" := 'TRADERS';
 
-        // PurchasesHeaderTable.Validate("Shortcut Dimension 1 Code");
-        // PurchasesHeaderTable.Validate("Shortcut Dimension 2 Code");
-        // PurchasesHeaderTable.Validate("Shortcut Dimension 3 Code");
-        // PurchasesHeaderTable.Validate("Shortcut Dimension 4 Code");
-        PurchasesHeaderTable."Currency Code" := CurrencyCode;
-        PurchasesHeaderTable.Validate("Currency Code");
+            // PurchasesHeaderTable.Validate("Shortcut Dimension 1 Code");
+            // PurchasesHeaderTable.Validate("Shortcut Dimension 2 Code");
+            // PurchasesHeaderTable.Validate("Shortcut Dimension 3 Code");
+            // PurchasesHeaderTable.Validate("Shortcut Dimension 4 Code");
+            PurchasesHeaderTable."Currency Code" := CurrencyCode;
+            PurchasesHeaderTable.Validate("Currency Code");
 
-        if (PurchasesHeaderTable.Insert(true) = true) then
-            exit(Format(AddResponseHead(OutputJson, true)));
-
+            if (PurchasesHeaderTable.Insert(true) = true) then
+                exit(Format(AddResponseHead(OutputJson, true)));
+        end;
         exit(format(AddResponseHead(outputjson, false)));
 
+    end;
+
+    local procedure AmendImprestRequest(RequestJson: JsonObject): Text;
+    var
+        OutputJson: JsonObject;
+        JsonToken: JsonToken;
+
+        RequestNumber: Code[50];
+        StaffID: Code[50];
+        Purpose: Text;
+        FundCode: Code[100];
+        ProgramCode: Code[100];
+        DepartmentCode: Code[100];
+        BudgetCode: Code[100];
+        CurrencyCode: Code[100];
+    begin
+
+        RequestJson.Get('employee_id', JsonToken);
+        StaffID := JsonToken.AsValue().AsText();
+        RequestJson.Get('purpose', JsonToken);
+        Purpose := JsonToken.AsValue().AsText();
+        RequestJson.Get('fund_code', JsonToken);
+        FundCode := JsonToken.AsValue().AsText();
+        RequestJson.Get('program_code', JsonToken);
+        ProgramCode := JsonToken.AsValue().AsText();
+        RequestJson.Get('department_code', JsonToken);
+        DepartmentCode := JsonToken.AsValue().AsText();
+        RequestJson.Get('budget_code', JsonToken);
+        BudgetCode := JsonToken.AsValue().AsText();
+        RequestJson.Get('currency_code', JsonToken);
+        CurrencyCode := JsonToken.AsValue().AsText();
+
+        PurchasesHeaderTable.Reset();
+        PurchasesHeaderTable.SetRange("No.", RequestNumber);
+        if PurchasesHeaderTable.Find('-') then begin
+            PurchasesHeaderTable."Posting Description" := Purpose;
+            PurchasesHeaderTable."Shortcut Dimension 1 Code" := FundCode;
+            PurchasesHeaderTable."Shortcut Dimension 2 Code" := ProgramCode;
+            PurchasesHeaderTable."Shortcut Dimension 3 Code" := BudgetCode;
+            PurchasesHeaderTable."Shortcut Dimension 5 Code" := DepartmentCode;
+            PurchasesHeaderTable."Currency Code" := CurrencyCode;
+            PurchasesHeaderTable.Validate("Currency Code");
+
+            if PurchasesHeaderTable.modify(true) then
+                exit(Format(AddResponseHead(OutputJson, true)));
+        end;
+        exit(format(AddResponseHead(outputjson, false)));
+
+    end;
+
+
+    local procedure SaveImprestRequestLine(RequestJson: JsonObject): Text;
+    var
+        OutputJson: JsonObject;
+        JsonToken: JsonToken;
+
+        ImprestNumber: Code[50];
+        LineNo: Integer;
+        ExpenseCategory: Code[100];
+        GLAccount: Code[100];
+        // Description: Text;
+        ItemSpecification: Text;
+        Quantity: Integer;
+        UnitCost: Decimal;
+
+        linespage: page "Imprest Subform";
+    begin
+
+        RequestJson.Get('imprest_number', JsonToken);
+        ImprestNumber := JsonToken.AsValue().AsText();
+        RequestJson.Get('line_no', JsonToken);
+        LineNo := JsonToken.AsValue().AsInteger();
+        RequestJson.Get('expense_category', JsonToken);
+        ExpenseCategory := JsonToken.AsValue().AsText();
+        RequestJson.Get('account_no', JsonToken);
+        GLAccount := JsonToken.AsValue().AsText();
+        // RequestJson.Get('description', JsonToken);
+        // Description := JsonToken.AsValue().AsText();
+        RequestJson.Get('item_specification', JsonToken);
+        ItemSpecification := JsonToken.AsValue().AsText();
+        RequestJson.Get('quantity', JsonToken);
+        Quantity := JsonToken.AsValue().AsInteger();
+        RequestJson.Get('unit_cost', JsonToken);
+        UnitCost := JsonToken.AsValue().AsDecimal();
+
+        PurchasesHeaderTable.Reset();
+        PurchasesHeaderTable.SetRange("No.", ImprestNumber);
+        if PurchasesHeaderTable.Find('-') then begin
+            PurchasesLineTable.Reset();
+            PurchasesLineTable.SetRange("Line No.", LineNo);
+            PurchasesLineTable.SetRange("Document No.", PurchasesHeaderTable."No.");
+            if PurchasesLineTable.Find('-') then begin
+                PurchasesLineTable."No." := GLAccount;
+                PurchasesLineTable.Validate("No.");
+
+                if PurchasesLineTable.Modify(true) then begin
+                    PurchasesLineTable.Reset();
+                    PurchasesLineTable.SetRange("Line No.", LineNo);
+                    PurchasesLineTable.SetRange("Document No.", PurchasesHeaderTable."No.");
+                    if PurchasesLineTable.Find('-') then begin
+                        PurchasesLineTable."Expense Category" := ExpenseCategory;
+                        PurchasesLineTable."Document No." := PurchasesHeaderTable."No.";
+                        PurchasesLineTable."Description 2" := ItemSpecification;
+                        PurchasesLineTable.Quantity := Quantity;
+                        PurchasesLineTable."Direct Unit Cost" := UnitCost;
+                        PurchasesLineTable."Line Amount" := Quantity * UnitCost;
+                        if PurchasesLineTable.Modify(true) then begin
+                            RedistributeTotalsOnAfterValidate(PurchasesLineTable."Document Type", PurchasesLineTable."Document No.", PurchasesLineTable);
+                            exit(format(AddResponseHead(outputjson, true)));
+                        end;
+                    end
+                end;
+            end else begin
+                PurchasesLineTable.Reset();
+                PurchasesLineTable.SetRange("Document No.", PurchasesHeaderTable."No.");
+                if PurchasesLineTable.FindLast() then
+                    LineNo := PurchasesLineTable."Line No." + 1000
+                else
+                    LineNo := 1000;
+                PurchasesLineTable.Init();
+                PurchasesLineTable."Line No." := LineNo;
+                PurchasesLineTable."Document No." := PurchasesHeaderTable."No.";
+                PurchasesLineTable.Type := PurchasesLineTable.Type::"G/L Account";
+                PurchasesLineTable."No." := GLAccount;
+                PurchasesLineTable."Currency Code" := PurchasesHeaderTable."Currency Code";
+                PurchasesLineTable."Direct Unit Cost" := UnitCost;
+                PurchasesLineTable."Shortcut Dimension 1 Code" := PurchasesHeaderTable."Shortcut Dimension 1 Code";
+                PurchasesLineTable."Shortcut Dimension 2 Code" := PurchasesHeaderTable."Shortcut Dimension 2 Code";
+                // PurchasesLineTable.Validate(Type);
+                PurchasesLineTable.Validate("No.");
+                if PurchasesLineTable.Insert(true) then begin
+                    PurchasesLineTable.Reset();
+                    PurchasesLineTable.SetRange("Line No.", LineNo);
+                    PurchasesLineTable.SetRange("Document No.", PurchasesHeaderTable."No.");
+                    if PurchasesLineTable.Find('-') then begin
+                        PurchasesLineTable."Expense Category" := ExpenseCategory;
+                        PurchasesLineTable."Document No." := PurchasesHeaderTable."No.";
+                        PurchasesLineTable."Description 2" := ItemSpecification;
+                        PurchasesLineTable.Quantity := Quantity;
+                        PurchasesLineTable."Direct Unit Cost" := UnitCost;
+                        PurchasesLineTable."Line Amount" := Quantity * UnitCost;
+                        // PurchasesLineTable.Validate("No.");
+
+                        if PurchasesLineTable.Modify(true) then begin
+                            RedistributeTotalsOnAfterValidate(PurchasesLineTable."Document Type", PurchasesLineTable."Document No.", PurchasesLineTable);
+                            exit(format(AddResponseHead(outputjson, true)));
+                        end;
+                    end;
+                end;
+
+            end;
+        end;
+        exit(format(AddResponseHead(outputjson, false)));
+
+    end;
+
+
+    local procedure NewImprestSurrender(RequestJson: JsonObject): Text;
+    var
+        OutputJson: JsonObject;
+        JsonToken: JsonToken;
+
+        ImprestNumber: Code[50];
+        PurchasesTable2: Record "Purchase Header";
+        PurchaseLines2: Record "Purchase Line";
+        LineNo: Integer;
+    begin
+
+        RequestJson.Get('imprest_number', JsonToken);
+        ImprestNumber := JsonToken.AsValue().AsText();
+
+        PurchasesTable2.Reset();
+        PurchasesTable2.SetRange("No.", ImprestNumber);
+        if PurchasesTable2.Find('-') then begin
+            EmployeeTable.Reset();
+            EmployeeTable.SetRange("No.", PurchasesTable2."Employee No");
+            if EmployeeTable.Find('-') then begin
+                PurchasesandPayablesSetup.Get();
+                PurchasesHeaderTable.Init();
+                PurchasesHeaderTable."Imprest No" := PurchasesTable2."No.";
+                PurchasesHeaderTable."No." := NumberSeries.GetNextNo(PurchasesandPayablesSetup."Surrender Nos.", Today, true);
+                PurchasesHeaderTable."Employee No" := PurchasesTable2."Employee No";
+                PurchasesHeaderTable.Validate("Employee No");
+                PurchasesHeaderTable."Document Type" := PurchasesHeaderTable."Document Type"::Quote;
+                PurchasesHeaderTable.SR := true;
+                PurchasesHeaderTable."Requested Receipt Date" := Today;
+                PurchasesHeaderTable."Posting Description" := '';
+                PurchasesHeaderTable."Shortcut Dimension 1 Code" := PurchasesTable2."Shortcut Dimension 1 Code";
+                PurchasesHeaderTable."Shortcut Dimension 2 Code" := PurchasesTable2."Shortcut Dimension 2 Code";
+                PurchasesHeaderTable."Shortcut Dimension 3 Code" := PurchasesTable2."Shortcut Dimension 3 Code";
+                PurchasesHeaderTable."Shortcut Dimension 4 Code" := PurchasesTable2."Shortcut Dimension 4 Code";
+                PurchasesHeaderTable."Shortcut Dimension 5 Code" := PurchasesTable2."Shortcut Dimension 5 Code";
+                PurchasesHeaderTable.Status := PurchasesHeaderTable.Status::Open;
+                PurchasesHeaderTable."Buy-from Vendor No." := 'FM-V00052';
+                PurchasesHeaderTable."Vendor Posting Group" := 'TRADERS';
+                PurchasesHeaderTable."Currency Code" := PurchasesTable2."Currency Code";
+                PurchasesHeaderTable."Mission Proposal No" := PurchasesTable2."Mission Proposal No";
+                PurchasesHeaderTable."Responsibility Center" := EmployeeTable."User ID";
+                PurchasesHeaderTable."Assigned User ID" := EmployeeTable."User ID";
+                PurchasesHeaderTable."User ID" := EmployeeTable."User ID";
+                PurchasesHeaderTable.Validate("Currency Code");
+
+                if (PurchasesHeaderTable.Insert(true) = true) then begin
+                    PurchaseLines2.Reset;
+                    PurchaseLines2.SetRange("Document No.", ImprestNumber);
+                    if PurchaseLines2.Find('-') then begin
+                        repeat
+                            PurchasesLineTable.Init;
+
+                            LineNo := LineNo + 1000;
+                            PurchasesLineTable."Document Type" := PurchasesHeaderTable."Document Type";
+                            PurchasesLineTable.Validate("Document Type");
+                            PurchasesLineTable."Document No." := PurchasesHeaderTable."No.";
+                            PurchasesLineTable.Validate("Document No.");
+                            PurchasesLineTable."Line No." := LineNo;
+                            PurchasesLineTable.Type := PurchaseLines2.Type;
+                            PurchasesLineTable."No." := PurchaseLines2."No.";
+                            PurchasesLineTable.Validate("No.");
+                            PurchasesLineTable.Description := PurchaseLines2.Description;
+                            PurchasesLineTable."Description 2" := PurchaseLines2."Description 2";
+                            PurchasesLineTable.Quantity := PurchaseLines2.Quantity;
+                            PurchasesLineTable.Validate(Quantity);
+                            PurchasesLineTable."Unit of Measure Code" := PurchaseLines2."Unit of Measure Code";
+                            PurchasesLineTable.Validate("Unit of Measure Code");
+                            PurchasesLineTable."Direct Unit Cost" := PurchaseLines2."Direct Unit Cost";
+                            PurchasesLineTable.Validate("Direct Unit Cost");
+                            PurchasesLineTable."Location Code" := PurchaseLines2."Location Code";
+                            PurchasesLineTable."Location Code" := PurchasesHeaderTable."Location Code";
+                            PurchasesLineTable."Expense Category" := PurchaseLines2."Expense Category";
+                            PurchasesLineTable."Shortcut Dimension 1 Code" := PurchasesHeaderTable."Shortcut Dimension 1 Code";
+                            PurchasesLineTable."Shortcut Dimension 2 Code" := PurchasesHeaderTable."Shortcut Dimension 2 Code";
+                            PurchasesLineTable.Insert(true);
+
+                        until PurchaseLines2.Next = 0;
+                    end;
+                end;
+            end;
+            exit(Format(AddResponseHead(OutputJson, true)));
+        end;
+
+        exit(format(AddResponseHead(outputjson, false)));
+    end;
+
+    local procedure RedistributeTotalsOnAfterValidate(DocumentType: enum "Purchase Document Type"; DocumentNo: Code[20]; Rec: record "Purchase Line")
+    var
+        DocumentTotals: Codeunit "Document Totals";
+        VATAmount: decimal;
+        TotalPurchaseLine: Record "Purchase Line";
+    begin
+
+        PurchasesHeaderTable.Get(DocumentType, DocumentNo);
+        if DocumentTotals.PurchaseCheckNumberOfLinesLimit(PurchasesHeaderTable) then
+            DocumentTotals.PurchaseRedistributeInvoiceDiscountAmounts(Rec, VATAmount, TotalPurchaseLine);
     end;
 
     procedure FnUpdateSetup(): Text
@@ -1424,6 +1776,7 @@ codeunit 50047 PortalEntry
                 repeat
                     Clear(line);
                     line.Add('line_no', PurchasesLineTable."Line No.");
+                    line.Add('line_type', Format(PurchasesLineTable."Line Type"));
                     line.Add('description', PurchasesLineTable."Description 2");
                     lines.Add(line);
                 until PurchasesLineTable.Next() = 0;
@@ -1438,6 +1791,7 @@ codeunit 50047 PortalEntry
                 repeat
                     Clear(line);
                     line.Add('line_no', PurchasesLineTable."Line No.");
+                    line.Add('line_type', Format(PurchasesLineTable."Line Type"));
                     line.Add('employee_name', PurchasesLineTable."Description 2");
                     line.Add('responsibilities', PurchasesLineTable."Description 3");
                     lines.Add(line);
@@ -1454,6 +1808,7 @@ codeunit 50047 PortalEntry
                 repeat
                     Clear(line);
                     line.Add('line_no', PurchasesLineTable."Line No.");
+                    line.Add('line_type', Format(PurchasesLineTable."Line Type"));
                     line.Add('date', PurchasesLineTable."Expected Receipt Date");
                     line.Add('activity', PurchasesLineTable."Description 3");
                     line.Add('duration', PurchasesLineTable."Unit of Measure");
@@ -1471,6 +1826,7 @@ codeunit 50047 PortalEntry
                 repeat
                     Clear(line);
                     line.Add('line_no', PurchasesLineTable."Line No.");
+                    line.Add('line_type', Format(PurchasesLineTable."Line Type"));
                     line.Add('budget_item', PurchasesLineTable."Description 3");
                     line.Add('identified_vendor', PurchasesLineTable."Description 2");
                     line.Add('no_of_days', PurchasesLineTable."No of days");
@@ -1493,6 +1849,7 @@ codeunit 50047 PortalEntry
                 repeat
                     Clear(line);
                     line.Add('line_no', PurchasesLineTable."Line No.");
+                    line.Add('line_type', Format(PurchasesLineTable."Line Type"));
                     line.Add('details', PurchasesLineTable."Description 3");
                     line.Add('vendor_1', PurchasesLineTable."Description 2");
                     line.Add('vendor_2', PurchasesLineTable."Description 4");

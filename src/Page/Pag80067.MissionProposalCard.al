@@ -216,12 +216,36 @@ Page 80067 "Mission Proposal Card"
 
     actions
     {
+        area(Processing)
+        {
+            action("Mark as Completed")
+            {
+                ApplicationArea = Basic, Suite;
+                Image = ProdBOMMatrixPerVersion;
+                Promoted = true;
+                PromotedCategory = Category4;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                Visible = ReleasedDocument;
+
+                trigger OnAction()
+                var
+                    ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+                begin
+                    if Confirm('Mark mission as completed') then begin
+                        Rec.Completed := true;
+                        Rec.Modify;
+                    end;
+                end;
+            }
+        }
         area(navigation)
         {
             group("F&unctions")
             {
                 Caption = 'F&unctions';
                 Image = "Action";
+
                 action(Attachments)
                 {
                     ApplicationArea = Basic;
@@ -230,6 +254,7 @@ Page 80067 "Mission Proposal Card"
                     Promoted = true;
                     PromotedCategory = Category4;
                     RunObject = Page Documents;
+
                     RunPageLink = "Doc No." = field("No.");
                 }
                 action("Archive Document")
@@ -237,6 +262,7 @@ Page 80067 "Mission Proposal Card"
                     ApplicationArea = Basic;
                     Caption = 'Archi&ve Document';
                     Image = Archive;
+
 
                     trigger OnAction()
                     begin
@@ -262,15 +288,14 @@ Page 80067 "Mission Proposal Card"
                     PromotedIsBig = true;
                     PromotedOnly = true;
                     ToolTip = 'Request approval of the document.';
+                    Visible = OpenDocument;
 
                     trigger OnAction()
                     var
                         ApprovalsMgmt: Codeunit "Approvals Mgmt.";
                     begin
-                        // if ApprovalsMgmt.CheckPurchaseApprovalPossible(Rec) then
-                        //     ApprovalsMgmt.OnSendPurchaseDocForApproval(Rec);
-                        rec.Status := rec.Status::Released;
-                        Rec.Modify();
+                        ApprovalsMgmt.OnSendPurchaseDocForApproval(Rec);
+
                     end;
                 }
                 action(CancelApprovalRequest)
@@ -280,6 +305,7 @@ Page 80067 "Mission Proposal Card"
                     Image = CancelApprovalRequest;
                     Promoted = true;
                     PromotedCategory = Category4;
+                    Visible = false;
                     PromotedIsBig = true;
                     PromotedOnly = true;
                     ToolTip = 'Request approval of the document.';
@@ -305,6 +331,7 @@ Page 80067 "Mission Proposal Card"
                     Promoted = true;
                     PromotedCategory = Category4;
                     PromotedIsBig = true;
+                    Visible = OpenDocument;
 
                     trigger OnAction()
                     var
@@ -333,25 +360,7 @@ Page 80067 "Mission Proposal Card"
                             Report.Run(80033, true, false, PurchHeader);
                     end;
                 }
-                action("Mark as Completed")
-                {
-                    ApplicationArea = Basic, Suite;
-                    Image = ProdBOMMatrixPerVersion;
-                    Promoted = true;
-                    PromotedCategory = Category4;
-                    PromotedIsBig = true;
-                    PromotedOnly = true;
 
-                    trigger OnAction()
-                    var
-                        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
-                    begin
-                        if Confirm('Mark mission as completed') then begin
-                            Rec.Completed := true;
-                            Rec.Modify;
-                        end;
-                    end;
-                }
             }
         }
     }
@@ -458,6 +467,9 @@ Page 80067 "Mission Proposal Card"
         PurchaseHeader: Record "Purchase Header";
         PurchasesPayablesSetup: Record "Purchases & Payables Setup";
 
+        ReleasedDocument: Boolean;
+        OpenDocument: Boolean;
+
     local procedure ApproveCalcInvDisc()
     begin
         //CurrPage.PurchLines.PAGE.ApproveCalcInvDisc;
@@ -519,10 +531,18 @@ Page 80067 "Mission Proposal Card"
 
     procedure UpdateControls()
     begin
-        if Rec.Status = Rec.Status::Open then
-            StatusEditable := true
-        else
+        if Rec.Status = Rec.Status::Open then begin
+            StatusEditable := true;
+            OpenDocument := true
+        end else begin
             StatusEditable := false;
+            OpenDocument := false;
+        end;
+        if rec.Status = rec.Status::Released then begin
+            ReleasedDocument := false;
+        end else begin
+            ReleasedDocument := true;
+        end;
     end;
 
 

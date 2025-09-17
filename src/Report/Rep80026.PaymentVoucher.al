@@ -2,8 +2,8 @@
 Report 80026 "Payment Voucher"
 {
     UseSystemPrinter = true;
-    WordLayout = 'Layouts/PaymentVoucher.docx';
-    DefaultLayout = Word;
+    RDLCLayout = 'Layouts/PaymentVoucher.Rdlc';
+    DefaultLayout = RDLC;
 
     dataset
     {

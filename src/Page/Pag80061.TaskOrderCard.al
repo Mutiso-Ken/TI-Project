@@ -561,17 +561,13 @@ Page 80061 "Task Order Card"
         Rec."Assigned User ID" := UserId;
         Rec."User ID" := UserId;
         Rec."Requested Receipt Date" := Today;
-
+        Rec."Buy-from Vendor No." := 'FM-V00052';
+        Rec."Vendor Posting Group" := 'TRADERS';
 
 
         Rec.PR := true;
         Rec.Requisition := true;
-        Vendor.Reset;
-        Vendor.SetRange(Vendor."No.", '.');
-        if Vendor.FindFirst then begin
-            Rec."Buy-from Vendor No." := Vendor."No.";
-            Rec.Validate("Buy-from Vendor No.");
-        end;
+
 
 
         UpdateControls;

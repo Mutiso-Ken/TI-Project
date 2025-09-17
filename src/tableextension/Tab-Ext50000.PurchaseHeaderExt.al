@@ -183,7 +183,10 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
         field(9028; "Imprest No"; Code[10])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Purchase Header"."No." where(IM = const(true));
+            TableRelation = "Purchase Header"."No." where(IM = const(true),
+                                                             "Account No" = field("Account No"),
+                                                             "User ID" = field("User ID"),
+                                                             Surrendered = const(false));
         }
         field(9029; SR; Boolean)
         {

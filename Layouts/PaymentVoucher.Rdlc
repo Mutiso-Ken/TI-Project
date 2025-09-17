@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>2in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="Gen__Journal_Line__Posting_Date_">
+          <DataField>Gen__Journal_Line__Posting_Date_</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Document_Date_">
+          <DataField>Gen__Journal_Line__Document_Date_</DataField>
+        </Field>
+        <Field Name="CompanyInfo_Picture">
+          <DataField>CompanyInfo_Picture</DataField>
+        </Field>
+        <Field Name="CompanyInfo_Name">
+          <DataField>CompanyInfo_Name</DataField>
+        </Field>
+        <Field Name="CompanyInfo_Address">
+          <DataField>CompanyInfo_Address</DataField>
+        </Field>
+        <Field Name="CompanyInfo_City">
+          <DataField>CompanyInfo_City</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Address_2_">
+          <DataField>CompanyInfo__Address_2_</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Country_Region_Code_">
+          <DataField>CompanyInfo__Country_Region_Code_</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Phone_No__">
+          <DataField>CompanyInfo__Phone_No__</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Fax_No__">
+          <DataField>CompanyInfo__Fax_No__</DataField>
+        </Field>
+        <Field Name="CompanyInfo__E_Mail_">
+          <DataField>CompanyInfo__E_Mail_</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Home_Page_">
+          <DataField>CompanyInfo__Home_Page_</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Document_No__">
+          <DataField>Gen__Journal_Line__Document_No__</DataField>
+        </Field>
+        <Field Name="ReportTitle">
+          <DataField>ReportTitle</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line_Amount">
+          <DataField>Gen__Journal_Line_Amount</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line_AmountFormat">
+          <DataField>Gen__Journal_Line_AmountFormat</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line_Description">
+          <DataField>Gen__Journal_Line_Description</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Account_No__">
+          <DataField>Gen__Journal_Line__Account_No__</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Applies_to_Doc__No__">
+          <DataField>Gen__Journal_Line__Applies_to_Doc__No__</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__External_Document_No__">
+          <DataField>Gen__Journal_Line__External_Document_No__</DataField>
+        </Field>
+        <Field Name="AMOUNT_IN_WORDS____AmtInWords_1_">
+          <DataField>AMOUNT_IN_WORDS____AmtInWords_1_</DataField>
+        </Field>
+        <Field Name="VOUCHER_NO_Caption">
+          <DataField>VOUCHER_NO_Caption</DataField>
+        </Field>
+        <Field Name="VOUCHER_DATECaption">
+          <DataField>VOUCHER_DATECaption</DataField>
+        </Field>
+        <Field Name="CHEQUE_DATECaption">
+          <DataField>CHEQUE_DATECaption</DataField>
+        </Field>
+        <Field Name="Tel_Caption">
+          <DataField>Tel_Caption</DataField>
+        </Field>
+        <Field Name="Fax_Caption">
+          <DataField>Fax_Caption</DataField>
+        </Field>
+        <Field Name="Email_Caption">
+          <DataField>Email_Caption</DataField>
+        </Field>
+        <Field Name="Web_Caption">
+          <DataField>Web_Caption</DataField>
+        </Field>
+        <Field Name="Other_DetailsCaption">
+          <DataField>Other_DetailsCaption</DataField>
+        </Field>
+        <Field Name="Account_Details_DescriptionCaption">
+          <DataField>Account_Details_DescriptionCaption</DataField>
+        </Field>
+        <Field Name="KES_AmountCaption">
+          <DataField>KES_AmountCaption</DataField>
+        </Field>
+        <Field Name="Invoice_No_Caption">
+          <DataField>Invoice_No_Caption</DataField>
+        </Field>
+        <Field Name="TOTALCaption">
+          <DataField>TOTALCaption</DataField>
+        </Field>
+        <Field Name="Signature_Caption_Control1000000046">
+          <DataField>Signature_Caption_Control1000000046</DataField>
+        </Field>
+        <Field Name="FundNo">
+          <DataField>FundNo</DataField>
+        </Field>
+        <Field Name="vendorname">
+          <DataField>vendorname</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>

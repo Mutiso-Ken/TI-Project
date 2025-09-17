@@ -323,8 +323,8 @@ Codeunit 80007 STAFFPortalIntegration
         if objHRLeaveApplication.Find('-') then begin
             if objHRLeaveApplication.Status = objHRLeaveApplication.Status::New then begin
                 variantrec := objHRLeaveApplication;
-                if ApprovalMgt1.CheckApprovalsWorkflowEnabled(variantrec) then
-                    ApprovalMgt1.OnSendDocForApproval(variantrec);
+                // if ApprovalMgt1.CheckApprovalsWorkflowEnabled(variantrec) then
+                //     ApprovalMgt1.OnSendDocForApproval(variantrec);
             end;
         end;
 

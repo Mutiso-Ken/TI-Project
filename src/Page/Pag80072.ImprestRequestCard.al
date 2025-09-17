@@ -583,6 +583,7 @@ Page 80072 "Imprest Request Card"
         Rec."Requested Receipt Date" := Today;
         Rec."Document Type" := Rec."document type"::Quote;
         Rec.IM := true;
+        Rec."Buy-from Vendor No." := 'FM-V00052';
         Rec."Vendor Posting Group" := 'TRADERS';
         Rec."Posting Description" := '';
 

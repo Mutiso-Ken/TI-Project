@@ -43,9 +43,6 @@ Page 80076 "Imprest Surrender Card"
                 field("Imprest No"; Rec."Imprest No")
                 {
                     ApplicationArea = Basic;
-                    TableRelation = "Purchase Header" where(IM = const(true),
-                                                             "User ID" = field("User ID"),
-                                                             Surrendered = const(false));
 
                     trigger OnValidate()
                     begin
