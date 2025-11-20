@@ -5,6 +5,7 @@ Page 80048 "HR Leave Application Card"
     PageType = Card;
     PromotedActionCategories = 'New,Process,Report,Functions,Comments';
     SourceTable = "HR Leave Application";
+ 
 
     layout
     {
@@ -21,6 +22,8 @@ Page 80048 "HR Leave Application Card"
                     Importance = Promoted;
 
                     trigger OnValidate()
+                    var
+                        C: Report 1404;
                     begin
                         CurrPage.Update;
                     end;
@@ -361,8 +364,8 @@ Page 80048 "HR Leave Application Card"
                     Image = Attachments;
                     Promoted = true;
                     PromotedCategory = Category4;
-                    RunObject = Page Documents;
-                    RunPageLink = "Doc No." = field("Application Code");
+                    RunObject = Page "Document Uploads";
+                    RunPageLink = "Document Number" = field("Application Code");
                 }
                 action(Approvals)
                 {
@@ -376,16 +379,11 @@ Page 80048 "HR Leave Application Card"
                     var
                         ApprovalEntries: Page "Approval Entries";
                     begin
-                        /*DocumentType:=DocumentType::Leave;
-                        ApprovalEntries.Setfilters(DATABASE::"HR Leave Application",DocumentType,"Application Code");
-                        ApprovalEntries.RUN;*/
-
-                        ApprovalEntry.Reset;
-                        ApprovalEntry.SetRange("Document No.", Rec."Application Code");
-                        ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Open);
-                        Page.Run(658, ApprovalEntry);
-
+                        //DocumentType := Documenttype::Leave;
+                        ApprovalEntries.SetRecordFilters(Database::"HR Leave Application", Documenttype::Leave, Rec."Application Code");
+                        ApprovalEntries.Run;
                     end;
+
                 }
                 action("Send A&pproval Request")
                 {
@@ -727,6 +725,7 @@ Page 80048 "HR Leave Application Card"
 
 
     procedure Updatecontrols()
+
     begin
 
         if Rec.Status = Rec.Status::New then begin

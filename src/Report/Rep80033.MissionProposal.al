@@ -104,6 +104,7 @@ Report 80033 "Mission Proposal"
                 column(Description3_PurchaseLine2; "<Purchase Line2>"."Description 3")
                 {
                 }
+
                 trigger OnPreDataItem();
                 begin
 
@@ -183,6 +184,7 @@ Report 80033 "Mission Proposal"
                 column(TotalOtherCurrency_PurchaseLine4; "<Purchase Line4>"."Total Other Currency")
                 {
                 }
+                column(Description_6; "Description 6") { }
                 trigger OnPreDataItem();
                 begin
 

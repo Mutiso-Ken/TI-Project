@@ -6,6 +6,7 @@ Page 80033 "HR Employee List"
     PageType = List;
     PromotedActionCategories = 'New,Process,Report,Employee';
     SourceTable = "HR Employees";
+    SourceTableView = where(Status = filter(Active));
     UsageCategory = Lists;
 
     layout
@@ -94,6 +95,29 @@ Page 80033 "HR Employee List"
 
     actions
     {
+        area(Processing)
+        {
+            action(LeaveStatement)
+            {
+                ApplicationArea = Basic;
+                Caption = 'Leave Statement';
+                Image = StatisticsDocument;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+
+                trigger OnAction()
+                var
+                    Emp: Record Employee;
+                begin
+                    Emp.Reset();
+                    Emp.SetRange("No.", Rec."No.");
+                    if Emp.FindFirst() then
+                        Report.Run(Report::"HR Leave Statement", true, true, Emp);
+                end;
+            }
+        }
+
         area(navigation)
         {
             group(Employee)

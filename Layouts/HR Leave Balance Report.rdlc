@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -11,75 +11,6 @@
       <rd:DataSourceID>06bf11a1-fa6f-438b-aae6-e1e88b72fffa</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="No">
-          <DataField>No</DataField>
-        </Field>
-        <Field Name="Surname">
-          <DataField>Surname</DataField>
-        </Field>
-        <Field Name="Firstname">
-          <DataField>Firstname</DataField>
-        </Field>
-        <Field Name="MIddle">
-          <DataField>MIddle</DataField>
-        </Field>
-        <Field Name="Annualleave">
-          <DataField>Annualleave</DataField>
-        </Field>
-        <Field Name="AnnualleaveFormat">
-          <DataField>AnnualleaveFormat</DataField>
-        </Field>
-        <Field Name="CompassionateLeaveAcc_HREmployees">
-          <DataField>CompassionateLeaveAcc_HREmployees</DataField>
-        </Field>
-        <Field Name="CompassionateLeaveAcc_HREmployeesFormat">
-          <DataField>CompassionateLeaveAcc_HREmployeesFormat</DataField>
-        </Field>
-        <Field Name="MaternityLeaveAcc_HREmployees">
-          <DataField>MaternityLeaveAcc_HREmployees</DataField>
-        </Field>
-        <Field Name="MaternityLeaveAcc_HREmployeesFormat">
-          <DataField>MaternityLeaveAcc_HREmployeesFormat</DataField>
-        </Field>
-        <Field Name="PaternityLeaveAcc_HREmployees">
-          <DataField>PaternityLeaveAcc_HREmployees</DataField>
-        </Field>
-        <Field Name="PaternityLeaveAcc_HREmployeesFormat">
-          <DataField>PaternityLeaveAcc_HREmployeesFormat</DataField>
-        </Field>
-        <Field Name="SickLeaveAcc_HREmployees">
-          <DataField>SickLeaveAcc_HREmployees</DataField>
-        </Field>
-        <Field Name="SickLeaveAcc_HREmployeesFormat">
-          <DataField>SickLeaveAcc_HREmployeesFormat</DataField>
-        </Field>
-        <Field Name="StudyLeaveAcc_HREmployees">
-          <DataField>StudyLeaveAcc_HREmployees</DataField>
-        </Field>
-        <Field Name="StudyLeaveAcc_HREmployeesFormat">
-          <DataField>StudyLeaveAcc_HREmployeesFormat</DataField>
-        </Field>
-        <Field Name="CTOLeaveAcc_HREmployees">
-          <DataField>CTOLeaveAcc_HREmployees</DataField>
-        </Field>
-        <Field Name="CTOLeaveAcc_HREmployeesFormat">
-          <DataField>CTOLeaveAcc_HREmployeesFormat</DataField>
-        </Field>
-      </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>Report.xsd</rd:SchemaPath>
-        <rd:TableName>Result</rd:TableName>
-      </rd:DataSetInfo>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -1593,12 +1524,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -1662,4 +1587,68 @@ AAAAAAAAHst/uWGVI1p6dFcAAAAASUVORK5CYII=</ImageData>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="No">
+          <DataField>No</DataField>
+        </Field>
+        <Field Name="Surname">
+          <DataField>Surname</DataField>
+        </Field>
+        <Field Name="Firstname">
+          <DataField>Firstname</DataField>
+        </Field>
+        <Field Name="MIddle">
+          <DataField>MIddle</DataField>
+        </Field>
+        <Field Name="Annualleave">
+          <DataField>Annualleave</DataField>
+        </Field>
+        <Field Name="AnnualleaveFormat">
+          <DataField>AnnualleaveFormat</DataField>
+        </Field>
+        <Field Name="CompassionateLeaveAcc_HREmployees">
+          <DataField>CompassionateLeaveAcc_HREmployees</DataField>
+        </Field>
+        <Field Name="CompassionateLeaveAcc_HREmployeesFormat">
+          <DataField>CompassionateLeaveAcc_HREmployeesFormat</DataField>
+        </Field>
+        <Field Name="MaternityLeaveAcc_HREmployees">
+          <DataField>MaternityLeaveAcc_HREmployees</DataField>
+        </Field>
+        <Field Name="MaternityLeaveAcc_HREmployeesFormat">
+          <DataField>MaternityLeaveAcc_HREmployeesFormat</DataField>
+        </Field>
+        <Field Name="PaternityLeaveAcc_HREmployees">
+          <DataField>PaternityLeaveAcc_HREmployees</DataField>
+        </Field>
+        <Field Name="PaternityLeaveAcc_HREmployeesFormat">
+          <DataField>PaternityLeaveAcc_HREmployeesFormat</DataField>
+        </Field>
+        <Field Name="SickLeaveAcc_HREmployees">
+          <DataField>SickLeaveAcc_HREmployees</DataField>
+        </Field>
+        <Field Name="SickLeaveAcc_HREmployeesFormat">
+          <DataField>SickLeaveAcc_HREmployeesFormat</DataField>
+        </Field>
+        <Field Name="StudyLeaveAcc_HREmployees">
+          <DataField>StudyLeaveAcc_HREmployees</DataField>
+        </Field>
+        <Field Name="StudyLeaveAcc_HREmployeesFormat">
+          <DataField>StudyLeaveAcc_HREmployeesFormat</DataField>
+        </Field>
+        <Field Name="CTOLeaveAcc_HREmployees">
+          <DataField>CTOLeaveAcc_HREmployees</DataField>
+        </Field>
+        <Field Name="CTOLeaveAcc_HREmployeesFormat">
+          <DataField>CTOLeaveAcc_HREmployeesFormat</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

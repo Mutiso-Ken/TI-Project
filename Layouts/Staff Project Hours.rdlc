@@ -943,9 +943,6 @@ AySjO2FUKK5P9mP9mN/2pv8AgkhpOk6Xc/2b4x0TX9Z1vwrqaPsk0/VLfVrtoGDfwqxyhPOA+7BKivUP
         <Field Name="Hours">
           <DataField>Hours</DataField>
         </Field>
-        <Field Name="HoursFormat">
-          <DataField>HoursFormat</DataField>
-        </Field>
         <Field Name="ProjectCode">
           <DataField>ProjectCode</DataField>
         </Field>

@@ -17,8 +17,10 @@ Page 80071 "Imprest Request"
     {
         area(content)
         {
+
             repeater(Control1)
             {
+                Editable = statuseditable;
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = Basic;
@@ -259,10 +261,19 @@ Page 80071 "Imprest Request"
 
     end;
 
+    procedure UpdateControls()
+    begin
+        if Rec.Status = Rec.Status::Open then
+            StatusEditable := true
+        else
+            StatusEditable := false;
+    end;
+
     var
         DimMgt: Codeunit DimensionManagement;
         DocPrint: Codeunit "Document-Print";
         HREmp: Record "HR Employees";
+        StatusEditable: Boolean;
 
 
     procedure LinesCommitted() Exists: Boolean

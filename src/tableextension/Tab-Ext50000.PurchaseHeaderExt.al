@@ -42,49 +42,49 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
             trigger OnValidate()
             begin
                 //CHECK WHETHER HAS LINES AND DELETE
-                if Confirm('If you change the requisition no. the current lines will be deleted. Do you want to continue?') then begin
+                // if Confirm('If you change the requisition no. the current lines will be deleted. Do you want to continue?') then begin
 
-                    PurchLine.Reset;
-                    PurchLine.SetRange(PurchLine."Document No.", "No.");
+                PurchLine.Reset;
+                PurchLine.SetRange(PurchLine."Document No.", "No.");
 
-                    if PurchLine.Find('-') then
-                        PurchLine.DeleteAll;
+                if PurchLine.Find('-') then
+                    PurchLine.DeleteAll;
 
 
-                    //POPULATTE PURCHASE LINE WHEN USER SELECTS RFQ.
-                    RFQ.Reset;
-                    RFQ.SetRange("Document No.", "Requisition No");
-                    if RFQ.Find('-') then begin
-                        repeat
-                            PurchLine2.Init;
+                //POPULATTE PURCHASE LINE WHEN USER SELECTS RFQ.
+                RFQ.Reset;
+                RFQ.SetRange("Document No.", "Requisition No");
+                if RFQ.Find('-') then begin
+                    repeat
+                        PurchLine2.Init;
 
-                            LineNo := LineNo + 1000;
-                            PurchLine2."Document Type" := "Document Type";
-                            PurchLine2.Validate("Document Type");
-                            PurchLine2."Document No." := "No.";
-                            PurchLine2.Validate("Document No.");
-                            PurchLine2."Line No." := LineNo;
-                            PurchLine2.Type := RFQ.Type;
-                            PurchLine2."No." := RFQ."No.";
-                            PurchLine2.Validate("No.");
-                            PurchLine2.Description := RFQ.Description;
-                            PurchLine2."Description 2" := RFQ."Description 2";
-                            PurchLine2.Quantity := RFQ.Quantity;
-                            PurchLine2.Validate(Quantity);
-                            PurchLine2."Unit of Measure Code" := RFQ."Unit of Measure Code";
-                            PurchLine2.Validate("Unit of Measure Code");
-                            PurchLine2."Direct Unit Cost" := RFQ."Direct Unit Cost";
-                            PurchLine2.Validate("Direct Unit Cost");
-                            PurchLine2."Location Code" := RFQ."Location Code";
-                            //PurchLine2."RFQ No.":="Request for Quote No.";
-                            //PurchLine2.VALIDATE("RFQ No.");
-                            PurchLine2."Location Code" := "Location Code";
-                            PurchLine2."Shortcut Dimension 1 Code" := "Shortcut Dimension 1 Code";
-                            PurchLine2."Shortcut Dimension 2 Code" := "Shortcut Dimension 2 Code";
-                            PurchLine2.Insert(true);
+                        LineNo := LineNo + 1000;
+                        PurchLine2."Document Type" := "Document Type";
+                        PurchLine2.Validate("Document Type");
+                        PurchLine2."Document No." := "No.";
+                        PurchLine2.Validate("Document No.");
+                        PurchLine2."Line No." := LineNo;
+                        PurchLine2.Type := RFQ.Type;
+                        PurchLine2."No." := RFQ."No.";
+                        PurchLine2.Validate("No.");
+                        PurchLine2.Description := RFQ.Description;
+                        PurchLine2."Description 2" := RFQ."Description 2";
+                        PurchLine2.Quantity := RFQ.Quantity;
+                        PurchLine2.Validate(Quantity);
+                        PurchLine2."Unit of Measure Code" := RFQ."Unit of Measure Code";
+                        PurchLine2.Validate("Unit of Measure Code");
+                        PurchLine2."Direct Unit Cost" := RFQ."Direct Unit Cost";
+                        PurchLine2.Validate("Direct Unit Cost");
+                        PurchLine2."Location Code" := RFQ."Location Code";
+                        //PurchLine2."RFQ No.":="Request for Quote No.";
+                        //PurchLine2.VALIDATE("RFQ No.");
+                        PurchLine2."Location Code" := "Location Code";
+                        PurchLine2."Shortcut Dimension 1 Code" := "Shortcut Dimension 1 Code";
+                        PurchLine2."Shortcut Dimension 2 Code" := "Shortcut Dimension 2 Code";
+                        PurchLine2.Insert(true);
 
-                        until RFQ.Next = 0;
-                    end;
+                    until RFQ.Next = 0;
+                    // end;
                 end;
             end;
         }
@@ -407,10 +407,10 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
         }
         field(99000795; "No of THours"; Decimal)
         {
-            CalcFormula = sum("TE Time Sheet1".Hours where(Code = field("No.")));
-            FieldClass = FlowField;
+            //\ CalcFormula = sum("TE Time Sheet1".Hours where(co = field("No.")));
+            // FieldClass = FlowField;
         }
-        field(99000796; Narration; Text[1000])
+        field(99000796; Narration; Text[2048])
         {
             DataClassification = ToBeClassified;
         }
@@ -420,6 +420,14 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
         }
     }
 
+
+    trigger OnBeforeInsert()
+    begin
+        // FORCE Invoice document type regardless of context
+        // if "Document Type" = "Document Type"::Quote then
+        //     "Document Type" := "Document Type"::Invoice;
+
+    end;
 
 
 

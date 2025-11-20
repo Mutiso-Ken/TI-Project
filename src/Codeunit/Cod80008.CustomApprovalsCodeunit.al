@@ -7,7 +7,9 @@ Codeunit 80008 "Custom Approvals Codeunit"
     end;
 
     var
+
         WorkflowManagement: Codeunit "Workflow Management";
+
         UnsupportedRecordTypeErr: label 'Record type %1 is not supported by this workflow response.', Comment = 'Record type Customer is not supported by this workflow response.';
         NoWorkflowEnabledErr: label 'This record is not supported by related approval workflow.';
 
@@ -101,10 +103,17 @@ Codeunit 80008 "Custom Approvals Codeunit"
         RunWorkflowOnSendItemJournalLineForApprovalCode: label 'RUNWORKFLOWONSENDITEMJOURNALLINEFORAPPROVAL';
         OnCancelItemJournalApprovalLineRequestTxt: label 'An Approval of Item Journal line is canceled';
         RunWorkflowOnCancelItemJournalLineForApprovalCode: label 'RUNWORKFLOWONCANCELITEMJOURNALLINEFORAPPROVAL';
+
         OnSendBankinslipApprovalRequestTxt: label 'Approval of Bank in slip is requested';
         RunWorkflowOnSendBankInSlipForApprovalCode: label 'RUNWORKFLOWONSENBANKINSLIPFORAPPROVAL';
         OnCancelBankInslipRequestTxt: label 'An Approval of Bank in slip is canceled';
         RunWorkflowOnCancelBankInSlipForApprovalCode: label 'RUNWORKFLOWONCANCEBANKINSLIPFORAPPROVAL';
+
+        //TimesheetApproval
+        OnSendTimesheetApprovalRequestTxt: label 'Approval of Time Sheet is requested';
+        RunWorkflowOnSendTimesheetForApprovalCode: label 'RUNWORKFLOWONSENTimesheetFORAPPROVAL';
+        OnCancelTimesheetRequestTxt: label 'An Approval of Time Sheet is canceled';
+        RunWorkflowOnCancelTimesheetForApprovalCode: label 'RUNWORKFLOWONCANCETimeSheetFORAPPROVAL';
 
 
     procedure CheckApprovalsWorkflowEnabled(var Variant: Variant): Boolean
@@ -115,8 +124,9 @@ Codeunit 80008 "Custom Approvals Codeunit"
         RecRef.GetTable(Variant);
         case RecRef.Number of
 
-            //HR
-
+            //TimesheetLines
+            Database::TimesheetLines:
+                exit(CheckApprovalsWorkflowEnabledCode(Variant, RunWorkflowOnSendTimesheetForApprovalCode));
 
 
             //Leave Application
@@ -161,9 +171,11 @@ Codeunit 80008 "Custom Approvals Codeunit"
     var
         WorkFlowEventHandling: Codeunit "Workflow Event Handling";
     begin
-        //HR
-
-
+        //Timesheets
+        WorkFlowEventHandling.AddEventToLibrary(
+                RunWorkflowOnSendTimesheetForApprovalCode, Database::TimesheetLines, OnSendTimesheetApprovalRequestTxt, 0, false);
+        WorkFlowEventHandling.AddEventToLibrary(
+        RunWorkflowOnCancelTimesheetForApprovalCode, Database::TimesheetLines, OnCancelTimesheetRequestTxt, 0, false);
         //Leave Application
         WorkFlowEventHandling.AddEventToLibrary(
         RunWorkflowOnSendLeaveForApprovalCode, Database::"HR Leave Application", OnSendLeaveApprovalRequestTxt, 0, false);
@@ -190,7 +202,9 @@ Codeunit 80008 "Custom Approvals Codeunit"
     begin
         RecRef.GetTable(Variant);
         case RecRef.Number of
-
+            //Time Lines
+            Database::TimesheetLines:
+                WorkflowManagement.HandleEvent(RunWorkflowOnSendTimesheetForApprovalCode, Variant);
 
             //Leave Application
             Database::"HR Leave Application":
@@ -214,7 +228,8 @@ Codeunit 80008 "Custom Approvals Codeunit"
 
             //HR
 
-
+            Database::TimesheetLines:
+                WorkflowManagement.HandleEvent(RunWorkflowOnCancelTimesheetForApprovalCode, Variant);
             //Leave Application
             Database::"HR Leave Application":
                 WorkflowManagement.HandleEvent(RunWorkflowOnCancelLeaveForApprovalCode, Variant);
@@ -226,27 +241,34 @@ Codeunit 80008 "Custom Approvals Codeunit"
         end;
     end;
 
-
-    procedure ReOpen(var Variant: Variant)
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnOpenDocument', '', false, false)]
+    procedure ReOpen(RecRef: RecordRef; var Handled: Boolean)
     var
-        RecRef: RecordRef;
         HRLeaveApplication: Record "HR Leave Application";
         ItemJournalBatch: Record "Item Journal Batch";
         itemjnlline: Record "Item Journal Line";
         TrainingRequests: Record "Training Requests";
+        TimeLines: Record TimesheetLines;
     begin
-        RecRef.GetTable(Variant);
         case RecRef.Number of
 
 
+            //Timelines
 
+            Database::TimesheetLines:
+                begin
+                    RecRef.SetTable(TimeLines);
+                    TimeLines.Validate(Status, TimeLines.Status::Open);
+                    TimeLines.Modify;
+                    Handled := true;
+                end;
             //Leave Application
             Database::"HR Leave Application":
                 begin
                     RecRef.SetTable(HRLeaveApplication);
                     HRLeaveApplication.Validate(Status, HRLeaveApplication.Status::New);
                     HRLeaveApplication.Modify;
-                    Variant := HRLeaveApplication;
+                    Handled := true;
                 end;
 
             //Training Application
@@ -255,7 +277,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     RecRef.SetTable(TrainingRequests);
                     TrainingRequests.Validate(Status, HRLeaveApplication.Status::New);
                     TrainingRequests.Modify;
-                    Variant := TrainingRequests;
+                    Handled := true;
                 end;
 
             else
@@ -263,31 +285,37 @@ Codeunit 80008 "Custom Approvals Codeunit"
         end
     end;
 
-
-    procedure Release(var Variant: Variant)
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnReleaseDocument', '', false, false)]
+    procedure Release(RecRef: RecordRef; var Handled: Boolean)
     var
-        RecRef: RecordRef;
         HRLeaveApplication: Record "HR Leave Application";
         ItemJournalBatch: Record "Item Journal Batch";
         usersetup: Record "User Setup";
         genjnline: Record "Gen. Journal Line";
         itemjournalline: Record "Item Journal Line";
         TrainingRequests: Record "Training Requests";
+        Factory: Codeunit GeneralFunctionsFactory;
+        TimeLines: Record TimesheetLines;
     begin
-        RecRef.GetTable(Variant);
         case RecRef.Number of
-
-
+            //Training Application
+            Database::TimesheetLines:
+                begin
+                    RecRef.SetTable(TimeLines);
+                    TimeLines.Validate(Status, TimeLines.Status::Approved);
+                    TimeLines.Modify;
+                    Handled := true;
+                end;
             //Leave Application
             Database::"HR Leave Application":
                 begin
                     RecRef.SetTable(HRLeaveApplication);
                     HRLeaveApplication.Validate(Status, HRLeaveApplication.Status::Approved);
+                    Factory.PostNegativeLeaveEntries(HRLeaveApplication);
+                    HRLeaveApplication.Validate(Status, HRLeaveApplication.Status::Posted);
                     HRLeaveApplication.Modify;
-                    HRLeaveApplication.CreateLeaveLedgerEntries;
-                    Variant := HRLeaveApplication;
+                    Handled := true;
                 end;
-
             //Training Application
             Database::"Training Requests":
                 begin
@@ -295,7 +323,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     TrainingRequests.Validate(Status, TrainingRequests.Status::Approved);
                     TrainingRequests.Modify;
                     //HRLeaveApplication.CreateLeaveLedgerEntries;
-                    Variant := TrainingRequests;
+                    Handled := true;
                 end;
 
             else
@@ -304,20 +332,28 @@ Codeunit 80008 "Custom Approvals Codeunit"
     end;
 
 
-    procedure SetStatusToPending(var Variant: Variant)
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnSetStatusToPendingApproval', '', false, false)]
+    procedure SetStatusToPending(RecRef: RecordRef; Variant: Variant; var IsHandled: Boolean)
     var
-        RecRef: RecordRef;
+
         HRLeaveApplication: Record "HR Leave Application";
         ItemJournalBatch: Record "Item Journal Batch";
         usersetup: Record "User Setup";
         genjnline: Record "Gen. Journal Line";
         itemjournalline: Record "Item Journal Line";
         TrainingRequests: Record "Training Requests";
+        TimeLines: record TimesheetLines;
     begin
-        RecRef.GetTable(Variant);
         case RecRef.Number of
-
-
+            //Training Application
+            Database::TimesheetLines:
+                begin
+                    RecRef.SetTable(TimeLines);
+                    TimeLines.Validate(Status, TimeLines.Status::"Pending Approval");
+                    TimeLines.Modify;
+                    Variant := TimeLines;
+                    IsHandled := true;
+                end;
             //Leave Application
             Database::"HR Leave Application":
                 begin
@@ -325,6 +361,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     HRLeaveApplication.Validate(Status, HRLeaveApplication.Status::"Pending Approval");
                     HRLeaveApplication.Modify;
                     Variant := HRLeaveApplication;
+                    IsHandled := true;
                 end;
 
             //Training Application
@@ -334,6 +371,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     TrainingRequests.Validate(Status, TrainingRequests.Status::"Pending Approval");
                     TrainingRequests.Modify;
                     Variant := TrainingRequests;
+                    IsHandled := true;
                 end;
 
 
@@ -352,11 +390,76 @@ Codeunit 80008 "Custom Approvals Codeunit"
         end;
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeCheckPurchLines', '', false, false)]
-    local procedure SkipCheckPurchLines(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
+    [EventSubscriber(ObjectType::Table, Database::"Approval Entry", 'OnBeforeShowRecord', '', false, false)]
+    procedure OnBeforeShowRecordApproval(var ApprovalEntry: Record "Approval Entry"; var IsHandled: Boolean)
+    var
+        RecRef: RecordRef;
+        PaymentMemo: Page "Payment Memo Card";
+        PurchaseHeader: Record "Purchase Header";
+        PageManagement: Codeunit "Page Management";
+        MissionProposal: Page "Mission Proposal Card";
+        IMSurrender: Page "Imprest Surrender Card";
+        IMRequest: Page "Imprest Request Card";
+        PurchasRequisition: Page "Task Order Card";
     begin
+        // Prevent standard BC logic
         IsHandled := true;
+        // Load referenced record
+        if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
+            exit;
+
+        RecRef.SetRecFilter();
+
+        case RecRef.Number of
+
+            Database::"Purchase Header":
+                begin
+                    RecRef.SetTable(PurchaseHeader);
+                    if PurchaseHeader.PM then begin
+                        PaymentMemo.SetRecord(PurchaseHeader);
+                        PaymentMemo.Run();
+                        exit;
+                    end;
+
+                    if PurchaseHeader.MP then begin
+                        MissionProposal.SetRecord(PurchaseHeader);
+                        MissionProposal.Run();
+                        exit;
+                    end;
+                    if PurchaseHeader.IM then begin
+                        IMRequest.SetRecord(PurchaseHeader);
+                        IMRequest.Run();
+                        exit;
+                    end;
+
+                    if PurchaseHeader.SR then begin
+                        IMSurrender.SetRecord(PurchaseHeader);
+                        IMSurrender.Run();
+                        exit;
+                    end;
+
+                    if PurchaseHeader.PR then begin
+                        PurchasRequisition.SetRecord(PurchaseHeader);
+                        PurchasRequisition.Run();
+                        exit;
+                    end;
+
+                    PageManagement.PageRun(RecRef);
+                    exit;
+                end;
+
+            else
+                PageManagement.PageRun(RecRef);
+        end;
     end;
+
+    local procedure MyProcedure()
+    var
+        myInt: Integer;
+    begin
+
+    end;
+
 
 }
 

@@ -2,8 +2,9 @@
 Report 80022 "HR Leave Balance Report"
 {
     UsageCategory = ReportsAndAnalysis;
-    WordLayout = 'Layouts/HRLeaveBalanceReport.docx';
-    DefaultLayout = Word;
+    DefaultLayout = RDLC;
+    RDLCLayout = './Layouts/HR Leave Balance Report.rdlc';
+    ;
 
     dataset
     {

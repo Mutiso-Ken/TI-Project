@@ -6,6 +6,7 @@ Page 80050 "HR Leave Ledger Entries"
     Editable = false;
     PageType = List;
     SourceTable = "HR Leave Ledger Entries";
+    SourceTableView = SORTING("Posting Date") ORDER(Descending);
 
     layout
     {
@@ -14,6 +15,10 @@ Page 80050 "HR Leave Ledger Entries"
             repeater(Control1)
             {
                 field("Posting Date"; Rec."Posting Date")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Document No."; Rec."Document No.")
                 {
                     ApplicationArea = Basic;
                 }

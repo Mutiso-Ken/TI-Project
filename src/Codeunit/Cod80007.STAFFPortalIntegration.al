@@ -3611,7 +3611,7 @@ Codeunit 80007 STAFFPortalIntegration
 
                 // TimesheetHeader.FINDLAST;
                 // TimesheetHeader.Entry:=TimesheetHeader.COUNT()+RANDOM(99999);
-                TimesheetHeader.Code := Doc;
+                TimesheetHeader."Document No." := Doc;
                 //dayeofweek:=DATE2DMY(TimesheetHeader.Date,1);
                 if Format(TimesheetHeader.Date, 0, '<Weekday Text>') <> 'Sunday' then begin
                     if Format(TimesheetHeader.Date, 0, '<Weekday Text>') <> 'Saturday' then
@@ -3632,7 +3632,7 @@ Codeunit 80007 STAFFPortalIntegration
 
         TimesheetHeader.Reset;
         TimesheetHeader.SetRange("Employee No", employee);
-        TimesheetHeader.SetRange(Code, name);
+        TimesheetHeader.SetRange("Document No.", name);
         TimesheetHeader.SetRange(Date, Dt2Date(startdate));
         TimesheetHeader.SetRange(Description, projectCode);
         if TimesheetHeader.FindLast then begin

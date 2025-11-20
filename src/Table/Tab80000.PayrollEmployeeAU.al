@@ -425,6 +425,12 @@ Table 80000 "Payroll Employee_AU"
         {
             DataClassification = ToBeClassified;
         }
+      
+        field(99; "Expense Account"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "G/L Account"."No.";
+        }
     }
 
     keys

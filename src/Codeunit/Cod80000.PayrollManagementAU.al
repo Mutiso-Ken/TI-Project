@@ -358,6 +358,7 @@ Codeunit 80000 "Payroll Management_AU"
     var
         DaysInMonth: Integer;
         DaysWorked: Integer;
+        Employee: Record "Payroll Employee_AU";
     begin
         //Setup Constants
         "Transaction Code" := TCODE_BPAY;
@@ -404,9 +405,9 @@ Codeunit 80000 "Payroll Management_AU"
         currentAmount := EmpBasicPay;
         "currentAmount(LCY)" := "EmpBasicPay(LCY)";
 
-        if PayrollPostingGroup.Get("Posting Group") then begin
+        if Employee.Get("Employee No") then begin
             "Account Type" := "account type"::"G/L Account";
-            "Account No." := PayrollPostingGroup."Salary Account";
+            "Account No." := Employee."Expense Account";
         end;
         "co-op" := "co-op"::None;
 
@@ -547,6 +548,8 @@ Codeunit 80000 "Payroll Management_AU"
     var
         DaysInMonth: Integer;
         DaysWorked: Integer;
+        Employee: Record "Payroll Employee_AU";
+
     begin
         EmpTotalAllowances := 0;
         "EmpTotalAllowances(LCY)" := 0;
@@ -661,6 +664,12 @@ Codeunit 80000 "Payroll Management_AU"
                     end;
                     //End posting Details
                     "co-op" := "co-op"::None;
+                    if PayrollTransactions.Expense then begin
+                        if Employee.Get("Employee No") then begin
+                            "Account No." := Employee."Expense Account";
+                        end;
+                    end;
+
                     InsertMonthlyTransactions("Employee No", PayrollTransactions."Transaction Code", "Transaction Type", Grouping, SubGrouping,
                      TransDescription, currentAmount, "currentAmount(LCY)", CurBalance, "CurBalance(LCY)", "Payroll Period", CurMonth, CurYear, "Account Type",
                      "Account No.", "posting type"::Debit, "Global Dimension 1 Code", "Global Dimension 2 Code", EmployeeTransactions.Membership,

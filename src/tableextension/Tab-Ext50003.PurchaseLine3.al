@@ -17,7 +17,7 @@ tableextension 50003 "Purchase Line3" extends "Purchase Line"
             Caption = 'Description 5';
             DataClassification = ToBeClassified;
         }
-        field(7014; "Description 6"; Text[1000])
+        field(7014; "Description 6"; Text[2048])
         {
             Caption = 'Description 6';
             DataClassification = ToBeClassified;

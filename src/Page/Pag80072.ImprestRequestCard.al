@@ -55,6 +55,12 @@ Page 80072 "Imprest Request Card"
                 {
                     ApplicationArea = Basic;
                 }
+                field(Narration; Rec.Narration)
+                {
+                    ApplicationArea = all;
+                    MultiLine = true;
+
+                }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = Basic;
@@ -233,8 +239,8 @@ Page 80072 "Imprest Request Card"
                 Image = Attachments;
                 Promoted = true;
                 PromotedCategory = Process;
-                RunObject = Page Documents;
-                RunPageLink = "Doc No." = field("No.");
+                RunObject = Page "Document Uploads";
+                RunPageLink = "Document Number" = field("No.");
             }
             action("&Print")
             {
@@ -359,26 +365,23 @@ Page 80072 "Imprest Request Card"
                     PromotedCategory = Process;
 
                     trigger OnAction()
+                    var
+                        LineNo: Integer;
                     begin
                         if Confirm('Are you sure you want to Post this imprest') then begin
+                            Rec.TestField(Status, Rec.Status::Released);
+                            GenJnlLine2.RESET;
+                            GenJnlLine2.SETRANGE("Journal Template Name", 'PAYMENTS');
+                            GenJnlLine2.SETRANGE("Journal Batch Name", 'IMPREST');
+                            IF GenJnlLine2.FIND THEN begin
+                                GenJnlLine2.DELETE;
+                            end;
 
-                            /* GenJnlLine2.RESET;
-                             GenJnlLine2.SETRANGE("Journal Template Name",'PAYMENTS');
-                             GenJnlLine2.SETRANGE("Journal Batch Name",'IMPREST');
-                             IF GenJnlLine2.FIND THEN
-                             GenJnlLine2.DELETE;*/
-
+                            LineNo := LineNo + 1000;
                             GenJnlLine.Init;
                             GenJnlLine."Journal Template Name" := 'PAYMENTS';
                             GenJnlLine."Journal Batch Name" := 'IMPREST';
-                            GenJnlLine2.Reset;
-                            GenJnlLine2.SetRange("Journal Template Name", 'PAYMENTS');
-                            GenJnlLine2.SetRange("Journal Batch Name", 'IMPREST');
-                            if GenJnlLine2.FindLast then begin
-                                GenJnlLine."Line No." := GenJnlLine2."Line No." + 10000;
-                            end else begin
-                                GenJnlLine."Line No." := 10000;
-                            end;
+                            GenJnlLine."Line No." := LineNo;
 
                             GenJnlLine."Source Code" := 'PAYMENTJNL';
                             GenJnlLine."Posting Date" := Today;
@@ -419,10 +422,10 @@ Page 80072 "Imprest Request Card"
                                 GenJnlLine.Insert;
 
 
-                            GenJnlLine.RESET;
-                            GenJnlLine.SETRANGE(GenJnlLine."Journal Template Name", 'PAYMENTS');
-                            GenJnlLine.SETRANGE(GenJnlLine."Journal Batch Name", 'IMPREST');
-                            CODEUNIT.RUN(CODEUNIT::"Gen. Jnl.-Post Line", GenJnlLine);
+                            // GenJnlLine.RESET;
+                            // GenJnlLine.SETRANGE(GenJnlLine."Journal Template Name", 'PAYMENTS');
+                            // GenJnlLine.SETRANGE(GenJnlLine."Journal Batch Name", 'IMPREST');
+                            // CODEUNIT.RUN(CODEUNIT::"Gen. Jnl.-Post Line", GenJnlLine);
 
 
                             Rec.Completed := true;
@@ -444,6 +447,15 @@ Page 80072 "Imprest Request Card"
                               GenJnlLine2.DELETE;*/
 
                             Message('Imprest Request Posted Successfully');
+
+
+                            GenJnlLine2.Reset;
+                            GenJnlLine2.SetRange("Journal Template Name", 'PAYMENTS');
+                            GenJnlLine2.SetRange("Journal Batch Name", 'IMPREST');
+                            if GenJnlLine2.FindSet() then begin
+                                PAGE.Run(PAGE::"General Journal", GenJnlLine2);
+                            end;
+
                         end;
 
                     end;
@@ -499,8 +511,8 @@ Page 80072 "Imprest Request Card"
                     var
                         ApprovalsMgmt: Codeunit "Approvals Mgmt.";
                     begin
-                        if ApprovalsMgmt.CheckPurchaseApprovalPossible(Rec) then
-                            ApprovalsMgmt.OnSendPurchaseDocForApproval(Rec);
+                        //if ApprovalsMgmt.CheckPurchaseApprovalPossible(Rec) then
+                        ApprovalsMgmt.OnSendPurchaseDocForApproval(Rec);
                     end;
                 }
                 separator(Action10)
@@ -560,7 +572,13 @@ Page 80072 "Imprest Request Card"
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     begin
+
         Rec.IM := true;
+        Rec."Document Type" := Rec."Document Type"::Quote;
+        rec.Insert();
+        PurchasesPayablesSetup.Get;
+
+        Rec."No." := NoSeriesManagement.GetNextNo(PurchasesPayablesSetup."Imprest Nos.", Today, true);
 
         /*SHeader.RESET;
         SHeader.SETRANGE("User ID",USERID);
@@ -583,7 +601,7 @@ Page 80072 "Imprest Request Card"
         Rec."Requested Receipt Date" := Today;
         Rec."Document Type" := Rec."document type"::Quote;
         Rec.IM := true;
-        Rec."Buy-from Vendor No." := 'FM-V00052';
+        Rec."Buy-from Vendor No." := 'FM-V00123';
         Rec."Vendor Posting Group" := 'TRADERS';
         Rec."Posting Description" := '';
 
@@ -606,12 +624,10 @@ Page 80072 "Imprest Request Card"
             Rec.FilterGroup(0);
         end;
         Rec."Document Type" := Rec."document type"::Quote;
-        Rec."Buy-from Vendor No." := 'FM-V00052';
+        Rec."Buy-from Vendor No." := 'FM-V00123';
         Rec."Vendor Posting Group" := 'TRADERS';
         Rec."Assigned User ID" := UserId;
         Rec.IM := true;
-        //Rec.Modify();
-        //SETRANGE("User ID",USERID);
     end;
 
     var

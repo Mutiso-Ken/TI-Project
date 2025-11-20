@@ -3,7 +3,6 @@ pageextension 172177 "GenJournalPageExtension" extends "General Journal"
 {
     layout
     {
-
         modify("External Document No.")
         {
             Visible = true;
@@ -18,6 +17,7 @@ pageextension 172177 "GenJournalPageExtension" extends "General Journal"
         {
             Visible = true;
         }
+
         // Add changes to page layout here
         modify("EU 3-Party Trade")
         {
@@ -69,8 +69,8 @@ pageextension 172177 "GenJournalPageExtension" extends "General Journal"
         }
         addbefore(Amount)
         {
-            field("CreditAmount"; Rec."Credit Amount") { }
             field("DebitAmount"; Rec."Debit Amount") { }
+            field("CreditAmount"; Rec."Credit Amount") { }
         }
 
         addlast(Control1)
@@ -90,30 +90,26 @@ pageextension 172177 "GenJournalPageExtension" extends "General Journal"
     actions
     {
         // Add changes to page actions here
-        addafter(PostAndPrint)
+        addbefore(PostAndPrint)
         {
-            //  /action("Account closure Slip")
-            action("Import Journal")
+            action("Payment Voucher")
             {
-                ApplicationArea = Basic, suite;
-                Caption = 'Import Csvs';
+                ApplicationArea = Basic, Suite;
+                Image = Print;
                 Promoted = true;
-                Image = Import;
-                PromotedCategory = Process;
-                //RunObject = xmlport "Import Journals";
+                PromotedCategory = Category4;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                trigger OnAction()
+                var
+                    GenJnl: Record "Gen. Journal Line";
+                begin
+                    GenJnl.SETRANGE(GenJnl."Journal Template Name", rec."Journal Template Name");
+                    GenJnl.SETRANGE(GenJnl."Journal Batch Name", rec."Journal Batch Name");
+                    GenJnl.SETRANGE(GenJnl."Document No.", rec."Document No.");
+                    REPORT.RUN(80026, TRUE, TRUE, GenJnl);
+                end;
             }
-
-            action("Import Loans Journal")
-            {
-                ApplicationArea = Basic, suite;
-                Caption = 'Import Loans Csvs';
-                Promoted = true;
-                Image = Import;
-                PromotedCategory = Process;
-                //RunObject = xmlport "Import Loans Journals";
-            }
-
-
         }
     }
 

@@ -16,8 +16,29 @@
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
             "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "ForceSync",
             "tenant": "default",
             "usePublicURLFromServer": true
+
+        //             "name": "Your own server",       
+        //  // maybe change the configuration name
+        //      "type": "al",
+        //      "request": "attach",
+        //      "environmentType": "OnPrem",
+        //      "server": "http://localhost:8080/BC260/",               // change this to point to your instance URI
+        //      "serverInstance": "BC260",                    // change this to point to your instance
+        //      "authentication": "UserPassword",          // change this to your auth setup
+        //  "breakOnError": "All",
+        //  "port": 4049,
+        //  "breakOnRecordWrite": "None",
+        //      "enableSqlInformationDebugger": true,
+        //      "enableLongRunningSqlStatements": true,
+        //      "longRunningSqlStatementsThreshold": 500,  
+        //     "numberOfSqlStatements": 10,
+        //      "breakOnNext": "WebServiceClient",
+        //      "tenant": "default",                       // change this to point to your tenant
         },
+
+        
     ]
 }

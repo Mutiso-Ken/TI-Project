@@ -26,6 +26,11 @@ Page 80083 "Budget Information"
                     Caption = 'Identified Vendor';
                     ShowMandatory = true;
                 }
+                field("Description 6"; Rec."Description 6")
+                {
+                    ApplicationArea = all;
+                    Caption = 'Item specification';
+                }
                 field("No of days"; Rec."No of days")
                 {
                     ApplicationArea = Basic;
@@ -38,18 +43,18 @@ Page 80083 "Budget Information"
                 {
                     ApplicationArea = Basic;
                 }
-                field("other currency"; Rec."other currency")
-                {
-                    ApplicationArea = Basic;
-                }
+                // field("other currency"; Rec."other currency")
+                // {
+                //     ApplicationArea = Basic;
+                // }
                 field("Total Ksh"; Rec."Total Ksh")
                 {
                     ApplicationArea = Basic;
                 }
-                field("Total Other Currency"; Rec."Total Other Currency")
-                {
-                    ApplicationArea = Basic;
-                }
+                // field("Total Other Currency"; Rec."Total Other Currency")
+                // {
+                //     ApplicationArea = Basic;
+                // }
                 field("Mission Expense Category"; Rec."Mission Expense Category")
                 {
                     ApplicationArea = Basic;

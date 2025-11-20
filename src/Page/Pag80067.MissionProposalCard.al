@@ -71,6 +71,12 @@ Page 80067 "Mission Proposal Card"
                 {
                     ApplicationArea = Basic;
                 }
+                field(Narration; Rec.Narration)
+                {
+                    ApplicationArea = all;
+                    MultiLine = true;
+
+                }
                 field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
                 {
                     ApplicationArea = Basic;
@@ -152,7 +158,7 @@ Page 80067 "Mission Proposal Card"
             }
             part("Budget Information"; "Budget Information")
             {
-                Editable = statuseditable;
+                Editable = false;
                 ApplicationArea = all;
                 SubPageLink = "Document No." = field("No."),
                               "Line Type" = filter("Budget Info");
@@ -180,6 +186,8 @@ Page 80067 "Mission Proposal Card"
             part("Budget Notes"; "Budget Notes")
             {
                 Editable = statuseditable;
+                Visible=false;
+                ApplicationArea = Basic;
                 SubPageLink = "Document No." = field("No."),
                               "Line Type" = filter("Budget Notes");
             }
@@ -253,9 +261,8 @@ Page 80067 "Mission Proposal Card"
                     Image = Attachments;
                     Promoted = true;
                     PromotedCategory = Category4;
-                    RunObject = Page Documents;
-
-                    RunPageLink = "Doc No." = field("No.");
+                    RunObject = Page "Document Uploads";
+                    RunPageLink = "Document Number" = field("No.");
                 }
                 action("Archive Document")
                 {

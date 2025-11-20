@@ -8,15 +8,18 @@ Table 170500 "TE Time Sheet1"
     // ------------------------------------------------------------------------------------------
 
     Caption = 'Time Sheet Lines';
-    DrillDownPageID = "Timesheet Entries";
-    LookupPageID = "Timesheet Entries";
 
     fields
     {
-        field(1; "Entry No."; Integer)
+        field(1; "Line No."; Code[100])
         {
-            AutoIncrement = false;
-            Caption = 'Entry No.';
+            DataClassification = ToBeClassified;
+            TableRelation = TimesheetLines.Timesheetcode;
+        }
+        field(2; "Document No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = TimesheetLines.Timesheetcode;
         }
         field(5; "User ID"; Code[50])
         {
@@ -35,7 +38,7 @@ Table 170500 "TE Time Sheet1"
         {
             Caption = 'Time Type Code';
         }
-        field(20; Description; Text[250])
+        field(20; Description; Text[1000])
         {
             Caption = 'Description';
         }
@@ -170,10 +173,11 @@ Table 170500 "TE Time Sheet1"
 
             end;
         }
-        field(38; "Global Dimension 1 Code"; Code[100])
+        field(38; "Global Dimension 1 Code"; Code[200])
         {
             CaptionClass = '1,1,1';
             Caption = 'Global Dimension 1 Code';
+            TableRelation = "Dimension Value".Code where("Dimension Code" = const('FUND'));
 
             trigger OnValidate()
             begin
@@ -192,43 +196,43 @@ Table 170500 "TE Time Sheet1"
 
             end;
         }
-        field(39; "Global Dimension 2 Code"; Code[10])
+        field(39; "Global Dimension 2 Code"; Code[200])
         {
             CaptionClass = '1,1,2';
             Caption = 'Global Dimension 2 Code';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(2));
         }
-        field(40; "Global Dimension 3 Code"; Code[10])
+        field(40; "Global Dimension 3 Code"; Code[200])
         {
             CaptionClass = '1,1,3';
             Caption = 'Global Dimension 3 Code';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(3));
         }
-        field(41; "Global Dimension 4 Code"; Code[10])
+        field(41; "Global Dimension 4 Code"; Code[200])
         {
             CaptionClass = '1,1,4';
             Caption = 'Global Dimension 4 Code';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(4));
         }
-        field(42; "Global Dimension 5 Code"; Code[10])
+        field(42; "Global Dimension 5 Code"; Code[200])
         {
             CaptionClass = '1,1,5';
             Caption = 'Global Dimension 5 Code';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(5));
         }
-        field(43; "Global Dimension 6 Code"; Code[10])
+        field(43; "Global Dimension 6 Code"; Code[200])
         {
             CaptionClass = '1,1,6';
             Caption = 'Global Dimension 6 Code';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(6));
         }
-        field(44; "Global Dimension 7 Code"; Code[10])
+        field(44; "Global Dimension 7 Code"; Code[200])
         {
             CaptionClass = '1,1,7';
             Caption = 'Global Dimension 7 Code';
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(7));
         }
-        field(45; "Global Dimension 8 Code"; Code[10])
+        field(45; "Global Dimension 8 Code"; Code[200])
         {
             CaptionClass = '1,1,8';
             Caption = 'Global Dimension 8 Code';
@@ -303,15 +307,12 @@ Table 170500 "TE Time Sheet1"
         }
         field(50000; "Employee No"; Code[30])
         {
+            TableRelation = "HR Employees"."No.";
 
             trigger OnValidate()
             begin
-                if Employee.Get("Employee No") then begin
+                if Employee.Get("Employee No") then
                     "Employee Name" := Employee."First Name" + ' ' + Employee."Last Name";
-                    Supurvisor := Employee."Supervisor User ID";
-                end;
-                //Supurvisor:=Employee.s
-                //END;
 
                 /*IF("Employee No" <> xRec."Employee No")THEN BEGIN
                   IF Employee.GET("Employee No") THEN
@@ -350,7 +351,6 @@ Table 170500 "TE Time Sheet1"
         }
         field(50002; "Leave Type"; Code[30])
         {
-            TableRelation = "HR Leave Types".Code;
 
             trigger OnValidate()
             begin
@@ -369,13 +369,17 @@ Table 170500 "TE Time Sheet1"
 
             end;
         }
-        field(50003; Hours; Decimal)
+        field(50003; Hours; Integer)
+        {
+        }
+        field(50004; Date; Date)
         {
 
             trigger OnValidate()
             begin
-                if Hours > 8 then
-                    Error('You cannot book more than 8 hrs a day');
+                if Date > Today then
+                    Error('You cannot book timesheet for a future date');
+
 
                 Hrs := 0;
                 TETimeSheet.Reset;
@@ -386,39 +390,17 @@ Table 170500 "TE Time Sheet1"
                         Hrs := TETimeSheet.Hours;
                     until TETimeSheet.Next = 0;
                 end;
-                if Hrs + Hours > 8 then
-                    Error('You cannot book for more than 8 hours in a day');
-            end;
-        }
-        field(50004; Date; Date)
-        {
+                if Hrs + Hours > 14 then
+                    Error('You cannot book for more than 14 hours in a day');
 
-            trigger OnValidate()
-            begin
-
-
-                if Date > Today then
-                    Error('You cannot book timesheet for a future date');
-
-
-
-                /*
-                Usersetup.GET(USERID);
-                Employee.SETRANGE("No.",Usersetup."Employee No.");
-                IF Employee.FINDFIRST THEN BEGIN
-                   "Employee No" := Employee."No.";
-                  "Employee Name" := Employee."First Name" + '' + Employee."Last Name";
-                  END
-                  */
 
             end;
         }
-        field(50005; Narration; Text[100])
+        field(50005; Narration; Text[2048])
         {
         }
         field(50006; Supurvisor; Code[30])
         {
-            TableRelation = "User Setup";
         }
         field(50007; "Program Accountant"; Code[30])
         {
@@ -430,21 +412,27 @@ Table 170500 "TE Time Sheet1"
         {
             OptionCaption = 'New,ApprovalPending,Canceled,Approved';
             OptionMembers = New,ApprovalPending,Canceled,Approved;
+
+            trigger OnValidate()
+            begin
+                TETimeSheet.Reset;
+                TETimeSheet.SetRange("Document No.", TimesheetLines.Timesheetcode);
+                TETimeSheet.SetRange(Status, TimesheetLines.Status::Approved);
+                if TETimeSheet.FindFirst then begin
+                    Status := Status::Approved;
+                end;
+            end;
         }
         field(50010; Entry; Integer)
         {
             AutoIncrement = true;
             DataClassification = ToBeClassified;
         }
-        field(50011; "Code"; Code[10])
-        {
-            DataClassification = ToBeClassified;
-        }
     }
 
     keys
     {
-        key(Key1; Entry, Date)
+        key(Key1; "Document No.", "Employee No", Date)
         {
             Clustered = true;
         }
@@ -476,41 +464,18 @@ Table 170500 "TE Time Sheet1"
     end;
 
     trigger OnInsert()
+    var
+        TimesheetHeader: Record TimesheetLines;
+
     begin
 
+        if TimesheetHeader.Get(Rec."Document No.") then begin
+            "Employee No" := TimesheetHeader."Employee No";
+        end;
 
-
-        //TESTFIELD("User ID");
-        /*
-        CALCFIELDS("Day 1 Status","Day 2 Status","Day 3 Status","Day 4 Status","Day 5 Status","Day 6 Status","Day 7 Status");
-        CheckDays;
-        
-        "Entry No." := GetNextEntryNo;
-        
-        TETimeSheetStatus.SETRANGE("User ID","User ID");
-        TETimeSheetStatus.SETRANGE("Week Start Date", "Week Start Date");
-        IF NOT TETimeSheetStatus.FINDFIRST THEN BEGIN
-          TETimeSheetStatus."User ID" := "User ID";
-          TETimeSheetStatus."Week Start Date" := "Week Start Date";
-          TETimeSheetStatus.INSERT(TRUE);
-        END;
-        
-        "Source Code" := SetSourceCode;
-        UpdateDefaults;
-        TestRequiredFields;
-        
-        IF "Internal Control No." = '' THEN BEGIN
-          "Internal Control No." := GLTranManagement.GenerateICN;
-        END;
-        //TETimeMgt.GenDistBufferTimeSheet(Rec);
-        //SubmitApproval.SubmitTimeSheet("Entry No/");
-        IF Employee6.GET("Employee No") THEN
-        Supurvisor:=Employee6."Supervisor No";
-        Status := Status::ApprovalPending;
-        Sequency := 1;
-        */
 
     end;
+
 
     trigger OnModify()
     begin
@@ -600,19 +565,20 @@ Table 170500 "TE Time Sheet1"
         TX002: label 'Timesheet Shouldn''t Exceed 8 hours';
         Usersetup: Record "User Setup";
         Hrs: Decimal;
-        Employee6: Record "HR Employees";
+        Employee6: Record Employee;
         Usersetup6: Record "User Setup";
         TETimeSheet: Record "TE Time Sheet1";
         Leave: Record "HR Leave Types";
+        TimesheetLines: Record TimesheetLines;
 
 
     procedure GetNextEntryNo(): Integer
     begin
 
         TETimeSheet.Reset;
-        TETimeSheet.SetCurrentkey("Entry No.");
+        TETimeSheet.SetCurrentkey("Line No.");
         if TETimeSheet.FindLast then
-            exit(TETimeSheet."Entry No." + 100)
+            exit(TETimeSheet.Entry + 100)
         else
             exit(100);
     end;

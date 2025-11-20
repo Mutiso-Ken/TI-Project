@@ -32,6 +32,11 @@ Page 80076 "Imprest Surrender Card"
                     ApplicationArea = Basic;
                     Caption = 'Description';
                 }
+                field(Narration; Rec.Narration)
+                {
+                    MultiLine = true;
+                    ApplicationArea = all;
+                }
                 field("Account No"; Rec."Account No")
                 {
                     ApplicationArea = Basic;
@@ -269,8 +274,8 @@ Page 80076 "Imprest Surrender Card"
                 Image = Attachments;
                 Promoted = true;
                 PromotedCategory = Process;
-                RunObject = Page Documents;
-                RunPageLink = "Doc No." = field("No.");
+                RunObject = Page "Document Uploads";
+                RunPageLink = "Document Number" = field("No.");
             }
             action("&Print")
             {
@@ -376,60 +381,19 @@ Page 80076 "Imprest Surrender Card"
                     PromotedCategory = Process;
 
                     trigger OnAction()
+                    var
+                        LineNo: Integer;
                     begin
                         Rec.TestField(Completed, false);
+                        Rec.TestField(Status, Rec.Status::Released);
                         if Confirm('Are you sure you want to post the surrender') then begin
-                            //Rec.TestField(Status, Rec.Status::Released);
-
                             GenJnlLine2.Reset;
                             GenJnlLine2.SetRange("Journal Template Name", 'GENERAL');
                             GenJnlLine2.SetRange("Journal Batch Name", 'SURRENDER');
                             if GenJnlLine2.Find then
                                 GenJnlLine2.Delete;
 
-                            /*GenJnlLine.INIT;
-                            GenJnlLine."Journal Template Name":='PAYMENTS';
-                            GenJnlLine."Journal Batch Name":='SURRENDER';
-                            GenJnlLine2.RESET;
-                            GenJnlLine2.SETRANGE("Journal Template Name",'PAYMENTS');
-                            GenJnlLine2.SETRANGE("Journal Batch Name",'SURRENDER');
-                            IF GenJnlLine2.FINDLAST THEN
-                            GenJnlLine."Line No.":=GenJnlLine2."Line No."+10000;
-                            GenJnlLine."Source Code":='PAYMENTJNL';
-                            GenJnlLine."Posting Date":=TODAY;
-                            //GenJnlLine."Document Type":=GenJnlLine."Document Type"::Payment;
-                            GenJnlLine."Document No.":="No.";
-                            GenJnlLine."External Document No.":="Cheque No";
-                            GenJnlLine."Account Type":=GenJnlLine."Account Type"::Customer;
-                            GenJnlLine."Account No.":="Account No";
-                            GenJnlLine.VALIDATE(GenJnlLine."Account No.");
-                            GenJnlLine.Description:='Surrender: '+"Account No"+' '+"Imprest No";
-                            Amt:=0;
-                            PurchLine.RESET;
-                            PurchLine.SETRANGE("Document No.","No.");
-                            IF PurchLine.FINDSET THEN BEGIN
-                              REPEAT
-                                Amt:=Amt+PurchLine."Line Amount";
-                                UNTIL PurchLine.NEXT=0;
-                              END;
-                            GenJnlLine.Amount:=-1*Amt;
-                            GenJnlLine.VALIDATE(GenJnlLine.Amount);
-                           // GenJnlLine."Bal. Account Type":=GenJnlLine."Bal. Account Type"::"Bank Account";
-                           // GenJnlLine."Bal. Account No.":="Paying Account No";
-                           // GenJnlLine.VALIDATE(GenJnlLine."Bal. Account No.");
-                            //Added for Currency Codes
-                            GenJnlLine."Currency Code":="Currency Code";
-                            GenJnlLine.VALIDATE("Currency Code");
-                            GenJnlLine."Currency Factor":="Currency Factor";
-                            GenJnlLine.VALIDATE("Currency Factor");
-                            GenJnlLine."Shortcut Dimension 1 Code":="Shortcut Dimension 1 Code";
-                            GenJnlLine.VALIDATE(GenJnlLine."Shortcut Dimension 1 Code");
-                            GenJnlLine."Shortcut Dimension 2 Code":="Shortcut Dimension 2 Code";
-                            GenJnlLine.VALIDATE(GenJnlLine."Shortcut Dimension 2 Code");
-                        
-                        
-                            IF GenJnlLine.Amount<>0 THEN
-                            GenJnlLine.INSERT;*/
+
 
 
 
@@ -438,17 +402,13 @@ Page 80076 "Imprest Surrender Card"
                             PurchLine6.SetFilter("Amount Spent", '<>%1', 0);
                             if PurchLine6.FindSet then begin
                                 repeat
+                                    LineNo := LineNo + 1000;
                                     GenJnlLine.Init;
                                     GenJnlLine."Journal Template Name" := 'GENERAL';
                                     GenJnlLine."Journal Batch Name" := 'SURRENDER';
-                                    GenJnlLine2.Reset;
-                                    GenJnlLine2.SetRange("Journal Template Name", 'GENERAL');
-                                    GenJnlLine2.SetRange("Journal Batch Name", 'SURRENDER');
-                                    if GenJnlLine2.FindLast then
-                                        GenJnlLine."Line No." := GenJnlLine2."Line No." + 10000;
+                                    GenJnlLine."Line No." := LineNo;
                                     GenJnlLine."Source Code" := 'GENJNL';
                                     GenJnlLine."Posting Date" := Rec."Posting Date";
-                                    //GenJnlLine."Document Type":=GenJnlLine."Document Type"::Payment;
                                     GenJnlLine."Document No." := Rec."No.";
                                     GenJnlLine."External Document No." := Rec."Imprest No";
                                     GenJnlLine."Account Type" := GenJnlLine."account type"::Customer;
@@ -485,14 +445,12 @@ Page 80076 "Imprest Surrender Card"
                             PurchLine6.SetFilter("Cash Refund", '<>%1', 0);
                             if PurchLine6.FindSet then begin
                                 repeat
+
+                                    LineNo := LineNo + 1000;
                                     GenJnlLine.Init;
                                     GenJnlLine."Journal Template Name" := 'GENERAL';
                                     GenJnlLine."Journal Batch Name" := 'SURRENDER';
-                                    GenJnlLine2.Reset;
-                                    GenJnlLine2.SetRange("Journal Template Name", 'GENERAL');
-                                    GenJnlLine2.SetRange("Journal Batch Name", 'SURRENDER');
-                                    if GenJnlLine2.FindLast then
-                                        GenJnlLine."Line No." := GenJnlLine2."Line No." + 10000;
+                                    GenJnlLine."Line No." := LineNo;
                                     GenJnlLine."Source Code" := 'GENJNL';
                                     GenJnlLine."Posting Date" := Rec."Posting Date";
                                     //GenJnlLine."Document Type":=GenJnlLine."Document Type"::Payment;
@@ -665,34 +623,28 @@ Page 80076 "Imprest Surrender Card"
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     begin
         Rec.SR := true;
-
-        /*SHeader.RESET;
-        SHeader.SETRANGE("User ID",USERID);
-        SHeader.SETRANGE(SHeader.Status,SHeader.Status::Open);
-       // SHeader.SETRANGE(SHeader."Request date",TODAY);
-        IF SHeader.COUNT>1 THEN
-          ERROR('You have unused requisition records under your account,please utilize/release them for approval'+
-            ' before creating a new record');
-            */
-        Rec."Buy-from Vendor No." := 'FM-V00052';
+        Rec."Buy-from Vendor No." := 'FM-V00123';
         Rec."Vendor Posting Group" := 'TRADERS';
-        //Rec.Modify();
 
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
+
         PurchasesPayablesSetup.Get;
-        // Rec."No." := NoSeriesManagement.GetNextNo(PurchasesPayablesSetup."Surrender Nos.", Today, true);
+
+
+
         Rec."Responsibility Center" := UserMgt.GetPurchasesFilter;
         Rec."Assigned User ID" := UserId;
         Rec."User ID" := UserId;
         Rec."Requested Receipt Date" := Today;
         Rec."Document Type" := Rec."document type"::Quote;
         Rec.SR := true;
-        Rec."Buy-from Vendor No." := 'FM-V00052';
+        Rec."Buy-from Vendor No." := 'FM-V00123';
         Rec."Vendor Posting Group" := 'TRADERS';
         Rec."Posting Description" := '';
+
         UpdateControls;
     end;
 
@@ -703,7 +655,7 @@ Page 80076 "Imprest Surrender Card"
 
     trigger OnOpenPage()
     begin
-
+        PurchasesPayablesSetup.Get;
         if UserMgt.GetPurchasesFilter <> '' then begin
             Rec.FilterGroup(2);
             Rec.SetRange("Responsibility Center", UserMgt.GetPurchasesFilter);
@@ -712,9 +664,6 @@ Page 80076 "Imprest Surrender Card"
         Rec."Document Type" := Rec."document type"::Quote;
         Rec."Assigned User ID" := UserId;
         Rec.SR := true;
-
-
-        //SETRANGE("User ID",USERID);
     end;
 
     var

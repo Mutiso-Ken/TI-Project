@@ -1,6 +1,8 @@
 #pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006 // ForNAV settings
 Table 80029 "HR Leave Application"
 {
+    DrillDownPageId = "HR Leave Applications List";
+    LookupPageId = "HR Leave Applications List";
 
     fields
     {
@@ -230,32 +232,32 @@ Table 80029 "HR Leave Application"
             trigger OnValidate()
             begin
                 if Status = Status::Approved then begin
-                    intEntryNo := 0;
+                    // intEntryNo := 0;
 
-                    HRLeaveEntries.Reset;
-                    HRLeaveEntries.SetRange(HRLeaveEntries."Entry No.");
-                    if HRLeaveEntries.Find('-') then intEntryNo := HRLeaveEntries."Entry No.";
+                    // HRLeaveEntries.Reset;
+                    // HRLeaveEntries.SetRange(HRLeaveEntries."Entry No.");
+                    // if HRLeaveEntries.Find('-') then intEntryNo := HRLeaveEntries."Entry No.";
 
-                    intEntryNo := intEntryNo + 1;
+                    // intEntryNo := intEntryNo + 1;
 
-                    HRLeaveEntries.Init;
-                    HRLeaveEntries."Entry No." := intEntryNo;
-                    HRLeaveEntries."Staff No." := "Employee No";
-                    HRLeaveEntries."Staff Name" := Names;
-                    HRLeaveEntries."Posting Date" := Today;
-                    HRLeaveEntries."Leave Entry Type" := HRLeaveEntries."leave entry type"::Negative;
-                    HRLeaveEntries."Leave Approval Date" := "Application Date";
-                    HRLeaveEntries."Document No." := "Application Code";
-                    HRLeaveEntries."External Document No." := "Employee No";
-                    HRLeaveEntries."Job ID" := "Job Tittle";
-                    HRLeaveEntries."No. of days" := "Days Applied";
-                    HRLeaveEntries."Leave Start Date" := "Start Date";
-                    HRLeaveEntries."Leave Posting Description" := 'Leave';
-                    HRLeaveEntries."Leave End Date" := "End Date";
-                    HRLeaveEntries."Leave Return Date" := "Return Date";
-                    HRLeaveEntries."User ID" := "User ID";
-                    HRLeaveEntries."Leave Type" := "Leave Type";
-                    HRLeaveEntries.Insert;
+                    // HRLeaveEntries.Init;
+                    // HRLeaveEntries."Entry No." := intEntryNo;
+                    // HRLeaveEntries."Staff No." := "Employee No";
+                    // HRLeaveEntries."Staff Name" := Names;
+                    // HRLeaveEntries."Posting Date" := Today;
+                    // HRLeaveEntries."Leave Entry Type" := HRLeaveEntries."leave entry type"::Negative;
+                    // HRLeaveEntries."Leave Approval Date" := "Application Date";
+                    // HRLeaveEntries."Document No." := "Application Code";
+                    // HRLeaveEntries."External Document No." := "Employee No";
+                    // HRLeaveEntries."Job ID" := "Job Tittle";
+                    // HRLeaveEntries."No. of days" := "Days Applied";
+                    // HRLeaveEntries."Leave Start Date" := "Start Date";
+                    // HRLeaveEntries."Leave Posting Description" := 'Leave';
+                    // HRLeaveEntries."Leave End Date" := "End Date";
+                    // HRLeaveEntries."Leave Return Date" := "Return Date";
+                    // HRLeaveEntries."User ID" := "User ID";
+                    // HRLeaveEntries."Leave Type" := "Leave Type";
+                    // HRLeaveEntries.Insert;
                 end;
             end;
         }
@@ -773,6 +775,9 @@ Table 80029 "HR Leave Application"
         HREmployees: Record "HR Employees";
         balance: Decimal;
 
+ 
+
+
 
     procedure DetermineIfIsNonWorking(var bcDate: Date; var ltype: Record "HR Leave Types") ItsNonWorking: Boolean
     var
@@ -788,6 +793,9 @@ Table 80029 "HR Leave Application"
             if BaseCalendar.Nonworking = true then
                 ItsNonWorking := true;
         end;
+
+
+
 
         // For Annual Holidays
         BaseCalendar.Reset;
@@ -882,7 +890,6 @@ Table 80029 "HR Leave Application"
     procedure CreateLeaveLedgerEntries()
     begin
         if Status = Status::Posted then Error('Leave Already posted');
-        //TESTFIELD("Approved days");
         if "Approved days" = 0 then begin
             "Approved days" := "Days Applied";
             Modify;
@@ -900,10 +907,6 @@ Table 80029 "HR Leave Application"
             HRSetup.TestField(HRSetup."Leave Batch");
 
             HREmp.Get("Employee No");
-            //HREmp.TESTFIELD(HREmp."E-Mail");
-
-            //POPULATE JOURNAL LINES
-
             "LineNo." := 10000;
             LeaveGjline.Init;
             LeaveGjline."Journal Template Name" := HRSetup."Leave Template";
@@ -948,12 +951,6 @@ Table 80029 "HR Leave Application"
             end;
             Status := Status::Posted;
             Modify;
-
-            /*END ELSE BEGIN
-            ERROR('You must specify no of days');
-            END;
-            END;*/
-            //NotifyApplicant;
         end;
 
     end;

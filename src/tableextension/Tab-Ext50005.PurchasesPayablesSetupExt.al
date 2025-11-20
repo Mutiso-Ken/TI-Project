@@ -22,7 +22,6 @@ tableextension 50005 "Purchases & Payables Setup Ext" extends "Purchases & Payab
         }
         field(6606; "Surrender Nos."; Code[20])
         {
-            Caption = 'Imprest Nos.';
             DataClassification = ToBeClassified;
             TableRelation = "No. Series";
         }

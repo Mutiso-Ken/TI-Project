@@ -1,8 +1,9 @@
 #pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006 // ForNAV settings
-Page 50016 "Timesheet Entries"
+Page 80105 "Pending Timesheet Entries"
 {
     PageType = List;
     SourceTable = "TE Time Sheet1";
+    SourceTableView = where(Status = const(ApprovalPending));
 
     layout
     {
@@ -26,10 +27,6 @@ Page 50016 "Timesheet Entries"
                 {
                     ApplicationArea = Basic;
                 }
-                field(Narration; Rec.Narration)
-                {
-                    ApplicationArea = Basic;
-                }
                 field(Date; Rec.Date)
                 {
                     ApplicationArea = Basic;
@@ -46,6 +43,25 @@ Page 50016 "Timesheet Entries"
     {
         area(processing)
         {
+            action(Approve)
+            {
+                ApplicationArea = Basic;
+                Image = AddAction;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    if Confirm('Are you sure you want to approve') then begin
+                        repeat
+                            Rec.Status := Rec.Status::Approved;
+                            Rec.Modify;
+                        until Rec.Next = 0;
+                    end;
+                end;
+            }
             action("Staff Project Hours")
             {
                 ApplicationArea = Basic;
@@ -54,7 +70,7 @@ Page 50016 "Timesheet Entries"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                RunObject = Report "Staff Project Hours";
+                //RunObject = Report "BD Customer Report";
             }
             action("TimeSheet Report")
             {
@@ -64,7 +80,7 @@ Page 50016 "Timesheet Entries"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                RunObject = Report "TimeSheet Report";
+               // RunObject = Report "Update Dates";
             }
             action("TimeSheet Report Summary")
             {
@@ -74,9 +90,21 @@ Page 50016 "Timesheet Entries"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                RunObject = Report "TimeSheet Report Summary";
+                //RunObject = Report "BD RCK RB";
             }
         }
     }
+
+    trigger OnAfterGetRecord()
+    begin
+        /*IF HREmployees.GET("Employee No") THEN BEGIN
+          "Employee Name":=HREmployees.FullName;
+          MODIFY;
+          END;*/
+
+    end;
+
+    var
+        HREmployees: Record "HR Employees";
 }
 

@@ -47,6 +47,12 @@ Page 80061 "Task Order Card"
                         Rec."Requested Receipt Date" := Today;
                     end;
                 }
+                field(Narration; Rec.Narration)
+                {
+                    ApplicationArea = all;
+                    MultiLine = true;
+
+                }
                 field("Expected Receipt Date"; Rec."Expected Receipt Date")
                 {
                     ApplicationArea = Basic;
@@ -304,8 +310,8 @@ Page 80061 "Task Order Card"
                 Image = Attachments;
                 Promoted = true;
                 PromotedCategory = Process;
-                RunObject = Page Documents;
-                RunPageLink = "Doc No." = field("No.");
+                RunObject = Page "Document Uploads";
+                RunPageLink = "Document Number" = field("No.");
             }
             action("&Print")
             {
@@ -561,7 +567,7 @@ Page 80061 "Task Order Card"
         Rec."Assigned User ID" := UserId;
         Rec."User ID" := UserId;
         Rec."Requested Receipt Date" := Today;
-        Rec."Buy-from Vendor No." := 'FM-V00052';
+        Rec."Buy-from Vendor No." := 'FM-V00123';
         Rec."Vendor Posting Group" := 'TRADERS';
 
 

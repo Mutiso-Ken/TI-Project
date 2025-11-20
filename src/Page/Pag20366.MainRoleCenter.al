@@ -19,26 +19,14 @@ Page 20366 "Main Role Center"
                 ApplicationArea = Basic, Suite;
             }
 
-            part(Control7; "My Accounts")
-            {
-                ApplicationArea = Basic, Suite;
-                Caption = 'Favorite Accounts';
-            }
-            part(Control9; "Trial Balance")
-            {
-                AccessByPermission = TableData "G/L Entry" = R;
-                ApplicationArea = Basic, Suite;
-            }
-
             part(Control46; "Team Member Activities No Msgs")
             {
                 ApplicationArea = Suite;
             }
 
-            part(Control96; "Report Inbox Part")
+            part(ApprovalsActivities; "Approvals Activities")
             {
-                AccessByPermission = TableData "Report Inbox" = IMD;
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = all;
             }
         }
     }
@@ -105,7 +93,7 @@ Page 20366 "Main Role Center"
             action("Purchase Invoice")
             {
                 Visible = False;
-                AccessByPermission = TableData "Purchase Header" = IMD;
+                //  AccessByPermission = TableData "Purchase Header" = IMD;
                 ApplicationArea = Basic, Suite;
                 Caption = 'Purchase Invoice';
                 Image = NewPurchaseInvoice;
@@ -819,6 +807,7 @@ Page 20366 "Main Role Center"
                 action("<Page Purchase Invoices>")
                 {
                     ApplicationArea = Basic, Suite;
+                    AccessByPermission = TableData "Purchase Header" = IMD;
                     Caption = 'Purchase Invoices';
                     RunObject = Page "Purchase Invoices";
                     ToolTip = 'Create purchase invoices to mirror sales documents that vendors send to you. This enables you to record the cost of purchases and to track accounts payable. Posting purchase invoices dynamically updates inventory levels so that you can minimize inventory costs and provide better customer service. Purchase invoices can be created automatically from PDF or image files from your vendors by using the Incoming Documents feature.';
@@ -988,13 +977,42 @@ Page 20366 "Main Role Center"
                     RunObject = Page "Completed Payment Memos";
                 }
             }
+            group("Timesheets")
+            {
+                action("Time sheets")
+                {
+                    RunObject = page "Timesheet Entries";
+                    RunPageView = where(Status = const(Open));
+                    ApplicationArea = all;
+                }
+                action("Pending Time sheets")
+                {
+                    RunObject = page "Timesheet Entries";
+                    RunPageView = where(Status = const("Pending Approval"));
+                    ApplicationArea = all;
+                }
+                action("Approved Time sheets")
+                {
+                    RunObject = page "Timesheet Entries";
+                    RunPageView = where(Status = const(Approved));
+                    ApplicationArea = all;
+                }
+
+            }
             group("HR Management")
             {
                 Caption = 'HR Management';
                 action("HR Employees")
                 {
                     ApplicationArea = Basic, Suite;
+                    Caption = 'Active HR Employees';
                     RunObject = Page "HR Employee List";
+                }
+                action("Inactive HR Employees")
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Inactive HR Employees';
+                    RunObject = Page "HR Employee List-Inactive";
                 }
                 action("HR Jobs")
                 {
@@ -1088,36 +1106,45 @@ Page 20366 "Main Role Center"
                     RunObject = Page "Payroll Posting Group_AU";
                 }
             }
-            group(Timesheet)
-            {
-                Caption = 'Timesheet';
-                Image = Calculator;
-                ToolTip = 'Make quotes, orders, and credit memos to customers. Manage customers and view transaction history.';
-                action("Staff Project Allocation")
-                {
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'Staff Project Allocation';
-                    RunObject = Page "Staff Project Allocation";
-                }
-            }
+            // group(Timesheet)
+            // {
+            //     Caption = 'Timesheet';
+            //     Image = Calculator;
+            //     ToolTip = 'Make quotes, orders, and credit memos to customers. Manage customers and view transaction history.';
+            //     action("Staff Project Allocation")
+            //     {
+            //         ApplicationArea = Basic, Suite;
+            //         Caption = 'Staff Project Allocation';
+            //         RunObject = Page "Staff Project Allocation";
+            //     }
+            // }
             group(Appraisals)
             {
                 Caption = 'Appraisals';
                 Image = Calculator;
-                ToolTip = 'Make quotes, orders, and credit memos to customers. Manage customers and view transaction history.';
-                action(" Performance Plans")
+                ToolTip = 'View and edit Employee Perfomance Appraisals.';
+                action("New Appraisals")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = ' Performance Plans';
-
-                    RunObject = Page "Performance Plan List";
+                    RunObject = Page "Appraisal List";
+                    RunPageView = where(Status = const(Open));
                 }
-                action("Performance Appraisals")
+                action("Pending Approval Appraisals")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Performance Appraisals';
-
-                    RunObject = Page "Performance Appraisals";
+                    RunObject = Page "Appraisal List";
+                    RunPageView = where(Status = const("Pending Supervisor Approval"));
+                }
+                action("Approved Appraisals")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Appraisal List";
+                    RunPageView = where(Status = const(Approved));
+                }
+                action("Appraisal Questions")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Appraisal Questions";
                 }
             }
         }

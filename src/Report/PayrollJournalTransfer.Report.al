@@ -14,11 +14,6 @@ Report 80017 "Payroll Journal Transfer"
 
             trigger OnAfterGetRecord()
             begin
-                //For use when posting Pension and NSSF
-                ///GLS.GET;
-                //PostingGroup.GET(GLS."Payroll Posting Group");
-
-
                 //Get the staff details (header)
                 objEmp.SetRange(objEmp."No.", "Payroll Employee_AU"."No.");
                 if objEmp.Find('-') then begin
@@ -28,19 +23,15 @@ Report 80017 "Payroll Journal Transfer"
                 end;
 
                 LineNumber := LineNumber + 10;
-
-
                 PeriodTrans.Reset;
                 PeriodTrans.SetRange(PeriodTrans."No.", "Payroll Employee_AU"."No.");
                 PeriodTrans.SetRange(PeriodTrans."Payroll Period", SelectedPeriod);
                 if PeriodTrans.Find('-') then begin
                     repeat
-                        //IF PeriodTrans."Account No"<>'' THEN BEGIN
                         AmountToDebit := 0;
                         AmountToCredit := 0;
                         if PeriodTrans."Posting Type" = PeriodTrans."posting type"::Debit then
                             AmountToDebit := PeriodTrans.Amount;
-
                         if PeriodTrans."Posting Type" = PeriodTrans."posting type"::Credit then
                             AmountToCredit := PeriodTrans.Amount;
 
@@ -52,13 +43,15 @@ Report 80017 "Payroll Journal Transfer"
                         if (PeriodTrans."Posting Type" = PeriodTrans."posting type"::Credit) and (PeriodTrans.Amount < 0) then begin
                             AmountToDebit := AmountToCredit * -1;
                             AmountToCredit := 0;
-                            CreateJnlEntry(IntegerPostAs, PeriodTrans."Account No",
+                            CreateJnlEntry(IntegerPostAs, "Payroll Employee_AU"."Expense Account",
                             GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No.", AmountToDebit, AmountToCredit,
                             PeriodTrans."posting type"::Debit, PeriodTrans."Loan Number", SaccoTransactionType, "Payroll Employee_AU"."No.");
                         end else begin
-                            CreateJnlEntry(IntegerPostAs, PeriodTrans."Account No",
-                            GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No.", AmountToDebit, AmountToCredit,
-                            PeriodTrans."Posting Type", PeriodTrans."Loan Number", SaccoTransactionType, "Payroll Employee_AU"."No.");
+                            if PeriodTrans."Transaction Code" <> 'EXCESS PEN' then begin
+                                CreateJnlEntry(IntegerPostAs, PeriodTrans."Account No",
+                                                            GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No.", AmountToDebit, AmountToCredit,
+                                                            PeriodTrans."Posting Type", PeriodTrans."Loan Number", SaccoTransactionType, "Payroll Employee_AU"."No.");
+                            end;
                         end;
 
                         //Pension
@@ -75,7 +68,7 @@ Report 80017 "Payroll Journal Transfer"
                                 EmployerDed.Amount, PeriodTrans."Posting Type", '', SaccoTransactionType, "Payroll Employee_AU"."No.");
 
                                 //Debit Staff Expense
-                                CreateJnlEntry(0, PostingGroup."Pension Employer Acc",
+                                CreateJnlEntry(0, "Payroll Employee_AU"."Expense Account",
                                 GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No.", EmployerDed.Amount, 0, 1, '',
                                 SaccoTransactionType, "Payroll Employee_AU"."No.");
 
@@ -87,7 +80,7 @@ Report 80017 "Payroll Journal Transfer"
                         if PeriodTrans."Transaction Code" = 'NSSF' then begin
                             //Credit Payables
                             //Credit Payables
-                            CreateJnlEntry(0, PostingGroup."SSF Employee Account",
+                            CreateJnlEntry(0, "Payroll Employee_AU"."Expense Account",
                             GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + '' + 'EmpDed', 0, PeriodTrans.Amount,
                             PeriodTrans."Posting Type", '', SaccoTransactionType, "Payroll Employee_AU"."No.");
 
@@ -98,9 +91,9 @@ Report 80017 "Payroll Journal Transfer"
 
                             //nita
                             //Credit Payables
-                            CreateJnlEntry(0, '2204',
-                            GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + '' + 'Nita', 0, 50,
-                            PeriodTrans."Posting Type", '', SaccoTransactionType, "Payroll Employee_AU"."No.");
+                            // CreateJnlEntry(0, '2204',
+                            // GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + '' + 'Nita', 0, 50,
+                            // PeriodTrans."Posting Type", '', SaccoTransactionType, "Payroll Employee_AU"."No.");
 
                             //Debit Staff Expense
                             // CreateJnlEntry(0, PostingGroup.Nita,
@@ -117,27 +110,39 @@ Report 80017 "Payroll Journal Transfer"
                             PeriodTrans."Posting Type", '', SaccoTransactionType, "Payroll Employee_AU"."No.");
 
                             //Debit Staff Expense
-                            CreateJnlEntry(0, PostingGroup."Pension Employer Acc",
+                            CreateJnlEntry(0, "Payroll Employee_AU"."Expense Account",
                             GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + '' + 'EmpDed', PeriodTrans.Amount * 2, 0, 1, '',
+                            SaccoTransactionType, "Payroll Employee_AU"."No.");
+                        end;
+                        if PeriodTrans."Transaction Code" = 'EXCESS PEN' then begin
+                            //Credit Payables
+                            //Credit Payables
+                            CreateJnlEntry(0, PostingGroup."Pension Employee Acc",
+                            GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + ' ' + ' Excess Pension', 0, PeriodTrans.Amount,
+                            PeriodTrans."Posting Type", '', SaccoTransactionType, "Payroll Employee_AU"."No.");
+
+                            // //Debit Staff Expense
+                            CreateJnlEntry(0, "Payroll Employee_AU"."Expense Account",
+                            GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + ' ' + ' Excess Pension', PeriodTrans.Amount, 0, 1, '',
                             SaccoTransactionType, "Payroll Employee_AU"."No.");
                         end;
 
                         if PeriodTrans."Transaction Code" = 'HL' then begin
 
                             //Credit Payables
-                            CreateJnlEntry(0, '2208',
+                            CreateJnlEntry(0, '2232',
                             GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + '' + ' Housing', 0, PeriodTrans.Amount,
                             PeriodTrans."Posting Type", '', SaccoTransactionType, "Payroll Employee_AU"."No.");
 
                             //Debit Staff Expense
-                            // CreateJnlEntry(0, PostingGroup."Housing Employer",
-                            // GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + '' + ' housing', PeriodTrans.Amount, 0, 1, '',
-                            // SaccoTransactionType, "Payroll Employee_AU"."No.");
+                            CreateJnlEntry(0, "Payroll Employee_AU"."Expense Account",
+                            GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + '' + ' housing', PeriodTrans.Amount, 0, 1, '',
+                            SaccoTransactionType, "Payroll Employee_AU"."No.");
                         end;
 
 
                         //K.U Pension Employer Deduction*****Amos*****
-                        if PeriodTrans."Transaction Code" = '2061' then begin
+                        if PeriodTrans."Transaction Code" = '2207' then begin
                             //Credit Payables
                             //Credit Payables
                             CreateJnlEntry(0, PostingGroup."Pension Employee Acc",
@@ -145,7 +150,7 @@ Report 80017 "Payroll Journal Transfer"
                             PeriodTrans."Posting Type", '', SaccoTransactionType, "Payroll Employee_AU"."No.");
 
                             //Debit Staff Expense
-                            CreateJnlEntry(0, PostingGroup."Pension Employer Acc",
+                            CreateJnlEntry(0, "Payroll Employee_AU"."Expense Account",
                             GlobalDim1, GlobalDim2, PeriodTrans."Transaction Name" + '-' + PeriodTrans."No." + '' + 'EmpDed', PeriodTrans.Amount * 2, 0, 1, '',
                             SaccoTransactionType, "Payroll Employee_AU"."No.");
                             //END;
@@ -158,8 +163,11 @@ Report 80017 "Payroll Journal Transfer"
 
             trigger OnPostDataItem()
             begin
-                CreateRealJournal();
+                //CreateRealJournal();
                 Message('Journals Created Successfully');
+
+
+
             end;
 
             trigger OnPreDataItem()
@@ -185,10 +193,6 @@ Report 80017 "Payroll Journal Transfer"
                 if GeneraljnlLine.Find('-') then
                     GeneraljnlLine.DeleteAll;
 
-                RealGeneraljnlLine.Reset;
-                RealGeneraljnlLine.SetRange(RealGeneraljnlLine."Journal Batch Name", 'SALARIES');
-                if RealGeneraljnlLine.Find('-') then
-                    RealGeneraljnlLine.DeleteAll;
 
 
 
@@ -197,13 +201,14 @@ Report 80017 "Payroll Journal Transfer"
                 PostingGroup.Reset;
                 PostingGroup.SetRange(PostingGroup."Posting Code", 'SALARY');
                 if PostingGroup.Find('-') then begin
-                    PostingGroup.TestField("SSF Employer Account");
-                    PostingGroup.TestField("SSF Employee Account");
-                    PostingGroup.TestField("Pension Employer Acc");
-                    PostingGroup.TestField("Pension Employee Acc");
+                    // PostingGroup.TestField("SSF Employer Account");
+                    // PostingGroup.TestField("SSF Employee Account");
+                    // PostingGroup.TestField("Pension Employer Acc");
+                    // PostingGroup.TestField("Pension Employee Acc");
                 end;
             end;
         }
+
     }
 
     requestpage
@@ -248,6 +253,17 @@ Report 80017 "Payroll Journal Transfer"
 
     end;
 
+    trigger OnPostReport()
+    var
+        myInt: Integer;
+    begin
+        GeneraljnlLine.Reset;
+        GeneraljnlLine.SetRange(GeneraljnlLine."Journal Template Name", 'GENERAL');
+        GeneraljnlLine.SetRange(GeneraljnlLine."Journal Batch Name", 'SALARIES');
+        if GeneraljnlLine.Find('-') then
+            Page.Run(page::"General Journal", GeneraljnlLine);
+    end;
+
     var
         PeriodTrans: Record "Payroll Monthly Trans_AU";
         objEmp: Record "Payroll Employee_AU";
@@ -282,7 +298,16 @@ Report 80017 "Payroll Journal Transfer"
         GLAccount: Record "G/L Account";
 
 
-    procedure CreateJnlEntry(AccountType: Option "G/L Account",Customer,Vendor,"Bank Account","Fixed Asset","IC Partner"; AccountNo: Code[20]; GlobalDime1: Code[20]; GlobalDime2: Code[20]; Description: Text[50]; DebitAmount: Decimal; CreditAmount: Decimal; PostAs: Option " ",Debit,Credit; LoanNo: Code[20]; TransType: Option " ","Registration Fee",Loan,Repayment,Withdrawal,"Interest Due","Interest Paid","Welfare Contribution","Deposit Contribution","Loan Penalty","Application Fee","Appraisal Fee",Investment,"Unallocated Funds","Shares Capital","Loan Adjustment",Dividend,"Withholding Tax","Administration Fee","Welfare Contribution 2"; "Employee Code": Code[100])
+    procedure CreateJnlEntry(AccountType: enum "Gen. Journal Account Type"; AccountNo: Code[20];
+                                              GlobalDime1: Code[20];
+                                              GlobalDime2: Code[20];
+                                              Description: Text[50];
+                                              DebitAmount: Decimal;
+                                              CreditAmount: Decimal;
+                                              PostAs: Option " ",Debit,Credit;
+                                              LoanNo: Code[20];
+                                              TransType: Option " ","Registration Fee",Loan,Repayment,Withdrawal,"Interest Due","Interest Paid","Welfare Contribution","Deposit Contribution","Loan Penalty","Application Fee","Appraisal Fee",Investment,"Unallocated Funds","Shares Capital","Loan Adjustment",Dividend,"Withholding Tax","Administration Fee","Welfare Contribution 2";
+                                              "Employee Code": Code[100])
     begin
         PayrollProjectAllocation.Reset;
         PayrollProjectAllocation.SetRange("Employee No", "Employee Code");
@@ -301,26 +326,27 @@ Report 80017 "Payroll Journal Transfer"
                 // GeneraljnlLine."Posting Date":=TODAY;
                 GeneraljnlLine."Account Type" := AccountType;
                 GeneraljnlLine."Account No." := AccountNo;
-                GeneraljnlLine.Validate(GeneraljnlLine."Account No.");
+                //GeneraljnlLine.Validate(GeneraljnlLine."Account No.");
                 GeneraljnlLine.Description := Description;
-                if PostAs = Postas::Debit then begin
-                    GeneraljnlLine."Debit Amount" := DebitAmount;
-                    GeneraljnlLine.Validate("Debit Amount");
-                end else begin
-                    GeneraljnlLine."Credit Amount" := CreditAmount;
-                    GeneraljnlLine.Validate("Credit Amount");
-                end;
+                // if PostAs = Postas::Debit then begin
+                //     GeneraljnlLine."Debit Amount" := DebitAmount;
+                //     GeneraljnlLine.Validate("Debit Amount");
+                // end else begin
+                //     GeneraljnlLine."Credit Amount" := CreditAmount;
+                //     GeneraljnlLine.Validate("Credit Amount");
+                // end;
                 if DebitAmount <> 0 then
-                    GeneraljnlLine.Amount := ROUND(DebitAmount * (PayrollProjectAllocation.Allocation / 100), 0.00001);
+                    GeneraljnlLine.Amount := ROUND(DebitAmount * (PayrollProjectAllocation.Allocation / 100), 0.01, '=');
+
                 if CreditAmount <> 0 then
-                    GeneraljnlLine.Amount := -1 * ROUND((CreditAmount * (PayrollProjectAllocation.Allocation / 100)), 0.00001);
-                // GeneraljnlLine.VALIDATE(GeneraljnlLine.Amount,(GeneraljnlLine.Amount*(PayrollProjectAllocation.Allocation/100)));
-
-                GeneraljnlLine."Shortcut Dimension 1 Code" := PayrollProjectAllocation."Project Code";
-                GeneraljnlLine.Validate(GeneraljnlLine."Shortcut Dimension 1 Code");
-
-                GeneraljnlLine."Shortcut Dimension 2 Code" := PayrollProjectAllocation."Budget Line Code";
+                    GeneraljnlLine.Amount := -1 * ROUND((CreditAmount * (PayrollProjectAllocation.Allocation / 100)), 0.01, '=');
+                GeneraljnlLine."Shortcut Dimension 2 Code" := PayrollProjectAllocation."Project Code";
                 GeneraljnlLine.Validate(GeneraljnlLine."Shortcut Dimension 2 Code");
+                GeneraljnlLine.Validate(Amount);
+                GeneraljnlLine.Correction := false;
+
+                // GeneraljnlLine."Shortcut Dimension 2 Code" := PayrollProjectAllocation."Budget Line Code";
+                // GeneraljnlLine.Validate(GeneraljnlLine."Shortcut Dimension 2 Code");
 
                 if GeneraljnlLine.Amount <> 0 then
                     GeneraljnlLine.Insert;

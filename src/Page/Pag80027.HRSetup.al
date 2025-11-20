@@ -110,10 +110,10 @@ Page 80027 "HR Setup"
                 {
                     ApplicationArea = Basic;
                 }
-                field("Appraisal Nos"; Rec."Appraisal Nos")
-                {
-                    ApplicationArea = Basic;
-                }
+                // field("Appraisal Nos"; Rec."Appraisal Nos")
+                // {
+                //     ApplicationArea = Basic;
+                // }
                 field("Company Activities"; Rec."Company Activities")
                 {
                     ApplicationArea = Basic;
@@ -155,6 +155,10 @@ Page 80027 "HR Setup"
                     ApplicationArea = Basic;
                 }
                 field("Leave Planner Nos."; Rec."Leave Planner Nos.")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Ticket Nos."; Rec."Ticket Nos.")
                 {
                     ApplicationArea = Basic;
                 }

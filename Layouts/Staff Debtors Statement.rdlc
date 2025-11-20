@@ -1,0 +1,1769 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>3d171f70-353e-433b-9723-d162b852728b</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Tablix Name="Tablix1">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>2.2512cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.62463cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.67383cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.78217cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.52104cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.86337cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.3677cm</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.6cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox1">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">Posting Date </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">Document No </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox3</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox7">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">Description </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox7</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox9">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">Amount Issued</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox9</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox8">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">Surrendered Amount</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox8</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">Date Surrendered</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox2</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox6">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">Surrender Description</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox6</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox12">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">Surrender Document No.</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox12</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox11">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">Outstanding Amount</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox11</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.6cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="PostingDate_CustLedgerEntry">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!PostingDate_CustLedgerEntry.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <Format>d</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>PostingDate_CustLedgerEntry</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="DocumentNo_CustLedgerEntry">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!DocumentNo_CustLedgerEntry.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>DocumentNo_CustLedgerEntry</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Description_CustLedgerEntry">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!Description_CustLedgerEntry.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Description_CustLedgerEntry</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="AmountLCY_CustLedgerEntry">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!AmountLCY_CustLedgerEntry.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <Format>n2</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>AmountLCY_CustLedgerEntry</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Samt">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!RemainingAmtLCY_CustLedgerEntry.Value-Fields!AmountLCY_CustLedgerEntry.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <Format>n2</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Samt</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Sdate">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!Sdate.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <Format>d</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Sdate</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Surrenderdesc">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!Surrenderdesc.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Surrenderdesc</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Sdno">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!Sdno.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Sdno</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="RemainingAmtLCY_CustLedgerEntry">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!RemainingAmtLCY_CustLedgerEntry.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <Format>n2</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>RemainingAmtLCY_CustLedgerEntry</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.6cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox14">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">TOTALS</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox14</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>3</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="AmountLCY_CustLedgerEntry3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!issued.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Format>n2</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>AmountLCY_CustLedgerEntry</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Samt3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=Fields!surrendered.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Format>n2</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Samt</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <rd:Selected>true</rd:Selected>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox39">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto" />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox39</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox13">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto" />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox13</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox40">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto" />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox40</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="RemainingAmtLCY_CustLedgerEntry3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value EvaluationMode="Auto">=SUM(Fields!RemainingAmtLCY_CustLedgerEntry.Value)</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Format>n2</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>RemainingAmtLCY_CustLedgerEntry</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="Details" />
+                </TablixMember>
+                <TablixMember>
+                  <KeepWithGroup>Before</KeepWithGroup>
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>DataSet_Result</DataSetName>
+            <Top>0.10583cm</Top>
+            <Left>0cm</Left>
+            <Height>1.8cm</Height>
+            <Width>19.08394cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Tablix>
+        </ReportItems>
+        <Height>5.83641cm</Height>
+        <Style />
+      </Body>
+      <Width>19.21848cm</Width>
+      <Page>
+        <PageHeader>
+          <Height>5.94141cm</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="CompanyINfoName">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">=First(Fields!CompanyINfoName.Value, "DataSet_Result")</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>11pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>CompanyINfoName</rd:DefaultName>
+              <Top>0.19938cm</Top>
+              <Left>7.08826cm</Left>
+              <Height>0.6cm</Height>
+              <Width>7.18312cm</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="CompanyINfoAdd">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">=First(Fields!CompanyINfoAdd.Value, "DataSet_Result")</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>11pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>CompanyINfoAdd</rd:DefaultName>
+              <Top>0.97577cm</Top>
+              <Left>7.08826cm</Left>
+              <Height>0.6cm</Height>
+              <Width>7.18312cm</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Image Name="Image1">
+              <Source>Database</Source>
+              <Value>=First(Fields!CompanyINfoPicture.Value, "DataSet_Result")</Value>
+              <MIMEType>image/jpeg</MIMEType>
+              <Sizing>FitProportional</Sizing>
+              <Top>0.52599cm</Top>
+              <Left>0.36724cm</Left>
+              <Height>2.61084cm</Height>
+              <Width>4.38396cm</Width>
+              <ZIndex>2</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+              </Style>
+            </Image>
+            <Textbox Name="Textbox22">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">STAFF STATEMENT</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>11pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox22</rd:DefaultName>
+              <Top>2.05147cm</Top>
+              <Left>7.59096cm</Left>
+              <Height>0.75875cm</Height>
+              <Width>6.31cm</Width>
+              <ZIndex>3</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox23">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">=Globals!ExecutionTime</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>6pt</FontSize>
+                        <Format>dd-MMM-yy</Format>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox23</rd:DefaultName>
+              <Top>0.43751cm</Top>
+              <Left>16.26869cm</Left>
+              <Height>0.36187cm</Height>
+              <Width>1.87854cm</Width>
+              <ZIndex>4</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox24">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">=User!UserID</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>6pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox23</rd:DefaultName>
+              <Top>1.19653cm</Top>
+              <Left>14.65473cm</Left>
+              <Height>0.36187cm</Height>
+              <Width>3.4925cm</Width>
+              <ZIndex>5</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox25">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">=Globals!PageNumber</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>6pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox23</rd:DefaultName>
+              <Top>0.83466cm</Top>
+              <Left>17.59161cm</Left>
+              <Height>0.36187cm</Height>
+              <Width>0.55562cm</Width>
+              <ZIndex>6</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox26">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">Page</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>6pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox23</rd:DefaultName>
+              <Top>0.79939cm</Top>
+              <Left>17.00953cm</Left>
+              <Height>0.36187cm</Height>
+              <Width>0.58208cm</Width>
+              <ZIndex>7</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox4">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">STAFF No:</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>9pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox4</rd:DefaultName>
+              <Top>3.78037cm</Top>
+              <Left>0.40724cm</Left>
+              <Height>0.6cm</Height>
+              <Width>2.86159cm</Width>
+              <ZIndex>8</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="ShortcutDimension1Code_PurchaseHeader">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">=First(Fields!CustomerNo_CustLedgerEntry.Value, "DataSet_Result")</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>9pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>ShortcutDimension1Code_PurchaseHeader</rd:DefaultName>
+              <Top>3.78037cm</Top>
+              <Left>3.58633cm</Left>
+              <Height>0.6cm</Height>
+              <Width>5.46333cm</Width>
+              <ZIndex>9</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="ShortcutDimension2Code_PurchaseHeader">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">=Fields!CustName.Value</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>9pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>ShortcutDimension2Code_PurchaseHeader</rd:DefaultName>
+              <Top>4.38037cm</Top>
+              <Left>3.58633cm</Left>
+              <Height>0.6cm</Height>
+              <Width>5.46333cm</Width>
+              <ZIndex>10</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Line Name="Line1">
+              <Top>5.88849cm</Top>
+              <Left>0cm</Left>
+              <Height>0cm</Height>
+              <Width>18.14723cm</Width>
+              <ZIndex>11</ZIndex>
+              <Style>
+                <Border>
+                  <Style>Solid</Style>
+                </Border>
+              </Style>
+            </Line>
+            <Textbox Name="Textbox5">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value EvaluationMode="Auto">STAFF Name:</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>9pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox4</rd:DefaultName>
+              <Top>4.55676cm</Top>
+              <Left>0.40724cm</Left>
+              <Height>0.42361cm</Height>
+              <Width>2.86159cm</Width>
+              <ZIndex>12</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageHeader>
+        <PageHeight>29.7cm</PageHeight>
+        <PageWidth>21cm</PageWidth>
+        <LeftMargin>0cm</LeftMargin>
+        <RightMargin>0cm</RightMargin>
+        <TopMargin>0cm</TopMargin>
+        <BottomMargin>0cm</BottomMargin>
+        <ColumnSpacing>1.27cm</ColumnSpacing>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="ReportForNavId_83">
+          <DataField>ReportForNavId_83</DataField>
+        </Field>
+        <Field Name="ReportForNavId_1102755000">
+          <DataField>ReportForNavId_1102755000</DataField>
+        </Field>
+        <Field Name="EntryNo_CustLedgerEntry">
+          <DataField>EntryNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="CustomerNo_CustLedgerEntry">
+          <DataField>CustomerNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="PostingDate_CustLedgerEntry">
+          <DataField>PostingDate_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="DocumentType_CustLedgerEntry">
+          <DataField>DocumentType_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="DocumentNo_CustLedgerEntry">
+          <DataField>DocumentNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="Description_CustLedgerEntry">
+          <DataField>Description_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="CustomerName_CustLedgerEntry">
+          <DataField>CustomerName_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="CurrencyCode_CustLedgerEntry">
+          <DataField>CurrencyCode_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="Amount_CustLedgerEntry">
+          <DataField>Amount_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="Amount_CustLedgerEntryFormat">
+          <DataField>Amount_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="RemainingAmount_CustLedgerEntry">
+          <DataField>RemainingAmount_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="RemainingAmount_CustLedgerEntryFormat">
+          <DataField>RemainingAmount_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="OriginalAmtLCY_CustLedgerEntry">
+          <DataField>OriginalAmtLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="OriginalAmtLCY_CustLedgerEntryFormat">
+          <DataField>OriginalAmtLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="RemainingAmtLCY_CustLedgerEntry">
+          <DataField>RemainingAmtLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="RemainingAmtLCY_CustLedgerEntryFormat">
+          <DataField>RemainingAmtLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="AmountLCY_CustLedgerEntry">
+          <DataField>AmountLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="AmountLCY_CustLedgerEntryFormat">
+          <DataField>AmountLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="SalesLCY_CustLedgerEntry">
+          <DataField>SalesLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="SalesLCY_CustLedgerEntryFormat">
+          <DataField>SalesLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="ProfitLCY_CustLedgerEntry">
+          <DataField>ProfitLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ProfitLCY_CustLedgerEntryFormat">
+          <DataField>ProfitLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="InvDiscountLCY_CustLedgerEntry">
+          <DataField>InvDiscountLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="InvDiscountLCY_CustLedgerEntryFormat">
+          <DataField>InvDiscountLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="SelltoCustomerNo_CustLedgerEntry">
+          <DataField>SelltoCustomerNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="CustomerPostingGroup_CustLedgerEntry">
+          <DataField>CustomerPostingGroup_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="GlobalDimension1Code_CustLedgerEntry">
+          <DataField>GlobalDimension1Code_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="GlobalDimension2Code_CustLedgerEntry">
+          <DataField>GlobalDimension2Code_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="SalespersonCode_CustLedgerEntry">
+          <DataField>SalespersonCode_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="UserID_CustLedgerEntry">
+          <DataField>UserID_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="SourceCode_CustLedgerEntry">
+          <DataField>SourceCode_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="OnHold_CustLedgerEntry">
+          <DataField>OnHold_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="AppliestoDocType_CustLedgerEntry">
+          <DataField>AppliestoDocType_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="AppliestoDocNo_CustLedgerEntry">
+          <DataField>AppliestoDocNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="Open_CustLedgerEntry">
+          <DataField>Open_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="DueDate_CustLedgerEntry">
+          <DataField>DueDate_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="PmtDiscountDate_CustLedgerEntry">
+          <DataField>PmtDiscountDate_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="OriginalPmtDiscPossible_CustLedgerEntry">
+          <DataField>OriginalPmtDiscPossible_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="OriginalPmtDiscPossible_CustLedgerEntryFormat">
+          <DataField>OriginalPmtDiscPossible_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="PmtDiscGivenLCY_CustLedgerEntry">
+          <DataField>PmtDiscGivenLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="PmtDiscGivenLCY_CustLedgerEntryFormat">
+          <DataField>PmtDiscGivenLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="Positive_CustLedgerEntry">
+          <DataField>Positive_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosedbyEntryNo_CustLedgerEntry">
+          <DataField>ClosedbyEntryNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosedatDate_CustLedgerEntry">
+          <DataField>ClosedatDate_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosedbyAmount_CustLedgerEntry">
+          <DataField>ClosedbyAmount_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosedbyAmount_CustLedgerEntryFormat">
+          <DataField>ClosedbyAmount_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="AppliestoID_CustLedgerEntry">
+          <DataField>AppliestoID_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="JournalBatchName_CustLedgerEntry">
+          <DataField>JournalBatchName_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ReasonCode_CustLedgerEntry">
+          <DataField>ReasonCode_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="BalAccountType_CustLedgerEntry">
+          <DataField>BalAccountType_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="BalAccountNo_CustLedgerEntry">
+          <DataField>BalAccountNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="TransactionNo_CustLedgerEntry">
+          <DataField>TransactionNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosedbyAmountLCY_CustLedgerEntry">
+          <DataField>ClosedbyAmountLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosedbyAmountLCY_CustLedgerEntryFormat">
+          <DataField>ClosedbyAmountLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="DebitAmount_CustLedgerEntry">
+          <DataField>DebitAmount_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="DebitAmount_CustLedgerEntryFormat">
+          <DataField>DebitAmount_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="CreditAmount_CustLedgerEntry">
+          <DataField>CreditAmount_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="CreditAmount_CustLedgerEntryFormat">
+          <DataField>CreditAmount_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="DebitAmountLCY_CustLedgerEntry">
+          <DataField>DebitAmountLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="DebitAmountLCY_CustLedgerEntryFormat">
+          <DataField>DebitAmountLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="CreditAmountLCY_CustLedgerEntry">
+          <DataField>CreditAmountLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="CreditAmountLCY_CustLedgerEntryFormat">
+          <DataField>CreditAmountLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="DocumentDate_CustLedgerEntry">
+          <DataField>DocumentDate_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ExternalDocumentNo_CustLedgerEntry">
+          <DataField>ExternalDocumentNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="CalculateInterest_CustLedgerEntry">
+          <DataField>CalculateInterest_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosingInterestCalculated_CustLedgerEntry">
+          <DataField>ClosingInterestCalculated_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="NoSeries_CustLedgerEntry">
+          <DataField>NoSeries_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosedbyCurrencyCode_CustLedgerEntry">
+          <DataField>ClosedbyCurrencyCode_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosedbyCurrencyAmount_CustLedgerEntry">
+          <DataField>ClosedbyCurrencyAmount_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ClosedbyCurrencyAmount_CustLedgerEntryFormat">
+          <DataField>ClosedbyCurrencyAmount_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="AdjustedCurrencyFactor_CustLedgerEntry">
+          <DataField>AdjustedCurrencyFactor_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="AdjustedCurrencyFactor_CustLedgerEntryFormat">
+          <DataField>AdjustedCurrencyFactor_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="OriginalCurrencyFactor_CustLedgerEntry">
+          <DataField>OriginalCurrencyFactor_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="OriginalCurrencyFactor_CustLedgerEntryFormat">
+          <DataField>OriginalCurrencyFactor_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="OriginalAmount_CustLedgerEntry">
+          <DataField>OriginalAmount_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="OriginalAmount_CustLedgerEntryFormat">
+          <DataField>OriginalAmount_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="DateFilter_CustLedgerEntry">
+          <DataField>DateFilter_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="RemainingPmtDiscPossible_CustLedgerEntry">
+          <DataField>RemainingPmtDiscPossible_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="RemainingPmtDiscPossible_CustLedgerEntryFormat">
+          <DataField>RemainingPmtDiscPossible_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="PmtDiscToleranceDate_CustLedgerEntry">
+          <DataField>PmtDiscToleranceDate_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="MaxPaymentTolerance_CustLedgerEntry">
+          <DataField>MaxPaymentTolerance_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="MaxPaymentTolerance_CustLedgerEntryFormat">
+          <DataField>MaxPaymentTolerance_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="LastIssuedReminderLevel_CustLedgerEntry">
+          <DataField>LastIssuedReminderLevel_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="AcceptedPaymentTolerance_CustLedgerEntry">
+          <DataField>AcceptedPaymentTolerance_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="AcceptedPaymentTolerance_CustLedgerEntryFormat">
+          <DataField>AcceptedPaymentTolerance_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="AcceptedPmtDiscTolerance_CustLedgerEntry">
+          <DataField>AcceptedPmtDiscTolerance_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="PmtToleranceLCY_CustLedgerEntry">
+          <DataField>PmtToleranceLCY_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="PmtToleranceLCY_CustLedgerEntryFormat">
+          <DataField>PmtToleranceLCY_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="AmounttoApply_CustLedgerEntry">
+          <DataField>AmounttoApply_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="AmounttoApply_CustLedgerEntryFormat">
+          <DataField>AmounttoApply_CustLedgerEntryFormat</DataField>
+        </Field>
+        <Field Name="ICPartnerCode_CustLedgerEntry">
+          <DataField>ICPartnerCode_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ApplyingEntry_CustLedgerEntry">
+          <DataField>ApplyingEntry_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="Reversed_CustLedgerEntry">
+          <DataField>Reversed_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ReversedbyEntryNo_CustLedgerEntry">
+          <DataField>ReversedbyEntryNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ReversedEntryNo_CustLedgerEntry">
+          <DataField>ReversedEntryNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="Prepayment_CustLedgerEntry">
+          <DataField>Prepayment_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="PaymentMethodCode_CustLedgerEntry">
+          <DataField>PaymentMethodCode_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="AppliestoExtDocNo_CustLedgerEntry">
+          <DataField>AppliestoExtDocNo_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="RecipientBankAccount_CustLedgerEntry">
+          <DataField>RecipientBankAccount_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="MessagetoRecipient_CustLedgerEntry">
+          <DataField>MessagetoRecipient_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="ExportedtoPaymentFile_CustLedgerEntry">
+          <DataField>ExportedtoPaymentFile_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="DimensionSetID_CustLedgerEntry">
+          <DataField>DimensionSetID_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="DirectDebitMandateID_CustLedgerEntry">
+          <DataField>DirectDebitMandateID_CustLedgerEntry</DataField>
+        </Field>
+        <Field Name="CompanyINfoName">
+          <DataField>CompanyINfoName</DataField>
+        </Field>
+        <Field Name="CompanyINfoAdd">
+          <DataField>CompanyINfoAdd</DataField>
+        </Field>
+        <Field Name="CompanyINfoPicture">
+          <DataField>CompanyINfoPicture</DataField>
+        </Field>
+        <Field Name="CustName">
+          <DataField>CustName</DataField>
+        </Field>
+        <Field Name="Sdate">
+          <DataField>Sdate</DataField>
+        </Field>
+        <Field Name="Samt">
+          <DataField>Samt</DataField>
+        </Field>
+        <Field Name="SamtFormat">
+          <DataField>SamtFormat</DataField>
+        </Field>
+        <Field Name="Sdno">
+          <DataField>Sdno</DataField>
+        </Field>
+        <Field Name="Surrenderdesc">
+          <DataField>Surrenderdesc</DataField>
+        </Field>
+        <Field Name="issued">
+          <DataField>issued</DataField>
+        </Field>
+        <Field Name="issuedFormat">
+          <DataField>issuedFormat</DataField>
+        </Field>
+        <Field Name="surrendered">
+          <DataField>surrendered</DataField>
+        </Field>
+        <Field Name="surrenderedFormat">
+          <DataField>surrenderedFormat</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>

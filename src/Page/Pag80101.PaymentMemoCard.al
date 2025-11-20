@@ -3,6 +3,8 @@ Page 80101 "Payment Memo Card"
 {
     Caption = 'Payment Memo Card';
     DeleteAllowed = true;
+    
+
     PageType = Card;
     PromotedActionCategories = 'New,Process,Reports,Approval,Budgetary Control,Category6_caption,Category7_caption,Category8_caption,Category9_caption,Category10_caption';
     RefreshOnActivate = true;
@@ -121,8 +123,8 @@ Page 80101 "Payment Memo Card"
                     Image = Attachments;
                     Promoted = true;
                     PromotedCategory = Category4;
-                    RunObject = Page Documents;
-                    RunPageLink = "Doc No." = field("No.");
+                    RunObject = Page "Document Uploads";
+                    RunPageLink = "Document Number" = field("No.");
                 }
                 action("Archive Document")
                 {
@@ -158,9 +160,10 @@ Page 80101 "Payment Memo Card"
                     trigger OnAction()
                     var
                         ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+                        M: page 654;
+
                     begin
-                        if ApprovalsMgmt.CheckPurchaseApprovalPossible(Rec) then
-                            ApprovalsMgmt.OnSendPurchaseDocForApproval(Rec);
+                        ApprovalsMgmt.OnSendPurchaseDocForApproval(Rec);
                     end;
                 }
                 action(CancelApprovalRequest)
@@ -180,8 +183,10 @@ Page 80101 "Payment Memo Card"
                     begin
 
                         Rec.TestField(Status, Rec.Status::"Pending Approval");
-                        //IF ApprovalsMgmt.CheckPurchaseApprovalPossible(Rec) THEN
-                        ApprovalsMgmt.OnCancelPurchaseApprovalRequest(Rec);
+
+
+                        IF ApprovalsMgmt.CheckPurchaseApprovalPossible(Rec) THEN
+                            ApprovalsMgmt.OnCancelPurchaseApprovalRequest(Rec);
                     end;
                 }
                 separator(Action10)
@@ -239,9 +244,10 @@ Page 80101 "Payment Memo Card"
                         //  ERROR('All Lines should be committed');
                         Rec.Reset;
                         Rec.SetRange("No.", Rec."No.");
-                        Report.Run(80036, true, true, Rec);
-                        Rec.Reset;
-                        //DocPrint.PrintPurchHeader(Rec);
+                        if rec.FindSet() then
+                            Report.Run(80036, true, true, Rec);
+                
+                        
                     end;
                 }
             }
@@ -279,14 +285,6 @@ Page 80101 "Payment Memo Card"
         PurchLine.Init;
         PurchLine."Document No." := Rec."No.";
         PurchLine.Insert;
-        /*SHeader.RESET;
-        SHeader.SETRANGE("User ID",USERID);
-        SHeader.SETRANGE(SHeader.Status,SHeader.Status::Open);
-       // SHeader.SETRANGE(SHeader."Request date",TODAY);
-        IF SHeader.COUNT>1 THEN
-          ERROR('You have unused requisition records under your account,please utilize/release them for approval'+
-            ' before creating a new record');
-            */
 
     end;
 

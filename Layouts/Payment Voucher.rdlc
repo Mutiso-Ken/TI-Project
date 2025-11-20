@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -11,213 +11,6 @@
       <rd:DataSourceID>0879f648-580b-490f-b70c-8b16a4e6e36f</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="Gen__Journal_Line__Posting_Date_">
-          <DataField>Gen__Journal_Line__Posting_Date_</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line__Document_Date_">
-          <DataField>Gen__Journal_Line__Document_Date_</DataField>
-        </Field>
-        <Field Name="CompanyInfo_Picture">
-          <DataField>CompanyInfo_Picture</DataField>
-        </Field>
-        <Field Name="CompanyInfo_Name">
-          <DataField>CompanyInfo_Name</DataField>
-        </Field>
-        <Field Name="CompanyInfo_Address">
-          <DataField>CompanyInfo_Address</DataField>
-        </Field>
-        <Field Name="CompanyInfo_City">
-          <DataField>CompanyInfo_City</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Address_2_">
-          <DataField>CompanyInfo__Address_2_</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Country_Region_Code_">
-          <DataField>CompanyInfo__Country_Region_Code_</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Phone_No__">
-          <DataField>CompanyInfo__Phone_No__</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Fax_No__">
-          <DataField>CompanyInfo__Fax_No__</DataField>
-        </Field>
-        <Field Name="CompanyInfo__E_Mail_">
-          <DataField>CompanyInfo__E_Mail_</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Home_Page_">
-          <DataField>CompanyInfo__Home_Page_</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line__Document_No__">
-          <DataField>Gen__Journal_Line__Document_No__</DataField>
-        </Field>
-        <Field Name="ReportTitle">
-          <DataField>ReportTitle</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line_Amount">
-          <DataField>Gen__Journal_Line_Amount</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line_AmountFormat">
-          <DataField>Gen__Journal_Line_AmountFormat</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line_Description">
-          <DataField>Gen__Journal_Line_Description</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line__Account_No__">
-          <DataField>Gen__Journal_Line__Account_No__</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line__Account_Name_">
-          <DataField>Gen__Journal_Line__Account_Name_</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line__Applies_to_Doc__No__">
-          <DataField>Gen__Journal_Line__Applies_to_Doc__No__</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line__External_Document_No__">
-          <DataField>Gen__Journal_Line__External_Document_No__</DataField>
-        </Field>
-        <Field Name="AMOUNT_IN_WORDS____AmtInWords_1_">
-          <DataField>AMOUNT_IN_WORDS____AmtInWords_1_</DataField>
-        </Field>
-        <Field Name="TotalAmt">
-          <DataField>TotalAmt</DataField>
-        </Field>
-        <Field Name="TotalAmtFormat">
-          <DataField>TotalAmtFormat</DataField>
-        </Field>
-        <Field Name="P_Date">
-          <DataField>P_Date</DataField>
-        </Field>
-        <Field Name="FinUser">
-          <DataField>FinUser</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line__Posting_Date__Control1000000060">
-          <DataField>Gen__Journal_Line__Posting_Date__Control1000000060</DataField>
-        </Field>
-        <Field Name="VOUCHER_NO_Caption">
-          <DataField>VOUCHER_NO_Caption</DataField>
-        </Field>
-        <Field Name="VOUCHER_DATECaption">
-          <DataField>VOUCHER_DATECaption</DataField>
-        </Field>
-        <Field Name="CHEQUE_DATECaption">
-          <DataField>CHEQUE_DATECaption</DataField>
-        </Field>
-        <Field Name="Tel_Caption">
-          <DataField>Tel_Caption</DataField>
-        </Field>
-        <Field Name="Fax_Caption">
-          <DataField>Fax_Caption</DataField>
-        </Field>
-        <Field Name="Email_Caption">
-          <DataField>Email_Caption</DataField>
-        </Field>
-        <Field Name="Web_Caption">
-          <DataField>Web_Caption</DataField>
-        </Field>
-        <Field Name="Other_DetailsCaption">
-          <DataField>Other_DetailsCaption</DataField>
-        </Field>
-        <Field Name="Account_Details_DescriptionCaption">
-          <DataField>Account_Details_DescriptionCaption</DataField>
-        </Field>
-        <Field Name="Cheque_Reference_No_Caption">
-          <DataField>Cheque_Reference_No_Caption</DataField>
-        </Field>
-        <Field Name="KES_AmountCaption">
-          <DataField>KES_AmountCaption</DataField>
-        </Field>
-        <Field Name="Invoice_No_Caption">
-          <DataField>Invoice_No_Caption</DataField>
-        </Field>
-        <Field Name="TOTALCaption">
-          <DataField>TOTALCaption</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption">
-          <DataField>EmptyStringCaption</DataField>
-        </Field>
-        <Field Name="Signature_Caption">
-          <DataField>Signature_Caption</DataField>
-        </Field>
-        <Field Name="Signature_Caption_Control1000000012">
-          <DataField>Signature_Caption_Control1000000012</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000025">
-          <DataField>EmptyStringCaption_Control1000000025</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000028">
-          <DataField>EmptyStringCaption_Control1000000028</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000034">
-          <DataField>EmptyStringCaption_Control1000000034</DataField>
-        </Field>
-        <Field Name="Date_Caption">
-          <DataField>Date_Caption</DataField>
-        </Field>
-        <Field Name="Date_Caption_Control1000000039">
-          <DataField>Date_Caption_Control1000000039</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000041">
-          <DataField>EmptyStringCaption_Control1000000041</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000045">
-          <DataField>EmptyStringCaption_Control1000000045</DataField>
-        </Field>
-        <Field Name="Signature_Caption_Control1000000046">
-          <DataField>Signature_Caption_Control1000000046</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000047">
-          <DataField>EmptyStringCaption_Control1000000047</DataField>
-        </Field>
-        <Field Name="Date_Caption_Control1000000048">
-          <DataField>Date_Caption_Control1000000048</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000049">
-          <DataField>EmptyStringCaption_Control1000000049</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000050">
-          <DataField>EmptyStringCaption_Control1000000050</DataField>
-        </Field>
-        <Field Name="Authorised_By_Executive_Director_Caption">
-          <DataField>Authorised_By_Executive_Director_Caption</DataField>
-        </Field>
-        <Field Name="Prepared_By_Finance_Officer__Caption">
-          <DataField>Prepared_By_Finance_Officer__Caption</DataField>
-        </Field>
-        <Field Name="Checked_By_Head_of_Finance__Caption">
-          <DataField>Checked_By_Head_of_Finance__Caption</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line_Journal_Template_Name">
-          <DataField>Gen__Journal_Line_Journal_Template_Name</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line_Journal_Batch_Name">
-          <DataField>Gen__Journal_Line_Journal_Batch_Name</DataField>
-        </Field>
-        <Field Name="Gen__Journal_Line_Line_No_">
-          <DataField>Gen__Journal_Line_Line_No_</DataField>
-        </Field>
-        <Field Name="FundNo">
-          <DataField>FundNo</DataField>
-        </Field>
-        <Field Name="AccName">
-          <DataField>AccName</DataField>
-        </Field>
-        <Field Name="vendorname">
-          <DataField>vendorname</DataField>
-        </Field>
-      </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>Report.xsd</rd:SchemaPath>
-        <rd:TableName>Result</rd:TableName>
-      </rd:DataSetInfo>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -2471,12 +2264,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -2516,4 +2303,209 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>f887be62-53d7-4e47-8981-22d763b77e79</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="ReportForNavId_7024">
+          <DataField>ReportForNavId_7024</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Posting_Date_">
+          <DataField>Gen__Journal_Line__Posting_Date_</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Document_Date_">
+          <DataField>Gen__Journal_Line__Document_Date_</DataField>
+        </Field>
+        <Field Name="CompanyInfo_Picture">
+          <DataField>CompanyInfo_Picture</DataField>
+        </Field>
+        <Field Name="CompanyInfo_Name">
+          <DataField>CompanyInfo_Name</DataField>
+        </Field>
+        <Field Name="CompanyInfo_Address">
+          <DataField>CompanyInfo_Address</DataField>
+        </Field>
+        <Field Name="CompanyInfo_City">
+          <DataField>CompanyInfo_City</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Address_2_">
+          <DataField>CompanyInfo__Address_2_</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Country_Region_Code_">
+          <DataField>CompanyInfo__Country_Region_Code_</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Phone_No__">
+          <DataField>CompanyInfo__Phone_No__</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Fax_No__">
+          <DataField>CompanyInfo__Fax_No__</DataField>
+        </Field>
+        <Field Name="CompanyInfo__E_Mail_">
+          <DataField>CompanyInfo__E_Mail_</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Home_Page_">
+          <DataField>CompanyInfo__Home_Page_</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Document_No__">
+          <DataField>Gen__Journal_Line__Document_No__</DataField>
+        </Field>
+        <Field Name="ReportTitle">
+          <DataField>ReportTitle</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line_Amount">
+          <DataField>Gen__Journal_Line_Amount</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line_AmountFormat">
+          <DataField>Gen__Journal_Line_AmountFormat</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line_Description">
+          <DataField>Gen__Journal_Line_Description</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Account_No__">
+          <DataField>Gen__Journal_Line__Account_No__</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Account_Name_">
+          <DataField>Gen__Journal_Line__Account_Name_</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Applies_to_Doc__No__">
+          <DataField>Gen__Journal_Line__Applies_to_Doc__No__</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__External_Document_No__">
+          <DataField>Gen__Journal_Line__External_Document_No__</DataField>
+        </Field>
+        <Field Name="AMOUNT_IN_WORDS____AmtInWords_1_">
+          <DataField>AMOUNT_IN_WORDS____AmtInWords_1_</DataField>
+        </Field>
+        <Field Name="TotalAmt">
+          <DataField>TotalAmt</DataField>
+        </Field>
+        <Field Name="TotalAmtFormat">
+          <DataField>TotalAmtFormat</DataField>
+        </Field>
+        <Field Name="P_Date">
+          <DataField>P_Date</DataField>
+        </Field>
+        <Field Name="FinUser">
+          <DataField>FinUser</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line__Posting_Date__Control1000000060">
+          <DataField>Gen__Journal_Line__Posting_Date__Control1000000060</DataField>
+        </Field>
+        <Field Name="VOUCHER_NO_Caption">
+          <DataField>VOUCHER_NO_Caption</DataField>
+        </Field>
+        <Field Name="VOUCHER_DATECaption">
+          <DataField>VOUCHER_DATECaption</DataField>
+        </Field>
+        <Field Name="CHEQUE_DATECaption">
+          <DataField>CHEQUE_DATECaption</DataField>
+        </Field>
+        <Field Name="Tel_Caption">
+          <DataField>Tel_Caption</DataField>
+        </Field>
+        <Field Name="Fax_Caption">
+          <DataField>Fax_Caption</DataField>
+        </Field>
+        <Field Name="Email_Caption">
+          <DataField>Email_Caption</DataField>
+        </Field>
+        <Field Name="Web_Caption">
+          <DataField>Web_Caption</DataField>
+        </Field>
+        <Field Name="Other_DetailsCaption">
+          <DataField>Other_DetailsCaption</DataField>
+        </Field>
+        <Field Name="Account_Details_DescriptionCaption">
+          <DataField>Account_Details_DescriptionCaption</DataField>
+        </Field>
+        <Field Name="Cheque_Reference_No_Caption">
+          <DataField>Cheque_Reference_No_Caption</DataField>
+        </Field>
+        <Field Name="KES_AmountCaption">
+          <DataField>KES_AmountCaption</DataField>
+        </Field>
+        <Field Name="Invoice_No_Caption">
+          <DataField>Invoice_No_Caption</DataField>
+        </Field>
+        <Field Name="TOTALCaption">
+          <DataField>TOTALCaption</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption">
+          <DataField>EmptyStringCaption</DataField>
+        </Field>
+        <Field Name="Signature_Caption">
+          <DataField>Signature_Caption</DataField>
+        </Field>
+        <Field Name="Signature_Caption_Control1000000012">
+          <DataField>Signature_Caption_Control1000000012</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000025">
+          <DataField>EmptyStringCaption_Control1000000025</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000028">
+          <DataField>EmptyStringCaption_Control1000000028</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000034">
+          <DataField>EmptyStringCaption_Control1000000034</DataField>
+        </Field>
+        <Field Name="Date_Caption">
+          <DataField>Date_Caption</DataField>
+        </Field>
+        <Field Name="Date_Caption_Control1000000039">
+          <DataField>Date_Caption_Control1000000039</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000041">
+          <DataField>EmptyStringCaption_Control1000000041</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000045">
+          <DataField>EmptyStringCaption_Control1000000045</DataField>
+        </Field>
+        <Field Name="Signature_Caption_Control1000000046">
+          <DataField>Signature_Caption_Control1000000046</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000047">
+          <DataField>EmptyStringCaption_Control1000000047</DataField>
+        </Field>
+        <Field Name="Date_Caption_Control1000000048">
+          <DataField>Date_Caption_Control1000000048</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000049">
+          <DataField>EmptyStringCaption_Control1000000049</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000050">
+          <DataField>EmptyStringCaption_Control1000000050</DataField>
+        </Field>
+        <Field Name="Authorised_By_Executive_Director_Caption">
+          <DataField>Authorised_By_Executive_Director_Caption</DataField>
+        </Field>
+        <Field Name="Prepared_By_Finance_Officer__Caption">
+          <DataField>Prepared_By_Finance_Officer__Caption</DataField>
+        </Field>
+        <Field Name="Checked_By_Head_of_Finance__Caption">
+          <DataField>Checked_By_Head_of_Finance__Caption</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line_Journal_Template_Name">
+          <DataField>Gen__Journal_Line_Journal_Template_Name</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line_Journal_Batch_Name">
+          <DataField>Gen__Journal_Line_Journal_Batch_Name</DataField>
+        </Field>
+        <Field Name="Gen__Journal_Line_Line_No_">
+          <DataField>Gen__Journal_Line_Line_No_</DataField>
+        </Field>
+        <Field Name="FundNo">
+          <DataField>FundNo</DataField>
+        </Field>
+        <Field Name="AccName">
+          <DataField>AccName</DataField>
+        </Field>
+        <Field Name="vendorname">
+          <DataField>vendorname</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

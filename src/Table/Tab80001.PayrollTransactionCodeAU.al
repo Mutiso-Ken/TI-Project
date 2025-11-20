@@ -214,6 +214,10 @@ Table 80001 "Payroll Transaction Code_AU"
         {
             DataClassification = ToBeClassified;
         }
+        field(59; Expense; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys

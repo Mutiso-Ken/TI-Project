@@ -10,6 +10,7 @@ Table 80038 "HR Leave Ledger Entries"
         field(1; "Entry No."; Integer)
         {
             Caption = 'Entry No.';
+            AutoIncrement = true;
         }
         field(2; "Leave Period"; Code[20])
         {
@@ -23,7 +24,7 @@ Table 80038 "HR Leave Ledger Entries"
         {
             Caption = 'Staff No.';
         }
-        field(5; "Staff Name"; Text[70])
+        field(5; "Staff Name"; Text[500])
         {
             Caption = 'Staff Name';
         }

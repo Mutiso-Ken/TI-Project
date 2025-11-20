@@ -35,6 +35,10 @@ Page 80011 "Payroll Earnings Card_AU"
                 {
                     ApplicationArea = Basic;
                 }
+                field(Expense; Rec.Expense)
+                {
+                    ApplicationArea = all;
+                }
                 field("Is Cash"; Rec."Is Cash")
                 {
                     ApplicationArea = Basic;

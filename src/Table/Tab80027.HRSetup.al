@@ -200,6 +200,11 @@ Table 80027 "HR Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
         }
+        field(50022; "Ticket Nos."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "No. Series".Code;
+        }
     }
 
     keys

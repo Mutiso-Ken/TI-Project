@@ -201,6 +201,14 @@ Page 80007 "Payroll Employee Card_AU"
                     ApplicationArea = Basic;
                 }
             }
+            group("Account Mapping")
+            {
+                field("Expense Account"; Rec."Expense Account")
+                {
+                    ApplicationArea = all;
+                }
+               
+            }
         }
     }
 

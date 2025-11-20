@@ -739,7 +739,7 @@ Table 80021 "HR Employees"
         {
             TableRelation = "HR Lookup Values".Code where(Type = filter(Religion));
         }
-        field(163; "Job Title"; Text[40])
+        field(163; "Job Title"; Text[60])
         {
         }
         field(164; "Post Office No"; Text[10])
@@ -1096,7 +1096,10 @@ Table 80021 "HR Employees"
         {
             CalcFormula = sum("HR Leave Ledger Entries"."No. of days" where("Leave Type" = const('ANNUAL'),
                                                                              "Staff No." = field("No.")));
+        
+
             FieldClass = FlowField;
+            AutoFormatType = 1;
         }
         field(3972; "Compassionate Leave Acc."; Decimal)
         {

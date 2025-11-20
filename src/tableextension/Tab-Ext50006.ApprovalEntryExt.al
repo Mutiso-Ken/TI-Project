@@ -6,5 +6,9 @@ tableextension 50006 "Approval Entry Ext" extends "Approval Entry"
         {
             DataClassification = ToBeClassified;
         }
+        field(33; "Approval Details"; Text[2048])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 }
