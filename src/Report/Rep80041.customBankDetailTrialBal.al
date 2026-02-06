@@ -295,7 +295,9 @@ codeunit 80011 "Substitute Report"
         if ReportId = Report::"Bank Account Statement" then
             NewReportId := Report::"Bank Recon Smnt";
 
+        if ReportId = Report::Order then
+            NewReportId := Report::LPO;
 
-        //
+
     end;
 }

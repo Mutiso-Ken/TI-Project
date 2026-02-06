@@ -15,7 +15,7 @@ Page 80080 "Mission Objectives"
         {
             repeater(Control1)
             {
-                field("Description 2"; Rec."Description 2")
+                field("Description 2"; Rec."Description 6")
                 {
                     ApplicationArea = Basic;
                     Caption = 'Objective';

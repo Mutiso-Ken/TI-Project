@@ -187,6 +187,11 @@ Table 80027 "HR Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
         }
+        field(50023; "Appraisal Question Nos."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "No. Series".Code;
+        }
         field(50019; Email; Text[50])
         {
             DataClassification = ToBeClassified;

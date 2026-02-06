@@ -47,13 +47,13 @@ Report 80020 "HR Employee PIF"
             column(HR_Employees__Post_Code_; "HR Employees"."Post Code")
             {
             }
-            column(HR_Employees__Main_Bank_; "HR Employees"."Main Bank")
+            column(HR_Employees__Main_Bank_; "HR Employees"."Bank Name")
             {
             }
-            column(HR_Employees__Branch_Bank_; "HR Employees"."Branch Bank")
+            column(HR_Employees__Branch_Bank_; "HR Employees"."Branch Name")
             {
             }
-            column(HR_Employees__Bank_Account_Number_; "HR Employees"."Bank Account Number")
+            column(HR_Employees__Bank_Account_Number_; "HR Employees"."Bank Account No")
             {
             }
             column(HR_Employees__FullName; FullName)
@@ -107,13 +107,13 @@ Report 80020 "HR Employee PIF"
             column(Section_C__Bank_Account_DetailsCaption; Section_C__Bank_Account_DetailsCaptionLbl)
             {
             }
-            column(HR_Employees__Main_Bank_Caption; FieldCaption("Main Bank"))
+            column(HR_Employees__Main_Bank_Caption; FieldCaption("Bank Name"))
             {
             }
-            column(HR_Employees__Branch_Bank_Caption; FieldCaption("Branch Bank"))
+            column(HR_Employees__Branch_Bank_Caption; FieldCaption("Branch Name"))
             {
             }
-            column(HR_Employees__Bank_Account_Number_Caption; FieldCaption("Bank Account Number"))
+            column(HR_Employees__Bank_Account_Number_Caption; FieldCaption("Bank Account No"))
             {
             }
             column(NamesCaption; NamesCaptionLbl)

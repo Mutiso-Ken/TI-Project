@@ -53,4 +53,6 @@ codeunit 80012 GeneralFunctionsFactory
     var
         HrLeaveApplications: Record "HR Leave Application";
         HRLedgerEntries: Record "HR Leave Ledger Entries";
+
+
 }

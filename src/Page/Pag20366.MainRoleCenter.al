@@ -445,7 +445,7 @@ Page 20366 "Main Role Center"
                 {
                     ApplicationArea = Basic, Suite;
                     Caption = 'Account Schedules';
-                    RunObject = Page "Account Schedule Names";
+                    RunObject = Page "Financial Reports";
                     ToolTip = 'Get insight into the financial data stored in your chart of accounts. Account schedules analyze figures in G/L accounts, and compare general ledger entries with general ledger budget entries. For example, you can view the general ledger entries as percentages of the budget entries. Account schedules provide the data for core financial statements and views, such as the Cash Flow chart.';
                 }
 
@@ -527,6 +527,13 @@ Page 20366 "Main Role Center"
                     Caption = 'Dimensions';
                     RunObject = Page Dimensions;
                     ToolTip = 'View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.';
+                }
+                action(AccountingPeriods)
+                {
+                    ApplicationArea = Suite;
+                    Caption = 'Accounting Periods';
+                    RunObject = Page "Accounting Periods";
+                    // ToolTip = 'View or edit dimensions, such as area, project, or department, that you can assign to sales and purchase documents to distribute costs and analyze transaction history.';
                 }
             }
             group("Cash Management")
@@ -1007,12 +1014,15 @@ Page 20366 "Main Role Center"
                     ApplicationArea = Basic, Suite;
                     Caption = 'Active HR Employees';
                     RunObject = Page "HR Employee List";
+                    RunPageView = where(Status = const(Active));
+
                 }
                 action("Inactive HR Employees")
                 {
                     ApplicationArea = Basic, Suite;
                     Caption = 'Inactive HR Employees';
                     RunObject = Page "HR Employee List-Inactive";
+                    RunPageView = where(Status = const(Inactive));
                 }
                 action("HR Jobs")
                 {

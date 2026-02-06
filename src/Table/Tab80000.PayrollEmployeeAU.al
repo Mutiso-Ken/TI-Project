@@ -18,7 +18,24 @@ Table 80000 "Payroll Employee_AU"
                     Validate(Firstname, HREmployees."First Name");
                     Validate(Lastname, HREmployees."Middle Name");
                     "Joining Date" := HREmployees."Date Of Join";
-
+                    "Posting Group" := 'SALARY';
+                    "Payment Mode" := rec."Payment Mode"::"Bank Transfer";
+                    Status := Status::Active;
+                    "Contract Type" := "Contract Type"::Contract;
+                    "NSSF No" := HREmployees."NSSF No.";
+                    "NHIF No" := HREmployees."NHIF No.";
+                    "PIN No" := HREmployees."PIN No.";
+                    "ID No/Passport No" := HREmployees."ID Number";
+                    "Pays NHIF" := true;
+                    "Pays PAYE" := true;
+                    "Pays NSSF" := true;
+                    HREmployees.CalcFields(Picture);
+                    Photo:=HREmployees.Picture;
+                    "Bank Code" := HREmployees."Bank Code";
+                    Validate("Bank Code");
+                    Validate("Branch Code", HREmployees."Branch Code");
+                    "Expense Account" := '5102';
+                    "Bank Account No" := HREmployees."Bank Account No";
                 end;
             end;
         }
@@ -425,7 +442,7 @@ Table 80000 "Payroll Employee_AU"
         {
             DataClassification = ToBeClassified;
         }
-      
+
         field(99; "Expense Account"; Code[50])
         {
             DataClassification = ToBeClassified;

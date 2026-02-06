@@ -17,8 +17,8 @@ table 1335 "Appraisal Lines Section A"
         }
         field(3; Section; Option)
         {
-            OptionCaption = '"Section A","Section B","Section C","Section D"';
-            OptionMembers = "Section A","Section B","Section C","Section D";
+            OptionCaption = '"Part A","Part B"';
+            OptionMembers = "Part A","Part B";
         }
         field(4; "What have you done"; Text[2048])
         {

@@ -25,7 +25,30 @@ pageextension 172186 paymentjournal extends "Payment Journal"
         {
             Visible = true;
         }
-
+        modify("Recipient Bank Account")
+        {
+            Visible = False;
+        }
+        modify("Payment Reference")
+        {
+            Visible = False;
+        }
+        modify("Creditor No.")
+        {
+            Visible = False;
+        }
+        modify("Bank Payment Type")
+        {
+            Visible = False;
+        }
+        modify("Exported to Payment File")
+        {
+            Visible = False;
+        }
+        modify(TotalExportedAmount)
+        {
+            Visible = False;
+        }
         addafter("Account No.")
         {
             field(acoountname; acoountname)

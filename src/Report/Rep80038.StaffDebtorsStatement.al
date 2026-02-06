@@ -56,7 +56,7 @@ Report 80038 "Staff Debtors Statement"
                 column(RemainingAmtLCY_CustLedgerEntry;"Cust. Ledger Entry"."Remaining Amt. (LCY)")
                 {
                 }
-                column(AmountLCY_CustLedgerEntry;"Cust. Ledger Entry"."Amount (LCY)")
+                column(AmountLCY_CustLedgerEntry;"Cust. Ledger Entry"."Original Amount")
                 {
                 }
                 column(SalesLCY_CustLedgerEntry;"Cust. Ledger Entry"."Sales (LCY)")

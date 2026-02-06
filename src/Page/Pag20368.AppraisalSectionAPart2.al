@@ -1,12 +1,12 @@
-namespace TISolution.TISolution;
+// namespace TISolution.TISolution;
 
-page 80106 AppraisalSecApart2
+page 20368 "Appraisal Section A Part 2"
 {
     ApplicationArea = All;
-    Caption = 'SECTION A - Part 2';
-
+    Caption = 'PART 2';
     PageType = ListPart;
-    SourceTable = "Appraisal Sec A(Second Part 2)";
+    SourceTable = "Appraisal Lines Section A";
+    SourceTableView = where(Section = const("Part B"));
 
     layout
     {
@@ -14,12 +14,12 @@ page 80106 AppraisalSecApart2
         {
             repeater(General)
             {
-                field("What capacity need? "; Rec."What capacity need? ")
+                field("What capacity need? "; Rec."Capacity Needed")
                 {
                     ToolTip = 'Specifies the value of the What capacity needs do you need to support your current objectives and growth? field.', Comment = '%';
                     ApplicationArea = all;
                 }
-                field("Why prioritized this year?"; Rec."Why prioritized this year?")
+                field("Why prioritized this year?"; Rec."Why Prioritize")
                 {
                     ToolTip = 'Specifies the value of the Why should they be prioritized this year? field.', Comment = '%';
                     ApplicationArea = all;

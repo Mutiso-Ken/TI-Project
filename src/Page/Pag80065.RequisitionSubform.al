@@ -106,7 +106,7 @@ Page 80065 "Requisition Subform"
                             RedistributeTotalsOnAfterValidate;
                     end;
                 }
-                field("Description 2"; Rec."Description 2")
+                field("Description 2"; Rec."Description 3")
                 {
                     ApplicationArea = Basic;
                     Caption = 'Item Specification';
@@ -119,15 +119,25 @@ Page 80065 "Requisition Subform"
                 }
                 field(Quantity; Rec.Quantity)
                 {
-                    ApplicationArea = Advanced;
-                    BlankZero = true;
-                    ShowMandatory = TypeChosen and (Rec."No." <> '');
+                    ApplicationArea = Basic;
                     ToolTip = 'Specifies the number of units of the item that will be specified on the line.';
+                }
+                field("Direct Unit Cost"; Rec."Direct Unit Cost")
+                {
+                    ApplicationArea = Basic;
+                    ToolTip = 'Specifies the cost of one unit of the selected item or resource.';
 
                     trigger OnValidate()
                     begin
-                        RedistributeTotalsOnAfterValidate;
+                        Rec.Amount := Rec."Direct Unit Cost" * Rec.Quantity;
+                        Rec.Modify();
                     end;
+                }
+                field(Amount; Rec.Amount)
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                    ToolTip = 'Specifies the number of units of the item that will be specified on the line.';
                 }
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
@@ -149,19 +159,6 @@ Page 80065 "Requisition Subform"
 
                     trigger OnValidate()
                     begin
-                        RedistributeTotalsOnAfterValidate;
-                    end;
-                }
-                field("Direct Unit Cost"; Rec."Direct Unit Cost")
-                {
-                    ApplicationArea = Advanced;
-                    BlankZero = true;
-                    ShowMandatory = TypeChosen and (Rec."No." <> '');
-                    ToolTip = 'Specifies the cost of one unit of the selected item or resource.';
-
-                    trigger OnValidate()
-                    begin
-
                         RedistributeTotalsOnAfterValidate;
                     end;
                 }

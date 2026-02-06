@@ -384,7 +384,7 @@ Page 80076 "Imprest Surrender Card"
                     var
                         LineNo: Integer;
                     begin
-                        Rec.TestField(Completed, false);
+                        Rec.TestField(Surrendered, false);
                         Rec.TestField(Status, Rec.Status::Released);
                         if Confirm('Are you sure you want to post the surrender') then begin
                             GenJnlLine2.Reset;

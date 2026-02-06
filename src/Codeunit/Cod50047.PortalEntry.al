@@ -26,6 +26,7 @@ codeunit 50047 PortalEntry
         lJsonArray: JsonArray;
         lJObject: JsonObject;
         AppraisalHeader: Record "Appraisal Header";
+        AppraisalSectionAPart1: record "Appraisal Lines Section A";
 
 
     procedure GetVariousOptions(args: Text): Text
@@ -129,6 +130,8 @@ codeunit 50047 PortalEntry
 
         if (RequestType = 'appraisals') then
             exit(GetAppraisals(RequestEmployeeID));
+        if (RequestType = 'appraisal_details') then
+            exit(GetAppraisalDetails(optionType));
 
         exit(Format(AddResponseHead(OutputJson, false)));
     end;
@@ -159,6 +162,53 @@ codeunit 50047 PortalEntry
             until AppraisalHeader.Next() = 0;
 
             Outputjson.Add('appraisals', JsonArray);
+            exit(Format(AddResponseHead(Outputjson, true)));
+        end;
+        exit(Format(AddResponseHead(Outputjson, false)));
+    end;
+
+    local procedure GetAppraisalDetails(appraisalNumber: code[50]): Text
+    var
+        Outputjson: JsonObject;
+        jsonobject: JsonObject;
+        object: JsonObject;
+        array: JsonArray;
+    begin
+        Clear(Outputjson);
+        AppraisalHeader.Reset();
+        AppraisalHeader.SetRange("Appraisal Code", appraisalNumber);
+        if AppraisalHeader.Find('-') then begin
+            Clear(jsonobject);
+            jsonobject.Add('appraisal_number', AppraisalHeader."Appraisal Code");
+            jsonobject.Add('employee_no', AppraisalHeader."Employee No");
+            jsonobject.Add('employee_name', AppraisalHeader."Employee Name");
+            jsonobject.Add('job_title', AppraisalHeader."Job Title");
+            jsonobject.Add('employee_department', AppraisalHeader."Employee Deparment");
+            jsonobject.Add('supervisor_code', AppraisalHeader."Immediate Supervisor");
+            jsonobject.Add('supervisor_name', AppraisalHeader."Supervisor Name");
+            jsonobject.Add('review_period', AppraisalHeader."Review Period");
+            jsonobject.Add('status', Format(AppraisalHeader.Status));
+
+            Clear(array);
+            AppraisalSectionAPart1.Reset();
+            AppraisalSectionAPart1.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+            if AppraisalSectionAPart1.FindSet() then
+                repeat
+                    Clear(object);
+                    object.Add('line_no', AppraisalSectionAPart1."Line No");
+                    object.Add('what_done', AppraisalSectionAPart1."What have you done");
+                    object.Add('when', AppraisalSectionAPart1."When?");
+                    object.Add('expected_results', AppraisalSectionAPart1."Expected Results");
+                    object.Add('achieved', AppraisalSectionAPart1."What was Achieved?");
+                    object.Add('capacity', AppraisalSectionAPart1."Capacity Needed");
+                    object.Add('prioritize', AppraisalSectionAPart1."Why Prioritize");
+                    object.Add('supervisor_rating', AppraisalSectionAPart1."Supervisor Rating");
+                    object.Add('supervisor_commens', AppraisalSectionAPart1."Comments by the supervisor");
+                    array.Add(object);
+                until AppraisalSectionAPart1.Next() = 0;
+            jsonobject.Add('performance_results_part_a', array);
+
+            Outputjson.Add('appraisal_details', jsonobject);
             exit(Format(AddResponseHead(Outputjson, true)));
         end;
         exit(Format(AddResponseHead(Outputjson, false)));
@@ -1241,7 +1291,7 @@ codeunit 50047 PortalEntry
                     Clear(line);
                     line.Add('line_no', PurchasesLineTable."Line No.");
                     line.Add('expense_category', PurchasesLineTable."Expense Category");
-                    line.Add('item_specification', PurchasesLineTable."Description 2");
+                    line.Add('item_specification', PurchasesLineTable."Description 3");
                     line.Add('line_amount', PurchasesLineTable.Amount);
                     line.Add('quantity', PurchasesLineTable.Quantity);
                     line.Add('direct_unit_cost', PurchasesLineTable."Direct Unit Cost");
@@ -1724,6 +1774,27 @@ codeunit 50047 PortalEntry
         exit(Format(AddResponseHead(OutputJson, false)));
     end;
 
+    procedure UpdatePRFNames()
+    begin
+        PurchasesHeaderTable.Reset();
+        // PurchasesHeaderTable.SetRange(Status, PurchasesHeaderTable.Status::Open);
+        PurchasesHeaderTable."Document Type" := PurchasesHeaderTable."Document Type"::Quote;
+        if PurchasesHeaderTable.Find('-') then
+            repeat
+                EmployeeTable.Reset();
+                EmployeeTable.SetRange("No.", PurchasesHeaderTable."Employee No");
+                if EmployeeTable.Find('-') then begin
+                    if EmployeeTable."Middle Name" <> '' then
+                        PurchasesHeaderTable."Employee Name" := EmployeeTable."First Name" + ' ' + EmployeeTable."Middle Name" + ' ' + EmployeeTable."Last Name"
+                    else
+                        PurchasesHeaderTable."Employee Name" := EmployeeTable."First Name" + ' ' + EmployeeTable."Last Name";
+                    // PurchasesHeaderTable."Account Name" := EmployeeTable."First Name" + ' ' + EmployeeTable."Middle Name";
+                    // PurchasesHeaderTable."Timesheet Approver" := EmployeeTable."Supervisor User ID";
+                end;
+                PurchasesHeaderTable.Modify();
+            until PurchasesHeaderTable.Next() = 0;
+    end;
+
     local procedure AmendTimeSheet(RequestJson: JsonObject): Text;
     var
         OutputJson: JsonObject;
@@ -1961,7 +2032,7 @@ codeunit 50047 PortalEntry
                         element.add('imprest_number', PurchasesHeaderTable."No.");
                         element.add('status', Format(PurchasesHeaderTable.Status));
                         element.add('employee_name', Format(PurchasesHeaderTable."Employee Name"));
-                        element.add('purpose', PurchasesHeaderTable."Posting Description");
+                        element.add('purpose', PurchasesHeaderTable.Description);
                         element.add('imprest_amount', PurchasesHeaderTable.Amount);
                         elements.add(element);
                     until PurchasesHeaderTable.Next() = 0;
@@ -1991,7 +2062,7 @@ codeunit 50047 PortalEntry
             element.add('imprest_number', PurchasesHeaderTable."Imprest No");
             element.add('mission_proposal_no', PurchasesHeaderTable."Mission Proposal No");
             element.add('posting_date', PurchasesHeaderTable."Posting Date");
-            element.add('purpose', PurchasesHeaderTable."Posting Description");
+            element.add('purpose', PurchasesHeaderTable.Description);
             element.add('fund_code', PurchasesHeaderTable."Shortcut Dimension 1 Code");
             element.add('program_code', PurchasesHeaderTable."Shortcut Dimension 2 Code");
             element.add('budget_code', PurchasesHeaderTable."Shortcut Dimension 3 Code");
@@ -2000,6 +2071,7 @@ codeunit 50047 PortalEntry
             element.add('status', Format(PurchasesHeaderTable.Status));
             element.add('employee_id', Format(PurchasesHeaderTable."Employee No"));
             element.add('employee_name', Format(PurchasesHeaderTable."Employee Name"));
+            element.Add('currency_code', PurchasesHeaderTable."Currency Code");
             // element.add('mission_proposal_no', Format(PurchasesHeaderTable."Mission Proposal No"));
             ImprestAmount := 0;
             Clear(lines);
@@ -2077,8 +2149,8 @@ codeunit 50047 PortalEntry
         BudgetCode := JsonToken.AsValue().AsText();
         RequestJson.Get('shortcut_4', JsonToken);
         BudgetCategoryCode := JsonToken.AsValue().AsText();
-        // RequestJson.Get('currency_code', JsonToken);
-        // Currency := JsonToken.AsValue().AsText();
+        RequestJson.Get('currency_code', JsonToken);
+        Currency := JsonToken.AsValue().AsText();
 
         EmployeeTable.Reset();
         EmployeeTable.SetRange("No.", StaffID);
@@ -2089,7 +2161,8 @@ codeunit 50047 PortalEntry
             PurchasesHeaderTable."No." := NextNo;
             PurchasesHeaderTable.Completed := false;
             PurchasesHeaderTable.Archived := false;
-            PurchasesHeaderTable."Currency Code" := '';
+            PurchasesHeaderTable."Currency Code" := Currency;
+            PurchasesHeaderTable."Currency Factor" := 1;
             PurchasesHeaderTable.Status := PurchasesHeaderTable.Status::Open;
             PurchasesHeaderTable."Document Type" := PurchasesHeaderTable."Document Type"::Quote;
             PurchasesHeaderTable."Doc Type" := optiontype;
@@ -2101,7 +2174,8 @@ codeunit 50047 PortalEntry
             PurchasesHeaderTable.Validate("Dimension Set ID");
             PurchasesHeaderTable."Employee No" := StaffID;
             PurchasesHeaderTable.Validate("Employee No");
-            PurchasesHeaderTable."Posting Description" := Purpose;
+            PurchasesHeaderTable."Employee Name" := EmployeeTable."First Name" + ' ' + EmployeeTable."Middle Name";
+            PurchasesHeaderTable.Description := Purpose;
             PurchasesHeaderTable."Shortcut Dimension 1 Code" := FundCode;
             PurchasesHeaderTable."Shortcut Dimension 2 Code" := ProgramCode;
             PurchasesHeaderTable."Shortcut Dimension 3 Code" := BudgetCode;
@@ -2132,6 +2206,7 @@ codeunit 50047 PortalEntry
         DepartmentCode: Code[100];
         BudgetCode: Code[100];
         BudgetCategoryCode: Code[100];
+        Currency: Code[100];
     begin
 
         RequestJson.Get('request_number', JsonToken);
@@ -2148,22 +2223,38 @@ codeunit 50047 PortalEntry
         BudgetCode := JsonToken.AsValue().AsText();
         RequestJson.Get('shortcut_4', JsonToken);
         BudgetCategoryCode := JsonToken.AsValue().AsText();
+        RequestJson.Get('currency_code', JsonToken);
+        Currency := JsonToken.AsValue().AsText();
 
         PurchasesHeaderTable.Reset();
         PurchasesHeaderTable.SetRange("No.", RequestNumber);
         if PurchasesHeaderTable.Find('-') then begin
-            PurchasesHeaderTable."Posting Description" := Purpose;
+            PurchasesHeaderTable.Description := Purpose;
             PurchasesHeaderTable."Shortcut Dimension 1 Code" := FundCode;
             PurchasesHeaderTable."Shortcut Dimension 2 Code" := ProgramCode;
             PurchasesHeaderTable."Shortcut Dimension 3 Code" := BudgetCode;
             PurchasesHeaderTable."Shortcut Dimension 4 Code" := BudgetCategoryCode;
             PurchasesHeaderTable."Shortcut Dimension 5 Code" := DepartmentCode;
+            // PurchasesHeaderTable."Currency Code" := Currency;
+            PurchasesHeaderTable."Currency Factor" := 1;
 
             if PurchasesHeaderTable.modify() then
                 exit(Format(AddResponseHead(OutputJson, true)));
         end;
         exit(format(AddResponseHead(outputjson, false)));
 
+    end;
+
+    procedure UpdateCurrencyFactor()
+    begin
+        PurchasesHeaderTable.Reset();
+        // PurchasesHeaderTable.SetRange("No.", 'IMP4519');
+        if PurchasesHeaderTable.Find('-') then
+            repeat
+                PurchasesHeaderTable."Currency Code" := 'KES';
+                PurchasesHeaderTable."Currency Factor" := 1;
+                PurchasesHeaderTable.Modify();
+            until PurchasesHeaderTable.Next() = 0;
     end;
 
 
@@ -2229,14 +2320,7 @@ codeunit 50047 PortalEntry
                         PurchasesLineTable."Amount Spent" := ImprestAmountSpent;
                         PurchasesLineTable."Cash Refund" := (Quantity * UnitCost) - ImprestAmountSpent;
                         if PurchasesLineTable.Modify(true) then begin
-                            // PurchasesLineTable.Reset();
-                            // PurchasesLineTable.SetRange("Document No.", PurchasesHeaderTable."No.");
-                            // if PurchasesLineTable.FindSet() then begin
-                            //     PurchasesLineTable.CalcSums("Line Amount");
-                            //     PurchasesHeaderTable.Amount := PurchasesLineTable."Line Amount";
-                            //     PurchasesHeaderTable.Modify();
-                            // end;
-                            // RedistributeTotalsOnAfterValidate(PurchasesLineTable."Document Type", PurchasesLineTable."Document No.", PurchasesLineTable);
+
                             exit(format(AddResponseHead(outputjson, true)));
                         end;
                     end
@@ -2264,13 +2348,14 @@ codeunit 50047 PortalEntry
                     PurchasesLineTable.SetRange("Line No.", LineNo);
                     PurchasesLineTable.SetRange("Document No.", PurchasesHeaderTable."No.");
                     if PurchasesLineTable.Find('-') then begin
-                        // PurchasesLineTable."Expense Category" := ExpenseCategory;
+
                         PurchasesLineTable."Document No." := PurchasesHeaderTable."No.";
                         PurchasesLineTable."Description 2" := ItemSpecification;
                         PurchasesLineTable.Quantity := Quantity;
                         PurchasesLineTable."Direct Unit Cost" := UnitCost;
                         PurchasesLineTable."Line Amount" := Quantity * UnitCost;
                         PurchasesLineTable."Amount Spent" := ImprestAmountSpent;
+
                         PurchasesLineTable."Cash Refund" := (Quantity * UnitCost) - ImprestAmountSpent;
                         // PurchasesLineTable.Validate("No.");
 
@@ -2325,17 +2410,18 @@ codeunit 50047 PortalEntry
             if PurchasesLineTable.Find('-') then begin
                 PurchasesLineTable."Expense Category" := ExpenseCategory;
                 PurchasesLineTable.Validate("Expense Category");
-                if PurchasesLineTable.Modify(true) then begin
+                if PurchasesLineTable.Modify() then begin
                     PurchasesLineTable.Reset();
                     PurchasesLineTable.SetRange("Line No.", LineNo);
                     PurchasesLineTable.SetRange("Document No.", PurchasesHeaderTable."No.");
                     if PurchasesLineTable.Find('-') then begin
-                        PurchasesLineTable."Description 2" := ItemSpecification;
+                        PurchasesLineTable."Description 3" := ItemSpecification;
                         PurchasesLineTable."Direct Unit Cost" := Unit_costt;
                         PurchasesLineTable.Quantity := Quantity;
                         PurchasesLineTable.Amount := Quantity * Unit_costt;
+
                         PurchasesLineTable."Currency Code" := PurchasesHeaderTable."Currency Code";
-                        if PurchasesLineTable.Modify(true) then begin
+                        if PurchasesLineTable.Modify() then begin
                             exit(format(AddResponseHead(outputjson, true)));
                         end;
                     end
@@ -2354,17 +2440,17 @@ codeunit 50047 PortalEntry
                 PurchasesLineTable.Type := PurchasesLineTable.Type::Item;
                 PurchasesLineTable."Expense Category" := ExpenseCategory;
                 PurchasesLineTable.Validate("Expense Category");
-                if PurchasesLineTable.Insert(true) then begin
+                if PurchasesLineTable.Insert() then begin
                     PurchasesLineTable.Reset();
                     PurchasesLineTable.SetRange("Line No.", LineNo);
                     PurchasesLineTable.SetRange("Document No.", PurchasesHeaderTable."No.");
                     if PurchasesLineTable.Find('-') then begin
-                        PurchasesLineTable."Description 2" := ItemSpecification;
+                        PurchasesLineTable."Description 3" := ItemSpecification;
                         PurchasesLineTable."Direct Unit Cost" := Unit_costt;
                         PurchasesLineTable.Quantity := Quantity;
                         PurchasesLineTable.Amount := Quantity * Unit_costt;
                         PurchasesLineTable."Currency Code" := PurchasesHeaderTable."Currency Code";
-                        if PurchasesLineTable.Modify(true) then begin
+                        if PurchasesLineTable.Modify() then begin
                             exit(format(AddResponseHead(outputjson, true)));
                         end;
                     end;
@@ -2768,9 +2854,11 @@ codeunit 50047 PortalEntry
         PurchasesHeaderTable."Shortcut Dimension 1 Code" := FundCode;
         PurchasesHeaderTable."Shortcut Dimension 2 Code" := ProgramCode;
         PurchasesHeaderTable."Shortcut Dimension 3 Code" := Shortcut3;
-        PurchasesHeaderTable."Shortcut Dimension 3 Code" := Shortcut4;
+        PurchasesHeaderTable."Shortcut Dimension 4 Code" := Shortcut4;
         PurchasesHeaderTable."Shortcut Dimension 5 Code" := Shortcut5;
         PurchasesHeaderTable.Status := PurchasesHeaderTable.Status::Open;
+        PurchasesHeaderTable."Buy-from Vendor No." := 'FM-V00123';
+        PurchasesHeaderTable."Vendor Posting Group" := 'TRADERS';
         PurchasesHeaderTable."Currency Code" := Currency;
         PurchasesHeaderTable."Currency Factor" := 1;
 
@@ -2780,6 +2868,19 @@ codeunit 50047 PortalEntry
         exit(format(AddResponseHead(outputjson, false)));
 
     end;
+
+    // procedure updateMissionPrpos(): Text
+    // begin
+    //     PurchasesHeaderTable.Reset();
+    //     PurchasesHeaderTable.SetRange(MP, true);
+    //     if PurchasesHeaderTable.FindSet() then begin
+    //         repeat
+    //             PurchasesHeaderTable."Buy-from Vendor No." := 'FM-V00123';
+    //             PurchasesHeaderTable."Vendor Posting Group" := 'TRADERS';
+    //             PurchasesHeaderTable.Modify();
+    //         until PurchasesHeaderTable.Next() = 0;
+    //     end;
+    // end;
 
     local procedure AmendMissionProposal(RequestJson: JsonObject): Text;
     var
@@ -2865,7 +2966,7 @@ codeunit 50047 PortalEntry
             PurchasesHeaderTable."Shortcut Dimension 1 Code" := FundCode;
             PurchasesHeaderTable."Shortcut Dimension 2 Code" := ProgramCode;
             PurchasesHeaderTable."Shortcut Dimension 3 Code" := Shortcut3;
-            PurchasesHeaderTable."Shortcut Dimension 3 Code" := Shortcut4;
+            PurchasesHeaderTable."Shortcut Dimension 4 Code" := Shortcut4;
             PurchasesHeaderTable."Shortcut Dimension 5 Code" := Shortcut5;
             PurchasesHeaderTable.Background := Background;
             PurchasesHeaderTable."Contribution to focus" := Contribution;
@@ -2905,9 +3006,9 @@ codeunit 50047 PortalEntry
             element.add('invited_members', PurchasesHeaderTable."Invited Members/Partners");
             element.add('fund_code', PurchasesHeaderTable."Shortcut Dimension 1 Code");
             element.add('program_code', PurchasesHeaderTable."Shortcut Dimension 2 Code");
-            element.add('budget_code', PurchasesHeaderTable."Shortcut Dimension 3 Code");
+            element.add('shortcut_3', PurchasesHeaderTable."Shortcut Dimension 3 Code");
             element.add('shortcut_4', PurchasesHeaderTable."Shortcut Dimension 4 Code");
-            element.add('department_code', PurchasesHeaderTable."Shortcut Dimension 5 Code");
+            element.add('shortcut_5', PurchasesHeaderTable."Shortcut Dimension 5 Code");
             element.add('currency_code', PurchasesHeaderTable."Currency Code");
             element.add('status', Format(PurchasesHeaderTable.Status));
             element.add('background', Format(PurchasesHeaderTable.Background));
@@ -3274,8 +3375,8 @@ codeunit 50047 PortalEntry
                                     IdentifiedVendor := JsonToken.AsValue().AsText();
                                 if MissionLine.Get('mission_expense_category', JsonToken) and not JsonToken.AsValue().IsNull() then
                                     ExpenseCategory := JsonToken.AsValue().AsText();
-                                if MissionLine.Get('budget_justification', JsonToken) and not JsonToken.AsValue().IsNull() then
-                                    BudgetJustification := JsonToken.AsValue().AsText();
+                                // if MissionLine.Get('budget_justification', JsonToken) and not JsonToken.AsValue().IsNull() then
+                                //     BudgetJustification := JsonToken.AsValue().AsText();
                                 if MissionLine.Get('no_of_days', JsonToken) and not JsonToken.AsValue().IsNull() then
                                     NoOfDays := JsonToken.AsValue().AsDecimal();
                                 if MissionLine.Get('no_of_pax', JsonToken) and not JsonToken.AsValue().IsNull() then
@@ -3296,7 +3397,7 @@ codeunit 50047 PortalEntry
                                     PurchasesLineTable."No of pax" := NoOfPax;
                                     PurchasesLineTable.Ksh := Ksh;
                                     PurchasesLineTable."Total Ksh" := TotalKsh;
-                                    PurchasesLineTable."Description 6" := BudgetJustification;
+                                    // PurchasesLineTable."Description 6" := BudgetJustification;
                                     PurchasesLineTable."Mission Expense Category" := ExpenseCategory;
                                     if PurchasesHeaderTable.get(PurchasesHeaderTable."Document Type"::Quote, ProposalNumber) then
                                         PurchasesLineTable."Currency Code" := PurchasesHeaderTable."Currency Code";
@@ -3317,7 +3418,7 @@ codeunit 50047 PortalEntry
                                         PurchasesLineTable."No of pax" := NoOfPax;
                                         PurchasesLineTable.Ksh := Ksh;
                                         PurchasesLineTable."Total Ksh" := TotalKsh;
-                                        PurchasesLineTable."Description 6" := BudgetJustification;
+                                        // PurchasesLineTable."Description 6" := BudgetJustification;
                                         PurchasesLineTable."Mission Expense Category" := ExpenseCategory;
                                         if PurchasesHeaderTable.get(PurchasesHeaderTable."Document Type"::Quote, ProposalNumber) then
                                             PurchasesLineTable."Currency Code" := PurchasesHeaderTable."Currency Code";
@@ -3335,8 +3436,86 @@ codeunit 50047 PortalEntry
                                         PurchasesLineTable."No of pax" := NoOfPax;
                                         PurchasesLineTable.Ksh := Ksh;
                                         PurchasesLineTable."Total Ksh" := TotalKsh;
-                                        PurchasesLineTable."Description 6" := BudgetJustification;
+                                        // PurchasesLineTable."Description 6" := BudgetJustification;
                                         PurchasesLineTable."Mission Expense Category" := ExpenseCategory;
+                                        if PurchasesHeaderTable.get(PurchasesHeaderTable."Document Type"::Quote, ProposalNumber) then
+                                            PurchasesLineTable."Currency Code" := PurchasesHeaderTable."Currency Code";
+                                        PurchasesLineTable.Insert();
+                                    end;
+                                end;
+                            end;
+                        end;
+                    end;
+                    exit(Format(AddResponseHead(outputjson, true)));
+                end;
+
+            'budget_notes':
+                begin
+                    RequestJson.Get('mission_proposal_budgetnotes', JsonToken);
+                    MissionLines := JsonToken.AsArray();
+                    if MissionLines.Count() > 0 then begin
+                        foreach JsonToken in MissionLines do begin
+                            if JsonToken.IsObject() then begin
+                                MissionLine := JsonToken.AsObject();
+                                if MissionLine.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull() then
+                                    LineNo := JsonToken.AsValue().AsInteger()
+                                else
+                                    LineNo := 0;
+
+                                if MissionLine.Get('details', JsonToken) and not JsonToken.AsValue().IsNull() then
+                                    Details := JsonToken.AsValue().AsText();
+                                if MissionLine.Get('vendor_1', JsonToken) and not JsonToken.AsValue().IsNull() then
+                                    Vendor1 := JsonToken.AsValue().AsText();
+                                if MissionLine.Get('vendor_2', JsonToken) and not JsonToken.AsValue().IsNull() then
+                                    Vendor2 := JsonToken.AsValue().AsText();
+                                if MissionLine.Get('vendor_3', JsonToken) and not JsonToken.AsValue().IsNull() then
+                                    Vendor3 := JsonToken.AsValue().AsText();
+                                if MissionLine.Get('comments', JsonToken) and not JsonToken.AsValue().IsNull() then
+                                    Comments := JsonToken.AsValue().AsText();
+
+                                PurchasesLineTable.Reset();
+                                PurchasesLineTable.SetRange("Document No.", ProposalNumber);
+                                PurchasesLineTable.SetRange("Line No.", LineNo);
+                                PurchasesLineTable.SetRange("Line Type", PurchasesLineTable."Line Type"::"Budget Notes");
+                                if PurchasesLineTable.Find('-') then begin
+                                    PurchasesLineTable."Description 3" := Details;
+                                    PurchasesLineTable."Description 2" := Vendor1;
+                                    PurchasesLineTable."Description 4" := Vendor2;
+                                    PurchasesLineTable."Description 5" := Vendor3;
+                                    PurchasesLineTable."Description 6" := Comments;
+                                    if PurchasesHeaderTable.get(PurchasesHeaderTable."Document Type"::Quote, ProposalNumber) then
+                                        PurchasesLineTable."Currency Code" := PurchasesHeaderTable."Currency Code";
+                                    PurchasesLineTable.Modify();
+                                end else begin
+                                    PurchasesLineTable.Reset();
+                                    PurchasesLineTable.SetRange("Document No.", ProposalNumber);
+                                    if PurchasesLineTable.FindLast() then begin
+                                        LineNo := PurchasesLineTable."Line No." + 100;
+                                        PurchasesLineTable.Init();
+                                        PurchasesLineTable."Line No." := LineNo;
+                                        PurchasesLineTable.Type := PurchasesLineTable.Type::Item;
+                                        PurchasesLineTable."Line Type" := PurchasesLineTable."line type"::"Budget Notes";
+                                        PurchasesLineTable."Document No." := ProposalNumber;
+                                        PurchasesLineTable."Description 3" := Details;
+                                        PurchasesLineTable."Description 2" := Vendor1;
+                                        PurchasesLineTable."Description 4" := Vendor2;
+                                        PurchasesLineTable."Description 5" := Vendor3;
+                                        PurchasesLineTable."Description 6" := Comments;
+                                        if PurchasesHeaderTable.get(PurchasesHeaderTable."Document Type"::Quote, ProposalNumber) then
+                                            PurchasesLineTable."Currency Code" := PurchasesHeaderTable."Currency Code";
+                                        PurchasesLineTable.Insert();
+                                    end else begin
+                                        LineNo := 100;
+                                        PurchasesLineTable.Init();
+                                        PurchasesLineTable."Line No." := LineNo;
+                                        PurchasesLineTable.Type := PurchasesLineTable.Type::Item;
+                                        PurchasesLineTable."Line Type" := PurchasesLineTable."line type"::"Budget Notes";
+                                        PurchasesLineTable."Document No." := ProposalNumber;
+                                        PurchasesLineTable."Description 3" := Details;
+                                        PurchasesLineTable."Description 2" := Vendor1;
+                                        PurchasesLineTable."Description 4" := Vendor2;
+                                        PurchasesLineTable."Description 5" := Vendor3;
+                                        PurchasesLineTable."Description 6" := Comments;
                                         if PurchasesHeaderTable.get(PurchasesHeaderTable."Document Type"::Quote, ProposalNumber) then
                                             PurchasesLineTable."Currency Code" := PurchasesHeaderTable."Currency Code";
                                         PurchasesLineTable.Insert();
@@ -3366,7 +3545,7 @@ codeunit 50047 PortalEntry
         RequestJson.Get('line_type', JsonToken);
         OptionType := JsonToken.AsValue().AsText();
 
-        if OptionType = '1' then begin//Mission Proposal Line
+        if OptionType = '1' then begin//Mission Proposal Line //Purchase Request Line //Imprest Request Line
             PurchasesLineTable.Reset();
             if RequestJson.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull then begin
                 PurchasesLineTable.SetRange("Line No.", JsonToken.AsValue().AsInteger());
@@ -3378,6 +3557,7 @@ codeunit 50047 PortalEntry
                 end;
             end;
         end;
+
     end;
 
     procedure UploadDocument(OriginalFileName: Text; FileExtension: text; SavedPath: text; ElementNumber: Code[50]): Text
@@ -3458,6 +3638,22 @@ codeunit 50047 PortalEntry
             until DocumentsTable.Next() = 0;
             outputjson.Add('uploaded_documents', documents);
             exit(Format(outputjson));
+        end;
+        exit(Format(AddResponseHead(outputjson, false)));
+    end;
+
+    procedure DeleteDocument(DocumentNo: Integer): Text
+    var
+        document: JsonObject;
+        documents: JsonArray;
+        DocumentsTable: Record "Portal Documents";
+        outputjson: JsonObject;
+    begin
+        DocumentsTable.Reset();
+        DocumentsTable.SetRange("Line No", DocumentNo);
+        if DocumentsTable.Find('-') then begin
+            if DocumentsTable.Delete() then
+                exit(Format(AddResponseHead(outputjson, true)));
         end;
         exit(Format(AddResponseHead(outputjson, false)));
     end;
@@ -3811,6 +4007,8 @@ codeunit 50047 PortalEntry
     procedure FnValidateStartDate("Start Date": Date)
     var
     begin
+        HrSetUpTable.Reset();
+        HrSetUpTable.Get();
         BaseCalendar.Reset;
         BaseCalendar.SetFilter(BaseCalendar."Base Calendar Code", HrSetUpTable."Base Calendar");
         BaseCalendar.SetRange(BaseCalendar.Date, "Start Date");

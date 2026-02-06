@@ -1,12 +1,12 @@
 
 
-page 20367 "Appraisal Section A"
+page 20367 "Appraisal Section A Part 1"
 {
     ApplicationArea = All;
-    Caption = ' ';
+    Caption = 'PART 1';
     PageType = ListPart;
     SourceTable = "Appraisal Lines Section A";
-    SourceTableView = where(Section = const("Section A"));
+    SourceTableView = where(Section = const("Part A"));
 
     layout
     {
@@ -32,14 +32,6 @@ page 20367 "Appraisal Section A"
                     ApplicationArea = Basic;
                 }
                 field("Capacity Needed"; Rec."Capacity Needed")
-                {
-                    ApplicationArea = Basic;
-                }
-                field("Why Prioritize"; Rec."Why Prioritize")
-                {
-                    ApplicationArea = Basic;
-                }
-                field("Supervisor Rating"; Rec."Supervisor Rating")
                 {
                     ApplicationArea = Basic;
                 }

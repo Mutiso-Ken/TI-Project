@@ -67,7 +67,7 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
                         PurchLine2.Type := RFQ.Type;
                         PurchLine2."No." := RFQ."No.";
                         PurchLine2.Validate("No.");
-                        PurchLine2.Description := RFQ.Description;
+                        PurchLine2."Description 3" := RFQ."Description 3";
                         PurchLine2."Description 2" := RFQ."Description 2";
                         PurchLine2.Quantity := RFQ.Quantity;
                         PurchLine2.Validate(Quantity);
@@ -359,8 +359,13 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
             trigger OnValidate()
             begin
                 if HREmployees.Get("Employee No") then begin
-                    "Employee Name" := HREmployees."First Name" + ' ' + HREmployees."Middle Name";
+                    if HREmployees."Middle Name" <> '' then
+                        "Employee Name" := HREmployees."First Name" + ' ' + HREmployees."Middle Name" + ' ' + HREmployees."Last Name"
+                    else
+                        "Employee Name" := HREmployees."First Name" + ' ' + HREmployees."Last Name";
+                    "Account Name" := HREmployees."First Name" + ' ' + HREmployees."Middle Name";
                     "Timesheet Approver" := HREmployees."Supervisor User ID";
+                    // Rec.Modify();
                 end;
             end;
         }
@@ -418,7 +423,12 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(99000798; Description; Text[2048])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
+
 
 
     trigger OnBeforeInsert()

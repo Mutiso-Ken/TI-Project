@@ -46,13 +46,13 @@ Page 20365 "Appraisal Card"
                 Style = Strong;
                 Caption = 'SECTION A: PERFORMANCE RESULTS (MEASURES 5 CORE RESULTS) 50 MARKS';
             }
-            part("Appraisal Section A"; "Appraisal Section A")
+            part("Appraisal Section A Part 1"; "Appraisal Section A Part 1")
             {
                 Caption = '';
                 ApplicationArea = all;
                 SubPageLink = "Appraisal Code" = field("Appraisal Code");
             }
-            part(AppraisalSecApart2; AppraisalSecApart2)
+            part("Appraisal Section A Part 2"; "Appraisal Section A Part 2")
             {
                 Caption = '';
                 ApplicationArea = all;
@@ -65,33 +65,26 @@ Page 20365 "Appraisal Card"
                 Style = Strong;
                 Caption = 'SECTION B: PERFORMANCE RESULTS (MEASURES 5 CORE RESULTS) 50 MARKS';
             }
-
-            part("Appraisal Section B"; "Appraisal Section B")
+            part(Section1; "Appraisal Section B Part 1")
             {
                 ApplicationArea = all;
-                SubPageLink = "Appraisal Code" = field("Appraisal Code");
+                SubPageLink = "Appraisal Code" = field("Appraisal Code"); // Link to header
             }
-            // part("Appraisal Section B2"; "Appraisal Section B2")
-            // {
-            //     ApplicationArea = all;
-            //     SubPageLink = "Appraisal Code" = field("Appraisal Code");
-            // }
-            // part("Appraisal Section B3"; "Appraisal Section B3")
-            // {
-            //     ApplicationArea = all;
-            //     SubPageLink = "Appraisal Code" = field("Appraisal Code");
-            // }
-            // part("Appraisal Section B4"; "Appraisal Section B4")
-            // {
-            //     ApplicationArea = all;
-            //     SubPageLink = "Appraisal Code" = field("Appraisal Code");
-            // }
-            // part("Appraisal Section B5"; "Appraisal Section B5")
-            // {
-            //     ApplicationArea = all;
-            //     SubPageLink = "Appraisal Code" = field("Appraisal Code");
-
-            // }
+            part(Section2; "Appraisal Section B Part 2")
+            {
+                ApplicationArea = all;
+                SubPageLink = "Appraisal Code" = field("Appraisal Code"); // Link to header
+            }
+            part(Section3; "Appraisal Section B Part 3")
+            {
+                ApplicationArea = all;
+                SubPageLink = "Appraisal Code" = field("Appraisal Code"); // Link to header
+            }
+            part(Section4; "Appraisal Section B Part 4")
+            {
+                ApplicationArea = all;
+                SubPageLink = "Appraisal Code" = field("Appraisal Code"); // Link to header
+            }
 
 
 

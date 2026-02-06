@@ -1,8 +1,8 @@
 #pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006 // ForNAV settings
 Report 80025 LPO
 {
-    WordLayout = 'Layouts/LPO.docx';
-    DefaultLayout = Word;
+    DefaultLayout = RDLC;
+    RDLCLayout = './Layouts/LPO.rdlc';
 
     dataset
     {
@@ -10,8 +10,16 @@ Report 80025 LPO
         {
             DataItemTableView = sorting("No.", "Document Type") where("Document Type" = filter(Order));
             RequestFilterFields = "No.", "Document Type";
-
-            column(Purchase_Header_No_; "Purchase Header"."No.")
+            column(ReportForNavId_4458; 4458)
+            {
+            }
+            column(Purchase_Header_Document_Type; "Document Type")
+            {
+            }
+            column(Purchase_Header_No_; "No.")
+            {
+            }
+            column(BuyfromVendorNo_PurchaseHeader; "Purchase Header"."Buy-from Vendor No.")
             {
             }
             column(OrderDate_PurchaseHeader; "Purchase Header"."Order Date")
@@ -21,7 +29,9 @@ Report 80025 LPO
             {
                 DataItemLink = "Document No." = field("No.");
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
-
+                column(ReportForNavId_6547; 6547)
+                {
+                }
                 column(CompanyInfo_Picture; CompanyInfo.Picture)
                 {
                 }
@@ -52,6 +62,12 @@ Report 80025 LPO
                 column(CompanyInfo__Home_Page_; CompanyInfo."Home Page")
                 {
                 }
+                column(Purchase_Header___No__; "Purchase Header"."No.")
+                {
+                }
+                column(FORMAT__Purchase_Line___Order_Date__0_4_; Format("Purchase Line"."Order Date", 0, 4))
+                {
+                }
                 column(Purchase_Header___Buy_from_Vendor_Name_; "Purchase Header"."Buy-from Vendor Name")
                 {
                 }
@@ -64,19 +80,34 @@ Report 80025 LPO
                 column(VendorPostCod; VendorPostCod)
                 {
                 }
-                column(Purchase_Line_Quantity; "Purchase Line".Quantity)
+                column(VendorTel; VendorTel)
                 {
                 }
-                column(Description2_PurchaseLine; "Purchase Line"."Description 2")
+                column(Purchase_Line_Quantity; Quantity)
                 {
                 }
-                column(Purchase_Line__Unit_Cost_; "Purchase Line"."Unit Cost")
+                column(Description2_PurchaseLine; "Purchase Line"."Description 4")
                 {
                 }
-                column(Purchase_Line_Amount; "Purchase Line".Amount)
+                column(Description_PurchaseLine; "Purchase Line".Description)
+                {
+                }
+                column(Purchase_Line__Unit_Cost_; "Unit Cost")
+                {
+                }
+                column(Purchase_Line_Amount; Amount)
+                {
+                }
+                column(Purchase_Line_Amount_Control1000000133; Amount)
+                {
+                }
+                column(CurrReport_PAGENO; CurrReport.PageNo)
                 {
                 }
                 column(Purchase_Header___Created_By_; "Purchase Header"."User ID")
+                {
+                }
+                column(Purchase_Header___Date_Created_; "Purchase Header"."Document Date")
                 {
                 }
                 column(Tel_Caption; Tel_CaptionLbl)
@@ -91,6 +122,21 @@ Report 80025 LPO
                 column(Web_Caption; Web_CaptionLbl)
                 {
                 }
+                column(PURCHASE_ORDERCaption; PURCHASE_ORDERCaptionLbl)
+                {
+                }
+                column(Order_DateCaption; Order_DateCaptionLbl)
+                {
+                }
+                column(Order_No_Caption; Order_No_CaptionLbl)
+                {
+                }
+                column(SUPPLIER_Caption; SUPPLIER_CaptionLbl)
+                {
+                }
+                column(QuantityCaption; QuantityCaptionLbl)
+                {
+                }
                 column(Unit_CostCaption; Unit_CostCaptionLbl)
                 {
                 }
@@ -101,6 +147,9 @@ Report 80025 LPO
                 {
                 }
                 column(TotalCaption; TotalCaptionLbl)
+                {
+                }
+                column(CurrReport_PAGENOCaption; CurrReport_PAGENOCaptionLbl)
                 {
                 }
                 column(TERMS_AND_CONDITIONSCaption; TERMS_AND_CONDITIONSCaptionLbl)
@@ -130,22 +179,68 @@ Report 80025 LPO
                 column(Date_Caption; Date_CaptionLbl)
                 {
                 }
+                column(Date_Caption_Control1000000025; Date_Caption_Control1000000025Lbl)
+                {
+                }
+                column(Date_Caption_Control1000000027; Date_Caption_Control1000000027Lbl)
+                {
+                }
                 column(Signature_Caption; Signature_CaptionLbl)
+                {
+                }
+                column(Signature_Caption_Control1000000030; Signature_Caption_Control1000000030Lbl)
+                {
+                }
+                column(Signature_Caption_Control1000000031; Signature_Caption_Control1000000031Lbl)
+                {
+                }
+                column(EmptyStringCaption; EmptyStringCaptionLbl)
+                {
+                }
+                column(EmptyStringCaption_Control1000000034; EmptyStringCaption_Control1000000034Lbl)
+                {
+                }
+                column(EmptyStringCaption_Control1000000035; EmptyStringCaption_Control1000000035Lbl)
+                {
+                }
+                column(EmptyStringCaption_Control1000000037; EmptyStringCaption_Control1000000037Lbl)
+                {
+                }
+                column(EmptyStringCaption_Control1000000038; EmptyStringCaption_Control1000000038Lbl)
+                {
+                }
+                column(EmptyStringCaption_Control1000000039; EmptyStringCaption_Control1000000039Lbl)
+                {
+                }
+                column(EmptyStringCaption_Control1000000040; EmptyStringCaption_Control1000000040Lbl)
                 {
                 }
                 column(V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption; V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaptionLbl)
                 {
                 }
+                column(Prepared_By_Finance_Officer__Caption; Prepared_By_Finance_Officer__CaptionLbl)
+                {
+                }
+                column(Checked_By_Head_of_Finance__Caption; Checked_By_Head_of_Finance__CaptionLbl)
+                {
+                }
+                column(Authorised_By_Executive_Director_Caption; Authorised_By_Executive_Director_CaptionLbl)
+                {
+                }
+                column(Purchase_Line_Document_Type; "Document Type")
+                {
+                }
+                column(Purchase_Line_Document_No_; "Document No.")
+                {
+                }
+                column(Purchase_Line_Line_No_; "Line No.")
+                {
+                }
                 column(FUND; "Purchase Line"."Shortcut Dimension 1 Code")
                 {
                 }
-                trigger OnPreDataItem();
-                begin
-                    LastFieldNo := FieldNo("Document Type");
 
-                end;
-
-                trigger OnAfterGetRecord();
+                trigger OnAfterGetRecord()
                 begin
                     if VendorInfo.Get("Purchase Header"."Buy-from Vendor No.") then
                         VendorAddr := VendorInfo.Address;
@@ -154,27 +249,34 @@ Report 80025 LPO
                     VendorTel := VendorInfo."Phone No.";
                 end;
 
+                trigger OnPreDataItem()
+                begin
+                    LastFieldNo := FieldNo("Document Type");
+                end;
             }
-            trigger OnPreDataItem();
-            begin
-
-            end;
         }
     }
+
     requestpage
     {
-        SaveValues = false;
+
         layout
         {
         }
 
+        actions
+        {
+        }
+    }
+
+    labels
+    {
     }
 
     trigger OnInitReport()
     begin
         CompanyInfo.Get;
         CompanyInfo.CalcFields(Picture);
-
     end;
 
     var
@@ -185,7 +287,7 @@ Report 80025 LPO
         VendorAddr: Text[30];
         VendorCity: Text[30];
         VendorPostCod: Code[10];
-        VendorTel: Variant;
+        VendorTel: Text;
         BankAccount: Code[10];
         PurchLine: Record "Purchase Line";
         Tel_CaptionLbl: label 'Tel:';
@@ -206,7 +308,7 @@ Report 80025 LPO
         V1__This_LPO_is_valid_for_30_daysCaptionLbl: label '1. This LPO is valid for 30 days';
         V3__TI_Kenya_reserves_the_right_to_return_all_the_goods_which_may_be_found_defective_during_consumptionCaptionLbl: label '3. TI-Kenya reserves the right to return all the goods which may be found defective during consumption';
         V2__All_the_goods_services_supplied_MUST_be_as_per_order_and_MUST_meet_all_the_specified_conditionsCaptionLbl: label '2. All the goods/services supplied MUST be as per order and MUST meet all the specified conditions';
-        V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_CaptionLbl: label '5. All payment will be by crossed cheques issued by TI-Kenya and in line with stated terms.';
+        V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_CaptionLbl: label '5. All payment will be made through bank tranfer by TI-Kenya and in line with stated terms.';
         V4__Goods_services_are_received_subject_to_verification_in_due_courseCaptionLbl: label '4. Goods/services are received subject to verification in due course';
         where_such_conditions_could_not_be_verified_or_established_during_receipt_of_the_goods_CaptionLbl: label '   where such conditions could not be verified or established during receipt of the goods.';
         V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaptionLbl: label '6. The prices on the LPO include delivery costs to the specified delivery/receiving point';
@@ -227,10 +329,5 @@ Report 80025 LPO
         Prepared_By_Finance_Officer__CaptionLbl: label 'Prepared By Finance Officer: ';
         Checked_By_Head_of_Finance__CaptionLbl: label 'Checked By Head of Finance: ';
         Authorised_By_Executive_Director_CaptionLbl: label 'Authorised By Executive Director:';
-
-    trigger OnPreReport();
-    begin
-
-    end;
-
 }
+

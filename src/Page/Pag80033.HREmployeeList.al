@@ -6,7 +6,6 @@ Page 80033 "HR Employee List"
     PageType = List;
     PromotedActionCategories = 'New,Process,Report,Employee';
     SourceTable = "HR Employees";
-    SourceTableView = where(Status = filter(Active));
     UsageCategory = Lists;
 
     layout

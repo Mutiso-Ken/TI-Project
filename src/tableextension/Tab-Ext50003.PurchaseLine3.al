@@ -9,7 +9,7 @@ tableextension 50003 "Purchase Line3" extends "Purchase Line"
         }
         field(7012; "Description 4"; Text[1000])
         {
-            Caption = 'Description 4';
+            Caption = 'Description';
             DataClassification = ToBeClassified;
         }
         field(7013; "Description 5"; Text[1000])

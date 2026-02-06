@@ -26,4 +26,17 @@ table 12 AppraisalQuestions
             Clustered = true;
         }
     }
+
+    trigger OnInsert()
+    begin
+        if "Code" = '' then begin
+            HRsetup.Get();
+            HRsetup.TestField("Appraisal Question Nos.");
+            "Code" := NoSeriesManagement.GetNextNo(HRsetup."Appraisal Question Nos.", 0D, true);
+        end;
+    end;
+
+    var
+        HRsetup: Record "HR Setup";
+        NoSeriesManagement: Codeunit "No. Series";
 }

@@ -22,13 +22,6 @@ table 1336 "Appraisal Lines Section B"
         field(4; "Question"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = AppraisalQuestions.Code where(Section = const("Section B"));
-            trigger
-            OnValidate()
-            begin
-                if AppraisalQuestions.Get(Question) then
-                    "Question Description" := AppraisalQuestions.Description;
-            end;
         }
         field(5; "Question Description"; Text[2048])
         {

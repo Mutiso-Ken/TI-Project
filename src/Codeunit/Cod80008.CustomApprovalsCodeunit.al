@@ -453,13 +453,62 @@ Codeunit 80008 "Custom Approvals Codeunit"
         end;
     end;
 
-    local procedure MyProcedure()
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnBeforeRejectSelectedApprovalRequest', '', false, false)]
+    local procedure OnBeforeRejectApprovalRequest(ApprovalEntry: Record "Approval Entry"; var IsHandled: Boolean)
     var
-        myInt: Integer;
+        ApprovalComment: Record "Approval Comment Line";
     begin
-
+        ApprovalComment.Reset();
+        ApprovalComment.SetRange("Table ID", ApprovalEntry."Table ID");
+        ApprovalComment.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
+        if not ApprovalComment.FindFirst() then begin
+            Error('You must enter a comment before rejecting this approval.');
+            exit;
+            IsHandled := true;
+        end;
     end;
 
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnAfterRejectSelectedApprovalRequest', '', false, false)]
+
+    local procedure OnAfterRejectApprovalRequest(
+        ApprovalEntry: Record "Approval Entry")
+    var
+        Email: Codeunit Email;
+        EmailMessage: Codeunit "Email Message";
+        UserSetup: Record "User Setup";
+        BodyText: Text;
+        RecRef: RecordRef;
+        ReceiverEmail: Text;
+        HRemployees: Record "HR Employees";
+        PurchaseHeader: Record "Purchase Header";
+        EmailBody: Text;
+        ApproverEmployee: record "HR Employees";
+        ApproverName: Text;
+        Notifications: Codeunit Notifications;
+        EmailSubject: Text;
+    begin
+        if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
+            exit;
+        RecRef.SetRecFilter();
+        case RecRef.Number of
+            Database::"Purchase Header":
+                begin
+                    ApproverEmployee.Reset();
+                    ApproverEmployee.SetRange(ApproverEmployee."User ID", ApprovalEntry."Approver ID");
+                    if ApproverEmployee.FindSet() then begin
+                        ApproverName := ApproverEmployee."First Name" + ' ' + ApproverEmployee."Middle Name" + ' ' + ApproverEmployee."Last Name";
+                    end;
+                    RecRef.SetTable(PurchaseHeader);
+                    HRemployees.reset;
+                    if HRemployees.Get(PurchaseHeader."Employee No") then begin
+                        ReceiverEmail := HRemployees."E-Mail";
+                        EmailBody := 'Your approval request for ' + PurchaseHeader."Posting Description" + ' has been rejected by' + ApproverName;
+                        EmailSubject := 'REJECTED DOCUMENT ' + Format(PurchaseHeader."No.");
+                        Notifications.fnSendemail(ApproverName, EmailSubject, EmailBody, HRemployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+                    end;
+                end;
+        end;
+    end;
 }
 

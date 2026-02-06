@@ -824,16 +824,45 @@ Table 80021 "HR Employees"
             OptionCaption = 'Others,USAID';
             OptionMembers = Others,USAID;
         }
-        field(190; "Main Bank"; Code[15])
+        field(190; "Bank Code"; Code[20])
         {
+            TableRelation = "Payroll Bank Codes_AU";
+
+            trigger OnValidate()
+            var
+            begin
+                BankCodes.Reset;
+                BankCodes.SetRange(BankCodes."Bank Code", "Bank Code");
+                if BankCodes.FindFirst then begin
+                    BankCodes.TestField(BankCodes."Bank Name");
+                    "Bank Name" := BankCodes."Bank Name";
+                end;
+            end;
         }
-        field(191; "Branch Bank"; Code[20])
+        field(191; "Bank Name"; Text[100])
         {
+            Editable = false;
         }
-        field(192; "Lock Bank Details"; Boolean)
+        field(192; "Branch Code"; Code[20])
         {
+            TableRelation = "Payroll Bank Branches_AU"."Branch Code" where("Bank Code" = field("Bank Code"));
+
+            trigger OnValidate()
+            begin
+                BankBranches.Reset;
+                BankBranches.SetRange(BankBranches."Bank Code", "Bank Code");
+                BankBranches.SetRange(BankBranches."Branch Code", "Branch Code");
+                if BankBranches.FindFirst then begin
+                    BankBranches.TestField(BankBranches."Branch Name");
+                    "Branch Name" := BankBranches."Branch Name";
+                end;
+            end;
         }
-        field(193; "Bank Account Number"; Code[20])
+        field(193; "Branch Name"; Text[100])
+        {
+            Editable = false;
+        }
+        field(194; "Bank Account No"; Code[50])
         {
         }
         field(195; "Payroll Code"; Code[20])
@@ -1096,7 +1125,7 @@ Table 80021 "HR Employees"
         {
             CalcFormula = sum("HR Leave Ledger Entries"."No. of days" where("Leave Type" = const('ANNUAL'),
                                                                              "Staff No." = field("No.")));
-        
+
 
             FieldClass = FlowField;
             AutoFormatType = 1;
@@ -1327,15 +1356,10 @@ Table 80021 "HR Employees"
         field(53925; "Institutional Base"; Decimal)
         {
         }
-        field(53926; "Bank Code"; Code[15])
-        {
-        }
         field(53927; IsBoard; Boolean)
         {
         }
-        field(53928; "Branch Code"; Code[15])
-        {
-        }
+
         field(53929; "Attachement 1"; Blob)
         {
             SubType = Bitmap;
@@ -1588,6 +1612,8 @@ Table 80021 "HR Employees"
         MSG1: label 'Employee Career History Starting Information successfully created.';
         ReasonDiaglog: Dialog;
         EmpQualification: Record "Employee Qualification";
+        BankCodes: Record "Payroll Bank Codes_AU";
+        BankBranches: Record "Payroll Bank Branches_AU";
         PayStartDate: Date;
         PayPeriodText: Text[30];
         ToD: Date;

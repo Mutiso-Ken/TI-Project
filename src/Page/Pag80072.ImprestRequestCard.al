@@ -28,7 +28,7 @@ Page 80072 "Imprest Request Card"
                     ApplicationArea = Basic;
                     Caption = 'Date';
                 }
-                field("Posting Description"; Rec."Posting Description")
+                field(Description;Rec.Description)
                 {
                     ApplicationArea = Basic;
                     Caption = 'Description';

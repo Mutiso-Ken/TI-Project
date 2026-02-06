@@ -12,6 +12,9 @@ Report 80027 "Imprest Requisition"
             column(No_PurchaseHeader; "Purchase Header"."No.")
             {
             }
+            column(Description;Description)
+            {
+            }
             column(DocumentDate_PurchaseHeader; "Purchase Header"."Document Date")
             {
             }
@@ -62,6 +65,7 @@ Report 80027 "Imprest Requisition"
                 column(Quantity_PurchaseLine; "Purchase Line".Quantity)
                 {
                 }
+               
                 column(sno; SNo)
                 {
                 }

@@ -428,7 +428,6 @@ Codeunit 80000 "Payroll Management_AU"
         if curPensionStaff > 0 then begin
             if curPensionStaff > MaxPensionContrib then
                 currentAmount := MaxPensionContrib
-            //ExcessPension:=MaxPensionContrib-curPensionStaff
             else
                 currentAmount := curPensionStaff;
 
@@ -1850,17 +1849,17 @@ Codeunit 80000 "Payroll Management_AU"
             TotDays := SysDate.Count;
 
 
-            baseCalender.Reset;
-            baseCalender.SetRange(baseCalender.Nonworking, true);
-            baseCalender.SetRange(baseCalender.Date, dtDate, LastDate);
-            if baseCalender.FindSet then
-                DaysDifference := baseCalender.Count;
+            // baseCalender.Reset;
+            // baseCalender.SetRange(baseCalender.Nonworking, true);
+            // baseCalender.SetRange(baseCalender.Date, dtDate, LastDate);
+            // if baseCalender.FindSet then
+            //     DaysDifference := baseCalender.Count;
 
-            NonWorkDays := NonWorkDays + DaysDifference;
+            // NonWorkDays := NonWorkDays + DaysDifference;
 
             DaysWorked := TotDays - NonWorkDays;
 
-            //Message('%1|%2|%3|%4', DaysWorked, NonWorkDays, TotDays, DaysDifference);
+
         end;
     end;
 

@@ -1,7 +1,6 @@
 Page 80084 "Budget Notes"
 {
     AutoSplitKey = true;
-    Caption = 'Budget Information';
     DelayedInsert = true;
     LinksAllowed = false;
     MultipleNewLines = true;

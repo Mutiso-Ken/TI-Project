@@ -1782,6 +1782,9 @@ End Function
         <Field Name="No_PurchaseHeader">
           <DataField>No_PurchaseHeader</DataField>
         </Field>
+        <Field Name="Description">
+          <DataField>Description</DataField>
+        </Field>
         <Field Name="DocumentDate_PurchaseHeader">
           <DataField>DocumentDate_PurchaseHeader</DataField>
         </Field>

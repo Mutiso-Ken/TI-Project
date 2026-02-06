@@ -186,7 +186,6 @@ Page 80067 "Mission Proposal Card"
             part("Budget Notes"; "Budget Notes")
             {
                 Editable = statuseditable;
-                Visible=false;
                 ApplicationArea = Basic;
                 SubPageLink = "Document No." = field("No."),
                               "Line Type" = filter("Budget Notes");
@@ -228,13 +227,13 @@ Page 80067 "Mission Proposal Card"
         {
             action("Mark as Completed")
             {
-                ApplicationArea = Basic, Suite;
+                ApplicationArea = Basic;
                 Image = ProdBOMMatrixPerVersion;
                 Promoted = true;
                 PromotedCategory = Category4;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                Visible = ReleasedDocument;
+               // Visible = ReleasedDocument;
 
                 trigger OnAction()
                 var
@@ -269,6 +268,10 @@ Page 80067 "Mission Proposal Card"
                     ApplicationArea = Basic;
                     Caption = 'Archi&ve Document';
                     Image = Archive;
+                    Promoted = true;
+                    PromotedCategory = Category4;
+                    PromotedIsBig = true;
+                    PromotedOnly = true;
 
 
                     trigger OnAction()

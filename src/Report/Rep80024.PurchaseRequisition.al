@@ -55,7 +55,7 @@ Report 80024 "Purchase Requisition"
                 column(Description_PurchaseLine; "Purchase Line".Description)
                 {
                 }
-                column(Description2_PurchaseLine; "Purchase Line"."Description 2")
+                column(Description2_PurchaseLine; "Purchase Line"."Description 3")
                 {
                 }
                 column(UnitofMeasure_PurchaseLine; "Purchase Line"."Unit of Measure")
@@ -73,7 +73,7 @@ Report 80024 "Purchase Requisition"
                 column(inventory; Inventory)
                 {
                 }
-                column(Amt; "Purchase Line"."Amount Including VAT")
+                column(Amt; "Purchase Line".Amount)
                 {
                 }
                 trigger OnPreDataItem();
@@ -84,6 +84,8 @@ Report 80024 "Purchase Requisition"
                 trigger OnAfterGetRecord();
                 begin
                     SNo += 1;
+                    "Purchase Line".Amount := "Purchase Line"."Direct Unit Cost" * "Purchase Line".Quantity;
+                    "Purchase Line".Modify();
                     if Type = Type::Item then begin
                         Item.Get("No.");
                         Item.CalcFields(Inventory);

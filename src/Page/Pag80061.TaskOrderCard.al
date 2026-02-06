@@ -156,7 +156,7 @@ Page 80061 "Task Order Card"
             part(PurchLines; "Requisition Subform")
             {
                 Caption = 'Purchase Requisition Lines';
-                Editable = statuseditable;
+                //Editable = statuseditable;
                 SubPageLink = "Document No." = field("No.");
                 ApplicationArea = All;
             }
@@ -336,17 +336,19 @@ Page 80061 "Task Order Card"
             }
             action("Mark As Completed")
             {
-                ApplicationArea = Basic;
                 Caption = 'Mark As Completed';
                 Ellipsis = true;
                 Image = ReceivableBill;
                 Promoted = true;
                 PromotedCategory = Process;
+                ApplicationArea = Basic;
+                PromotedIsBig = true;
+                PromotedOnly = true;
 
                 trigger OnAction()
                 begin
 
-                    if Confirm('Do you want to mark the document as completed') then begin
+                    if Confirm('Do you want to mark the document as completed') = true then begin
                         Rec.Completed := true;
                         Rec.Modify;
                     end;
@@ -585,8 +587,10 @@ Page 80061 "Task Order Card"
     end;
 
     trigger OnOpenPage()
+    var
+        PurchaseLine: record "Purchase Line";
+        PurchaseHeader: record "Purchase Header";
     begin
-
         if UserMgt.GetPurchasesFilter <> '' then begin
             Rec.FilterGroup(2);
             Rec.SetRange("Responsibility Center", UserMgt.GetPurchasesFilter);
@@ -595,7 +599,14 @@ Page 80061 "Task Order Card"
         Rec."Doc Type" := Rec."doc type"::PurchReq;
         Rec."Assigned User ID" := UserId;
         Rec.Requisition := true;
-        //SETRANGE("User ID",USERID);
+        PurchaseLine.Reset();
+        PurchaseLine.SetRange(PurchaseLine."Document No.", rec."No.");
+        if PurchaseLine.FindSet() then begin
+            repeat
+                PurchaseLine.Amount := PurchaseLine."Direct Unit Cost" * PurchaseLine.Quantity;
+                PurchaseLine.Modify();
+            until PurchaseLine.Next() = 0;
+        end;
     end;
 
     var

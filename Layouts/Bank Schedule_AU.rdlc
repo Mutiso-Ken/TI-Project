@@ -114,7 +114,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -408,7 +407,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Prepared By:...................................................................Date:..................................</Value>
+                    <Value>Prepared By:     ...................................................................Date:..................................</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -423,7 +422,7 @@
             <Top>6.63043cm</Top>
             <Left>0.06322cm</Left>
             <Height>0.49417cm</Height>
-            <Width>10.62271cm</Width>
+            <Width>12.52771cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -442,7 +441,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Checked By:...................................................................Date:..................................</Value>
+                    <Value>Checked By:    ...................................................................Date:..................................</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -457,7 +456,7 @@
             <Top>7.83015cm</Top>
             <Left>0.06322cm</Left>
             <Height>0.44125cm</Height>
-            <Width>10.62271cm</Width>
+            <Width>12.52771cm</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -476,7 +475,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Approved By:...................................................................Date:...............................</Value>
+                    <Value>Approved By:   ...................................................................Date:...............................</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -491,7 +490,7 @@
             <Top>8.89457cm</Top>
             <Left>0.10373cm</Left>
             <Height>0.49417cm</Height>
-            <Width>10.5822cm</Width>
+            <Width>12.4872cm</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>

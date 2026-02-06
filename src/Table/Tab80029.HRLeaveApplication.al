@@ -932,8 +932,7 @@ Table 80029 "HR Leave Application"
             end;
             LeaveGjline."Leave Type" := "Leave Type";
             //------------------------------------------------------------
-            //HRSetup.RESET;
-            //HRSetup.FIND('-');
+      
             HRSetup.TestField(HRSetup."Leave Posting Period[FROM]");
             HRSetup.TestField(HRSetup."Leave Posting Period[TO]");
             //------------------------------------------------------------

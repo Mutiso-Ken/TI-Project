@@ -242,7 +242,7 @@ Report 80016 "Payroll Detailed Summary_AU"
                 PayrollMonthly.Reset;
                 PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
                 PayrollMonthly.SetRange(PayrollMonthly."Payroll Period", Period);
-                PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'BENEFIT TE');
+                PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'IN LIEU');
                 if PayrollMonthly.Find('-') then begin
                     PerdiumAllowance := PayrollMonthly.Amount;
                 end;
@@ -299,7 +299,7 @@ Report 80016 "Payroll Detailed Summary_AU"
                 PayrollMonthly.Reset;
                 PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
                 PayrollMonthly.SetRange(PayrollMonthly."Payroll Period", Period);
-                PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'NHIF');
+                PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'SHIF');
                 if PayrollMonthly.Find('-') then begin
                     NHIF := Statutory + PayrollMonthly.Amount;
                 end;
@@ -454,11 +454,11 @@ Report 80016 "Payroll Detailed Summary_AU"
                 PayrollMonthly.SetFilter(Amount, '>%1', 0);
                 if PayrollMonthly.FindSet then begin
                     repeat
-                        Tnet := Tnet + ROUND(PayrollMonthly.Amount, 1, '=');
+                        Tnet := Tnet + ROUND(PayrollMonthly.Amount, 0.01, '=');
                     until PayrollMonthly.Next = 0;
                 end;
                 //Tnet:=ROUND(Tnet,1,'=');
-                Netpay := ROUND(Netpay, 1, '=');
+                Netpay := ROUND(Netpay, 0.01, '=');
                 if Netpay > 0 then NCount := NCount + 1;
             end;
 

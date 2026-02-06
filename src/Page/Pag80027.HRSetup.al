@@ -78,6 +78,10 @@ Page 80027 "HR Setup"
                 {
                     ApplicationArea = Basic;
                 }
+                field("Appraisal Question Nos."; Rec."Appraisal Question Nos.")
+                {
+                    ApplicationArea = Basic;
+                }
                 field("Training Analysis Nos"; Rec."Training Analysis Nos")
                 {
                     ApplicationArea = Basic;

@@ -30,7 +30,7 @@ Page 80071 "Imprest Request"
                     ApplicationArea = Basic;
                     Caption = 'Date';
                 }
-                field("Posting Description"; Rec."Posting Description")
+                field(Description;Rec.Description)
                 {
                     ApplicationArea = Basic;
                     Caption = 'Description';

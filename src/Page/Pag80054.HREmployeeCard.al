@@ -351,31 +351,25 @@ Page 80054 "HR Employee Card"
             }
             group("Bank Details")
             {
-                Caption = 'Bank Details';
-                field("Main Bank"; Rec."Main Bank")
+                field("Bank Code"; Rec."Bank Code")
                 {
                     ApplicationArea = Basic;
-                    Importance = Promoted;
                 }
-                field("<Bank Code>"; Rec."Bank Code")
+                field("Bank Name"; Rec."Bank Name")
                 {
                     ApplicationArea = Basic;
-                    Caption = 'Bank Code';
                 }
-                field("Branch Bank"; Rec."Branch Bank")
+                field("Branch Code"; Rec."Branch Code")
                 {
                     ApplicationArea = Basic;
-                    Importance = Promoted;
                 }
-                field("<Branch Code>"; Rec."Branch Code")
+                field("Branch Name"; Rec."Branch Name")
                 {
                     ApplicationArea = Basic;
-                    Caption = 'Branch Code';
                 }
-                field("Bank Account Number"; Rec."Bank Account Number")
+                field("Bank Account No"; Rec."Bank Account No")
                 {
                     ApplicationArea = Basic;
-                    Importance = Promoted;
                 }
             }
             group("Important Dates")

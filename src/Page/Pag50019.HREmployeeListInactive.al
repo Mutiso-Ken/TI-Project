@@ -5,7 +5,6 @@ page 50019 "HR Employee List-Inactive"
     PageType = List;
     PromotedActionCategories = 'New,Process,Report,Employee';
     SourceTable = "HR Employees";
-    SourceTableView = where(Status = filter(Inactive));
     UsageCategory = Lists;
 
     layout
