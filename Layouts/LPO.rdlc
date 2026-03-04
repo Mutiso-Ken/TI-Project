@@ -1250,6 +1250,48 @@
                     <TablixCell />
                   </TablixCells>
                 </TablixRow>
+                <TablixRow>
+                  <Height>0.6cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox10">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>9. An eTIMS-compliant invoice must be shared in accordance with KRA requirements</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox10</rd:DefaultName>
+                          <Style>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>0.45cm</PaddingLeft>
+                            <PaddingRight>0.45cm</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>5</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                  </TablixCells>
+                </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
@@ -1342,6 +1384,9 @@
                         <TablixMember>
                           <KeepWithGroup>Before</KeepWithGroup>
                         </TablixMember>
+                        <TablixMember>
+                          <KeepWithGroup>Before</KeepWithGroup>
+                        </TablixMember>
                       </TablixMembers>
                     </TablixMember>
                   </TablixMembers>
@@ -1351,7 +1396,7 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>5.90021cm</Top>
             <Left>0.28222cm</Left>
-            <Height>7.43164cm</Height>
+            <Height>8.03164cm</Height>
             <Width>17.42067cm</Width>
             <Style />
           </Tablix>
@@ -2491,7 +2536,7 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>16.21362cm</Height>
+        <Height>16.29299cm</Height>
         <Style />
       </Body>
       <Width>17.73817cm</Width>

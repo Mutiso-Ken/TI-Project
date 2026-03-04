@@ -347,6 +347,15 @@ Page 80006 "Payroll Employee List_AU"
                 begin
                 end;
             }
+            action("Payroll Employee Variance")
+            {
+                ApplicationArea = Basic;
+                Image = "Report";
+                Promoted = true;
+                PromotedCategory = "Report";
+                PromotedIsBig = true;
+                RunObject = Report "payroll Audit Report.";
+            }
         }
     }
 

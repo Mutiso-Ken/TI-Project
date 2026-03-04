@@ -144,6 +144,11 @@ Page 80054 "HR Employee Card"
                 {
                     ApplicationArea = Basic;
                 }
+                field("Supervisor ID"; Rec."Supervisor ID")
+                {
+                    // Caption = 'Appraisal Supervisor';
+                    ApplicationArea = Basic;
+                }
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = Basic;
@@ -479,6 +484,10 @@ Page 80054 "HR Employee Card"
                 {
                     ApplicationArea = Basic;
                 }
+                field("Appraisal Supervisor1"; Rec."Appraisal Supervisor1") { ApplicationArea = Basic; }
+                field("Appraisal Supervisor2"; Rec."Appraisal Supervisor2") { ApplicationArea = Basic; }
+                field("Appraisal Supervisor3"; Rec."Appraisal Supervisor3") { ApplicationArea = Basic; }
+                field("Appraisal Supervisor4"; Rec."Appraisal Supervisor4") { ApplicationArea = Basic; }
             }
             group("Terms of Service")
             {

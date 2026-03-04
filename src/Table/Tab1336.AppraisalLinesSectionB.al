@@ -1,6 +1,6 @@
 table 1336 "Appraisal Lines Section B"
 {
-    Caption = 'Appraisal Lines';
+    Caption = 'Appraisal Lines Section B';
     DataClassification = ToBeClassified;
 
     fields
@@ -14,20 +14,11 @@ table 1336 "Appraisal Lines Section B"
         {
             Caption = 'Appraisal Code';
         }
-        field(3; Section; Option)
+        field(3; Part; Option)
         {
-            OptionCaption = '"Section 1","Section 2","Section 3","Section 4"';
-            OptionMembers = "Section 1","Section 2","Section 3","Section 4";
-        }
-        field(4; "Question"; Code[20])
-        {
-            DataClassification = ToBeClassified;
+            OptionMembers = "Part 1","Part 2","Part 3","Part 4","Part 5","Part 6";
         }
         field(5; "Question Description"; Text[2048])
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(6; "Employee Answer"; Text[2048])
         {
             DataClassification = ToBeClassified;
         }
@@ -47,13 +38,4 @@ table 1336 "Appraisal Lines Section B"
             Clustered = true;
         }
     }
-
-    trigger
-    OnInsert()
-    begin
-
-    end;
-
-    var
-        AppraisalQuestions: Record AppraisalQuestions;
 }

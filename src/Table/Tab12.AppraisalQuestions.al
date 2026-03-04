@@ -1,4 +1,4 @@
-table 12 AppraisalQuestions
+table 12 "Appraisal Questions"
 {
     Caption = 'AppraisalQuestions';
     DataClassification = ToBeClassified;
@@ -15,8 +15,11 @@ table 12 AppraisalQuestions
         }
         field(3; Section; Option)
         {
-            OptionCaption = '"Section A","Section B","Section C"';
-            OptionMembers = "Section A","Section B","Section C";
+            OptionMembers = "Section A","Section B","Section C","Section D";
+        }
+        field(4; Part; Option)
+        {
+            OptionMembers = "Part 1","Part 2","Part 3","Part 4","Part 5","Part 6";
         }
     }
     keys

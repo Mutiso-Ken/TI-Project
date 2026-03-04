@@ -24,3 +24,18 @@ pageextension 172189 "Purchase Order" extends "Purchase Order"
     }
 
 }
+
+pageextension 172193 "Purchase Invoice" extends "Purchase Invoices"
+{
+    layout
+
+    {
+
+        modify("Status")
+        {
+            Visible = True;
+        }
+
+    }
+}
+

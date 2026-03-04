@@ -35,7 +35,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">OBJECTIVES TO BE ACHIEVED</Value>
+                                  <Value>OBJECTIVES TO BE ACHIEVED</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -78,7 +78,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description2_PurchaseLine.Value</Value>
+                                  <Value>=Fields!Description2_PurchaseLine.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -142,7 +142,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!StrategicFocusArea_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!StrategicFocusArea_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -175,7 +175,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">STRATEGIC FOCUS AREA </Value>
+                    <Value>STRATEGIC FOCUS AREA </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -209,7 +209,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!SubPillar_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!SubPillar_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -242,7 +242,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">SUB PILLAR</Value>
+                    <Value>SUB PILLAR</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -276,7 +276,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!ProjectTitle_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!ProjectTitle_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -309,7 +309,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">PROJECT TITLE</Value>
+                    <Value>PROJECT TITLE</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -343,7 +343,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!Country_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!Country_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -376,7 +376,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">COUNTRY</Value>
+                    <Value>COUNTRY</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -410,7 +410,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!County_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!County_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -443,7 +443,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">COUNTY</Value>
+                    <Value>COUNTY</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -477,7 +477,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!DatesofActivity_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!DatesofActivity_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -510,7 +510,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">DATE(S) OF ACTIVITY</Value>
+                    <Value>DATE(S) OF ACTIVITY</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -544,7 +544,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!MissionTeam_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!MissionTeam_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -577,7 +577,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">MISSION TEAM</Value>
+                    <Value>MISSION TEAM</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -611,7 +611,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!InvitedMembersPartners_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!InvitedMembersPartners_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -644,7 +644,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">INVITED Board Member(S)/ Development Partner(S)/Specific Target Group</Value>
+                    <Value>INVITED Board Member(S)/ Development Partner(S)/Specific Target Group</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -678,7 +678,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!EmployeeName_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!EmployeeName_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -711,7 +711,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">ORIGINATED BY</Value>
+                    <Value>ORIGINATED BY</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -745,7 +745,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">BACKGROUND </Value>
+                    <Value>BACKGROUND </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -779,7 +779,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!Background_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!Background_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -825,7 +825,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">CONTRIBUTION TO TI-KENYA STRATEGIC FOCUS</Value>
+                                  <Value>CONTRIBUTION TO TI-KENYA STRATEGIC FOCUS</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -868,7 +868,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=First(Fields!Contributiontofocus_PurchaseHeader.Value, "DataSet_Result")</Value>
+                                  <Value>=First(Fields!Contributiontofocus_PurchaseHeader.Value, "DataSet_Result")</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -939,7 +939,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">MAIN OUTCOME - as per DIP/LOGFRAME</Value>
+                                  <Value>MAIN OUTCOME - as per DIP/LOGFRAME</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -982,7 +982,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!MainOutcome_PurchaseHeader.Value</Value>
+                                  <Value>=Fields!MainOutcome_PurchaseHeader.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1056,7 +1056,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">SUMMARY OF ROLES AND RESPONSIBILITIES FOR THE TEAM</Value>
+                                  <Value>SUMMARY OF ROLES AND RESPONSIBILITIES FOR THE TEAM</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1101,7 +1101,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">NAME</Value>
+                                  <Value>NAME</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1139,7 +1139,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">RESPONSIBILITIES</Value>
+                                  <Value>RESPONSIBILITIES</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1182,7 +1182,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description2_PurchaseLine2.Value</Value>
+                                  <Value>=Fields!Description2_PurchaseLine2.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1215,7 +1215,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description3_PurchaseLine2.Value</Value>
+                                  <Value>=Fields!Description3_PurchaseLine2.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1306,7 +1306,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">ACTIVITIES</Value>
+                                  <Value>ACTIVITIES</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1346,7 +1346,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1384,7 +1384,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1427,7 +1427,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">DATE</Value>
+                                  <Value>DATE</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1465,7 +1465,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">ACTIVITY</Value>
+                                  <Value>ACTIVITY</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1503,7 +1503,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Duration</Value>
+                                  <Value>Duration</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1541,7 +1541,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Output</Value>
+                                  <Value>Output</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1584,7 +1584,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!ExpectedReceiptDate_PurchaseLine3.Value</Value>
+                                  <Value>=Fields!ExpectedReceiptDate_PurchaseLine3.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1620,7 +1620,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description3_PurchaseLine3.Value</Value>
+                                  <Value>=Fields!Description3_PurchaseLine3.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1653,7 +1653,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!UnitofMeasure_PurchaseLine3.Value</Value>
+                                  <Value>=Fields!UnitofMeasure_PurchaseLine3.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1686,7 +1686,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description2_PurchaseLine3.Value</Value>
+                                  <Value>=Fields!Description2_PurchaseLine3.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1757,7 +1757,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">Date: </Value>
+                    <Value>Date: </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -1824,7 +1824,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">BUDGET INFORMATION</Value>
+                                  <Value>BUDGET INFORMATION</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1864,7 +1864,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1902,7 +1902,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1940,7 +1940,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1978,7 +1978,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2016,7 +2016,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2054,7 +2054,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2097,7 +2097,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">BUDGET ITEM</Value>
+                                  <Value>BUDGET ITEM</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2135,7 +2135,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Identified Vendor/Service Provider</Value>
+                                  <Value>Identified Vendor/Service Provider</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2173,7 +2173,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">No. of Days</Value>
+                                  <Value>No. of Days</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2211,7 +2211,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">No. of Pax  /Units</Value>
+                                  <Value>No. of Pax  /Units</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2249,7 +2249,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Ksh</Value>
+                                  <Value>Ksh</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2287,7 +2287,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Other currency</Value>
+                                  <Value>Other currency</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2325,7 +2325,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Total Ksh</Value>
+                                  <Value>Total Ksh</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2363,7 +2363,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Total Other Currency </Value>
+                                  <Value>Total Other Currency </Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2406,7 +2406,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description3_PurchaseLine4.Value</Value>
+                                  <Value>=Fields!Description3_PurchaseLine4.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2441,7 +2441,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description2_PurchaseLine4.Value</Value>
+                                  <Value>=Fields!Description2_PurchaseLine4.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2474,7 +2474,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Noofdays_PurchaseLine4.Value</Value>
+                                  <Value>=Fields!Noofdays_PurchaseLine4.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2507,7 +2507,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Noofpax_PurchaseLine4.Value</Value>
+                                  <Value>=Fields!Noofpax_PurchaseLine4.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2540,7 +2540,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Ksh_PurchaseLine4.Value</Value>
+                                  <Value>=Fields!Ksh_PurchaseLine4.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2574,7 +2574,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!othercurrency_PurchaseLine4.Value</Value>
+                                  <Value>=Fields!othercurrency_PurchaseLine4.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2608,7 +2608,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!TotalKsh_PurchaseLine4.Value</Value>
+                                  <Value>=Fields!TotalKsh_PurchaseLine4.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2642,7 +2642,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!TotalOtherCurrency_PurchaseLine4.Value</Value>
+                                  <Value>=Fields!TotalOtherCurrency_PurchaseLine4.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2681,7 +2681,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">TOTAL:</Value>
+                                  <Value>TOTAL:</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2723,7 +2723,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=SUM(Fields!TotalKsh_PurchaseLine4.Value)</Value>
+                                  <Value>=SUM(Fields!TotalKsh_PurchaseLine4.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2758,7 +2758,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=SUM(Fields!TotalOtherCurrency_PurchaseLine4.Value)</Value>
+                                  <Value>=SUM(Fields!TotalOtherCurrency_PurchaseLine4.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2863,7 +2863,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Budget Notes</Value>
+                                  <Value>Budget Notes</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2903,7 +2903,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2941,7 +2941,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -2979,7 +2979,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto" />
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3022,7 +3022,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Details</Value>
+                                  <Value>Details</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3060,7 +3060,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Vendor 1</Value>
+                                  <Value>Vendor 1</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3098,7 +3098,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Vendor 2</Value>
+                                  <Value>Vendor 2</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3136,7 +3136,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Vendor 3</Value>
+                                  <Value>Vendor 3</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3174,7 +3174,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Comment/Conclusion</Value>
+                                  <Value>Comment/Conclusion</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3217,7 +3217,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description3_PurchaseLine5.Value</Value>
+                                  <Value>=Fields!Description3_PurchaseLine5.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3252,7 +3252,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description2_PurchaseLine5.Value</Value>
+                                  <Value>=Fields!Description2_PurchaseLine5.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3285,7 +3285,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description4_PurchaseLine5.Value</Value>
+                                  <Value>=Fields!Description4_PurchaseLine5.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3318,7 +3318,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description5_PurchaseLine5.Value</Value>
+                                  <Value>=Fields!Description5_PurchaseLine5.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3351,7 +3351,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=Fields!Description6_PurchaseLine5.Value</Value>
+                                  <Value>=Fields!Description6_PurchaseLine5.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3433,7 +3433,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Reviews &amp; Approvals</Value>
+                                  <Value>Reviews &amp; Approvals</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3476,7 +3476,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Finance</Value>
+                                  <Value>Finance</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3515,7 +3515,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Approver: L Oyugi                           Date: </Value>
+                                  <Value>Approver: Jane Kingori                                 Date: </Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3523,11 +3523,11 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=First(Fields!date2.Value, "DataSet_Result")</Value>
+                                  <Value>=Fields!date1.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
-                                    <Format>d</Format>
+                                    <Format>dd-MMM-yy</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3562,7 +3562,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Finance &amp; Investment Manager</Value>
+                                  <Value>Finance &amp; Investment Manager</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3601,7 +3601,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Approver: Njeri Gathoga                Date: </Value>
+                                  <Value>  Approver: Jeniffer kamande                      Date: </Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3609,11 +3609,11 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=First(Fields!date3.Value, "DataSet_Result")</Value>
+                                  <Value>=Fields!date1.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
-                                    <Format>d</Format>
+                                    <Format>dd-MMM-yy</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3648,7 +3648,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Program Manager</Value>
+                                  <Value>Program Manager</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3687,7 +3687,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">Approver: A Misoi                           Date: </Value>
+                                  <Value>Approver: Gibson Mwaita                            Date: </Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3695,11 +3695,11 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value EvaluationMode="Auto">=First(Fields!date1.Value, "DataSet_Result")</Value>
+                                  <Value>=Fields!date1.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
-                                    <Format>d</Format>
+                                    <Format>dd-MMM-yy</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3759,7 +3759,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!date1.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!date1.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -3796,7 +3796,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!ShortcutDimension1Code_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!ShortcutDimension1Code_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -3829,7 +3829,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">FUND CODE</Value>
+                    <Value>FUND CODE</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -3863,7 +3863,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!ShortcutDimension2Code_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!ShortcutDimension2Code_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -3896,7 +3896,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">PROGRAM CODE</Value>
+                    <Value>PROGRAM CODE</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -3930,7 +3930,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">=First(Fields!ShortcutDimension3Code_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!ShortcutDimension3Code_PurchaseHeader.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -3963,7 +3963,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value EvaluationMode="Auto">BUDGET LINE</Value>
+                    <Value>BUDGET LINE</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>9pt</FontSize>
@@ -4023,7 +4023,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">MISSION PROPOSAL</Value>
+                      <Value>MISSION PROPOSAL</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
                         <FontSize>11pt</FontSize>
@@ -4060,7 +4060,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=Globals!ExecutionTime</Value>
+                      <Value>=Globals!ExecutionTime</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
                         <FontSize>6pt</FontSize>
@@ -4094,7 +4094,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=User!UserID</Value>
+                      <Value>=User!UserID</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
                         <FontSize>6pt</FontSize>
@@ -4129,7 +4129,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=Globals!PageNumber</Value>
+                      <Value>=Globals!PageNumber</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
                         <FontSize>6pt</FontSize>
@@ -4162,7 +4162,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">Page</Value>
+                      <Value>Page</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
                         <FontSize>6pt</FontSize>
@@ -4197,7 +4197,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">MISSION NO:</Value>
+                      <Value>MISSION NO:</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
                         <FontSize>9pt</FontSize>
@@ -4231,7 +4231,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value EvaluationMode="Auto">=First(Fields!No_PurchaseHeader.Value, "DataSet_Result")</Value>
+                      <Value>=First(Fields!No_PurchaseHeader.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
                         <FontSize>9pt</FontSize>
@@ -4266,10 +4266,6 @@
         </PageHeader>
         <PageHeight>29.7cm</PageHeight>
         <PageWidth>21cm</PageWidth>
-        <LeftMargin>0cm</LeftMargin>
-        <RightMargin>0cm</RightMargin>
-        <TopMargin>0cm</TopMargin>
-        <BottomMargin>0cm</BottomMargin>
         <ColumnSpacing>1.27cm</ColumnSpacing>
         <Style />
       </Page>

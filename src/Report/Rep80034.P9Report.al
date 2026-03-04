@@ -47,6 +47,8 @@ Report 80034 P9Report
                 column(PeriodYear_PayrollEmployeeP9; "Payroll Employee P9"."Period Year")
                 {
                 }
+                column(Housing_Levy; HousingLevy) { }
+                column(NHIF; Shif) { }
                 column(MonthText; MonthText)
                 {
                     IncludeCaption = false;
@@ -75,6 +77,7 @@ Report 80034 P9Report
                 column(E2; E2)
                 {
                 }
+
                 trigger OnPreDataItem();
                 begin
 
@@ -82,6 +85,8 @@ Report 80034 P9Report
 
                 trigger OnAfterGetRecord();
                 begin
+                    Shif := 0;
+                    HousingLevy := 0;
                     PAYE := 0; // Inserted by ForNAV
                     INSRLF := 0; // Inserted by ForNAV
                     PSNR := 0; // Inserted by ForNAV
@@ -207,6 +212,30 @@ Report 80034 P9Report
                     PayrollMonthlyTransactions.SetRange("Transaction Code", 'PENSION');
                     if PayrollMonthlyTransactions.FindFirst then
                         E2 := E2 + PayrollMonthlyTransactions.Amount;
+
+
+                    MonthlyTransactions.Reset();
+                    MonthlyTransactions.SetRange("No.", "Payroll Employee P9"."Employee Code");
+                    MonthlyTransactions.SetRange(MonthlyTransactions."Period Year", "Payroll Employee P9"."Period Year");
+                    MonthlyTransactions.SetRange(MonthlyTransactions."Period Month", "Payroll Employee P9"."Period Month");
+                    MonthlyTransactions.SetFilter(MonthlyTransactions."Transaction Code", 'SHIF');
+                    if MonthlyTransactions.FindSet() then begin
+                        Shif := MonthlyTransactions.Amount;
+                        "Payroll Employee P9".NHIF := Shif;
+                        "Payroll Employee P9".Modify();
+                    end;
+                    MonthlyTransactions.Reset();
+                    MonthlyTransactions.SetRange("No.", "Payroll Employee P9"."Employee Code");
+                    MonthlyTransactions.SetRange(MonthlyTransactions."Period Year", "Payroll Employee P9"."Period Year");
+                    MonthlyTransactions.SetRange(MonthlyTransactions."Period Month", "Payroll Employee P9"."Period Month");
+                    MonthlyTransactions.SetFilter(MonthlyTransactions."Transaction Code", 'HL');
+                    if MonthlyTransactions.FindSet() then begin
+                        HousingLevy := MonthlyTransactions.Amount;
+                        "Payroll Employee P9"."Housing Levy" := HousingLevy;
+                        "Payroll Employee P9".Modify();
+                    end;
+
+
                 end;
 
             }
@@ -258,6 +287,9 @@ Report 80034 P9Report
                         TotalL := TotalL + P9.PAYE;
                     until P9.Next = 0;
                 end;
+
+
+
             end;
 
         }
@@ -272,15 +304,19 @@ Report 80034 P9Report
     }
 
     trigger OnInitReport()
+    var
+
     begin
         if ObjUserSetup.Get(UserId) then begin
             if ObjUserSetup."View Payroll" = false then Error('You dont have permissions for payroll, Contact your system administrator! ')
         end;
 
 
+
     end;
 
     var
+        MonthlyTransactions: Record "Payroll Monthly Trans_AU";
         MonthText: Text;
         ObjUserSetup: Record "User Setup";
         ColG: Decimal;
@@ -302,6 +338,8 @@ Report 80034 P9Report
         TotalL: Decimal;
         P9: Record "Payroll Employee P9_AU";
         PensionAmt: Decimal;
+        Shif: decimal;
+        HousingLevy: decimal;
         NSSFAmt: Decimal;
         PenNSSF: Decimal;
         Amount1: Decimal;

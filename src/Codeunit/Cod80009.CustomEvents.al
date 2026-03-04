@@ -110,4 +110,12 @@ codeunit 80009 CustomEvents
     end;
 
 
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Check Line", 'OnBeforeCheckAccountNo', '', false, false)]
+    local procedure OnBeforeCheckAccountNo(var GenJnlLine: Record "Gen. Journal Line"; var CheckDone: Boolean)
+    begin
+        CheckDone := true;
+    end;
+
+
 }

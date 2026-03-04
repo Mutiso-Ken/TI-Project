@@ -1521,6 +1521,32 @@ Table 80021 "HR Employees"
         {
             DataClassification = ToBeClassified;
         }
+
+        field(51516005; "Appraisal Supervisor1"; Text[100])
+        {
+            Caption = 'First Appraisal Supervisor';
+            DataClassification = ToBeClassified;
+            TableRelation = "HR Employees"."No.";
+        }
+        field(51516006; "Appraisal Supervisor2"; Text[100])
+        {
+            Caption = 'Second Appraisal Supervisor';
+            DataClassification = ToBeClassified;
+            TableRelation = "HR Employees"."No.";
+        }
+        field(51516007; "Appraisal Supervisor3"; Text[100])
+        {
+            Caption = 'Third Appraisal Supervisor';
+            DataClassification = ToBeClassified;
+            TableRelation = "HR Employees"."No.";
+        }
+        field(51516008; "Appraisal Supervisor4"; Text[100])
+        {
+            Caption = 'Fourth Appraisal Supervisor';
+            DataClassification = ToBeClassified;
+            TableRelation = "HR Employees"."No.";
+        }
+
     }
 
     keys
@@ -1640,9 +1666,14 @@ Table 80021 "HR Employees"
     procedure FullName(): Text[100]
     begin
         if "Middle Name" = '' then
-            exit("Known As" + ' ' + "Last Name")
+            exit("First Name" + ' ' + "Last Name")
         else
-            exit("Known As" + ' ' + "Middle Name" + ' ' + "Last Name");
+            exit("First Name" + ' ' + "Middle Name" + ' ' + "Last Name");
+    end;
+
+    procedure SimpleName(): Text[100]
+    begin
+        exit("First Name" + ' ' + "Last Name");
     end;
 
 

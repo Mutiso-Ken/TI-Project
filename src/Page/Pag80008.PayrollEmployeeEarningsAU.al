@@ -71,7 +71,6 @@ Page 80008 "Payroll Employee Earnings_AU"
         PayrollCalender.SetRange(PayrollCalender.Closed, false);
         if PayrollCalender.Find('-') then
             OpenPeriod := PayrollCalender."Date Opened";
-
         Rec.SetRange("Payroll Period", OpenPeriod)
     end;
 

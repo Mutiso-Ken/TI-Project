@@ -2421,7 +2421,7 @@ Codeunit 80007 STAFFPortalIntegration
         Trainingscehdule.Facilitator := facilitator;
         Trainingscehdule."Scheduled date" := scheduleDate;
         Trainingscehdule.Validate("Scheduled date");
-        Trainingscehdule."No. of Staff trained" := Employees;
+        // Trainingscehdule."No. of Staff trained" := Employees;
         Trainingscehdule."Evidence of training" := evidence;
         Trainingscehdule."Department/Organization" := department;
         Trainingscehdule.Topic := topic;

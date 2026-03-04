@@ -74,7 +74,7 @@ Report 80033 "Mission Proposal"
             {
                 DataItemLink = "Document No." = field("No.");
                 DataItemTableView = where("Line Type" = const(Objectives));
-                column(Description2_PurchaseLine; "Purchase Line"."Description 2")
+                column(Description2_PurchaseLine; "Purchase Line"."Description 6")
                 {
                 }
                 trigger OnPreDataItem();
@@ -241,11 +241,12 @@ Report 80033 "Mission Proposal"
             dataitem("Approval Entry"; "Approval Entry")
             {
                 DataItemLink = "Document No." = field("No.");
-                DataItemTableView = where("Document Type" = const(Quote), Status = const(Approved));
-                trigger OnPreDataItem();
+                DataItemTableView = where(Status = const(Approved));
+                trigger OnAfterGetRecord();
                 begin
-
+                    date1 := "Approval Entry"."Last Date-Time Modified"
                 end;
+
             }
             trigger OnPreDataItem();
             begin
@@ -254,53 +255,62 @@ Report 80033 "Mission Proposal"
 
             trigger OnAfterGetRecord();
             begin
-                DimVal.Reset;
-                DimVal.SetRange(Code, "Shortcut Dimension 1 Code");
-                if DimVal.FindFirst then
-                    Dim1Name := DimVal.Name;
-                DimVal.Reset;
-                DimVal.SetRange(Code, "Shortcut Dimension 2 Code");
-                if DimVal.FindFirst then
-                    Dim2Name := DimVal.Name;
+
+
                 ApprovalEntry.Reset;
                 ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
                 ApprovalEntry.SetRange("Sequence No.", 1);
-                if ApprovalEntry.FindFirst then begin
-                    date1 := ApprovalEntry."Date-Time Sent for Approval";
-                end;
-                ApprovalEntry.Reset;
-                ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                ApprovalEntry.SetRange("Sequence No.", 1);
-                if ApprovalEntry.FindFirst then begin
+                if ApprovalEntry.FindLast() then begin
                     User1 := ApprovalEntry."Last Modified By User ID";
-                    date1 := ApprovalEntry."Last Date-Time Modified";
+                    date1 := ApprovalEntry."Last Date-Time Modified"
                 end;
-                ApprovalEntry.Reset;
-                ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                ApprovalEntry.SetRange("Sequence No.", 2);
-                if ApprovalEntry.FindFirst then begin
-                    user2 := ApprovalEntry."Last Modified By User ID";
-                    date2 := ApprovalEntry."Last Date-Time Modified";
-                end;
-                ApprovalEntry.Reset;
-                ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                ApprovalEntry.SetRange("Sequence No.", 3);
-                if ApprovalEntry.FindFirst then begin
-                    user3 := ApprovalEntry."Last Modified By User ID";
-                    date3 := ApprovalEntry."Last Date-Time Modified";
-                end;
-                ApprovalEntry.Reset;
-                ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                ApprovalEntry.SetRange("Sequence No.", 4);
-                if ApprovalEntry.FindFirst then begin
-                    user4 := ApprovalEntry."Last Modified By User ID";
-                    date4 := ApprovalEntry."Last Date-Time Modified";
-                end;
+                // DimVal.Reset;
+                // DimVal.SetRange(Code, "Shortcut Dimension 1 Code");
+                // if DimVal.FindFirst then
+                //     Dim1Name := DimVal.Name;
+                // DimVal.Reset;
+                // DimVal.SetRange(Code, "Shortcut Dimension 2 Code");
+                // if DimVal.FindFirst then
+                //     Dim2Name := DimVal.Name;
+                // ApprovalEntry.Reset;
+                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
+                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+                // ApprovalEntry.SetRange("Sequence No.", 1);
+                // if ApprovalEntry.FindFirst then begin
+                //     date1 := ApprovalEntry."Date-Time Sent for Approval";
+                // end;
+                // ApprovalEntry.Reset;
+                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
+                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+                // ApprovalEntry.SetRange("Sequence No.", 1);
+                // if ApprovalEntry.FindFirst then begin
+                //     User1 := ApprovalEntry."Last Modified By User ID";
+                //     date1 := ApprovalEntry."Last Date-Time Modified";
+                // end;
+                // ApprovalEntry.Reset;
+                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
+                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+                // ApprovalEntry.SetRange("Sequence No.", 2);
+                // if ApprovalEntry.FindFirst then begin
+                //     user2 := ApprovalEntry."Last Modified By User ID";
+                //     date2 := ApprovalEntry."Last Date-Time Modified";
+                // end;
+                // ApprovalEntry.Reset;
+                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
+                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+                // ApprovalEntry.SetRange("Sequence No.", 3);
+                // if ApprovalEntry.FindFirst then begin
+                //     user3 := ApprovalEntry."Last Modified By User ID";
+                //     date3 := ApprovalEntry."Last Date-Time Modified";
+                // end;
+                // ApprovalEntry.Reset;
+                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
+                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+                // ApprovalEntry.SetRange("Sequence No.", 4);
+                // if ApprovalEntry.FindFirst then begin
+                //     user4 := ApprovalEntry."Last Modified By User ID";
+                //     date4 := ApprovalEntry."Last Date-Time Modified";
+                // end;
             end;
 
         }
@@ -344,6 +354,7 @@ Report 80033 "Mission Proposal"
         ApprovalEntry: Record "Approval Entry";
         user5: Code[100];
         date5: DateTime;
+        Approvaldate: Date;
 
     trigger OnInitReport();
     begin

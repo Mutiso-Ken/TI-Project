@@ -1,11 +1,11 @@
-//APPRAISAL Part B PAGES
+//APPRAISAL SECTION B PAGES
 
-page 20369 "Appraisal Section B Part 1"
+page 20378 "Appraisal Section D Part 1"
 {
     ApplicationArea = All;
-    Caption = 'What did you do well in relation to your objectives?';
+    Caption = 'Commitment to the Job';
     PageType = ListPart;
-    SourceTable = "Appraisal Lines Section B";
+    SourceTable = "Appraisal Lines Section D";
     SourceTableView = where(Part = const("Part 1"));
 
     layout
@@ -14,17 +14,16 @@ page 20369 "Appraisal Section B Part 1"
         {
             repeater(Control1)
             {
-                field("Question Description"; Rec."Question Description")
+                field("Question Description"; Rec."Question")
                 {
                     ApplicationArea = Basic;
                 }
-                field("Self-appraisal (Comments)"; Rec."Self-appraisal (Comments)")
+                field("Self-appraisal (Comments)"; Rec."Supervisor Rating")
                 {
                     ApplicationArea = Basic;
                 }
-                field("Comments by the supervisor"; Rec."Comments by the supervisor")
+                field("Comments by the supervisor"; Rec."Supervisor Comment")
                 {
-                    Caption = 'Supervisor`s Feedback';
                     ApplicationArea = Basic;
                 }
             }
@@ -36,12 +35,13 @@ page 20369 "Appraisal Section B Part 1"
         Rec.Part := Rec.Part::"Part 1";
     end;
 }
-page 20370 "Appraisal Section B Part 2"
+
+page 20379 "Appraisal Section D Part 2"
 {
     ApplicationArea = All;
-    Caption = 'What enabled you to perform well?';
+    Caption = 'Integrity';
     PageType = ListPart;
-    SourceTable = "Appraisal Lines Section B";
+    SourceTable = "Appraisal Lines Section D";
     SourceTableView = where(Part = const("Part 2"));
 
     layout
@@ -50,33 +50,34 @@ page 20370 "Appraisal Section B Part 2"
         {
             repeater(Control1)
             {
-                field("Question Description"; Rec."Question Description")
+                field("Question Description"; Rec."Question")
                 {
                     ApplicationArea = Basic;
                 }
-                field("Self-appraisal (Comments)"; Rec."Self-appraisal (Comments)")
+                field("Self-appraisal (Comments)"; Rec."Supervisor Rating")
                 {
                     ApplicationArea = Basic;
                 }
-                field("Comments by the supervisor"; Rec."Comments by the supervisor")
+                field("Comments by the supervisor"; Rec."Supervisor Comment")
                 {
-                    Caption = 'Supervisor`s Feedback';
                     ApplicationArea = Basic;
                 }
             }
         }
     }
+
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         Rec.Part := Rec.Part::"Part 2";
     end;
 }
-page 20371 "Appraisal Section B Part 3"
+
+page 20380 "Appraisal Section D Part 3"
 {
     ApplicationArea = All;
-    Caption = 'What didn’t you do well?';
+    Caption = 'Resource Management';
     PageType = ListPart;
-    SourceTable = "Appraisal Lines Section B";
+    SourceTable = "Appraisal Lines Section D";
     SourceTableView = where(Part = const("Part 3"));
 
     layout
@@ -85,33 +86,34 @@ page 20371 "Appraisal Section B Part 3"
         {
             repeater(Control1)
             {
-                field("Question Description"; Rec."Question Description")
+                field("Question Description"; Rec."Question")
                 {
                     ApplicationArea = Basic;
                 }
-                field("Self-appraisal (Comments)"; Rec."Self-appraisal (Comments)")
+                field("Self-appraisal (Comments)"; Rec."Supervisor Rating")
                 {
                     ApplicationArea = Basic;
                 }
-                field("Comments by the supervisor"; Rec."Comments by the supervisor")
+                field("Comments by the supervisor"; Rec."Supervisor Comment")
                 {
-                    Caption = 'Supervisor`s Feedback';
                     ApplicationArea = Basic;
                 }
             }
         }
     }
+
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         Rec.Part := Rec.Part::"Part 3";
     end;
 }
-page 20372 "Appraisal Section B Part 4"
+
+page 20381 "Appraisal Section D Part 4"
 {
     ApplicationArea = All;
-    Caption = 'What are some of the problems encountered and how were they handled?';
+    Caption = 'Punctuality';
     PageType = ListPart;
-    SourceTable = "Appraisal Lines Section B";
+    SourceTable = "Appraisal Lines Section D";
     SourceTableView = where(Part = const("Part 4"));
 
     layout
@@ -120,24 +122,61 @@ page 20372 "Appraisal Section B Part 4"
         {
             repeater(Control1)
             {
-                field("Question Description"; Rec."Question Description")
+                field("Question Description"; Rec."Question")
                 {
                     ApplicationArea = Basic;
                 }
-                field("Self-appraisal (Comments)"; Rec."Self-appraisal (Comments)")
+                field("Self-appraisal (Comments)"; Rec."Supervisor Rating")
                 {
                     ApplicationArea = Basic;
                 }
-                field("Comments by the supervisor"; Rec."Comments by the supervisor")
+                field("Comments by the supervisor"; Rec."Supervisor Comment")
                 {
-                    Caption = 'Supervisor`s Feedback';
                     ApplicationArea = Basic;
                 }
             }
         }
     }
+
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         Rec.Part := Rec.Part::"Part 4";
     end;
 }
+
+page 20382 "Appraisal Section D Part 5"
+{
+    ApplicationArea = All;
+    Caption = 'Team Work';
+    PageType = ListPart;
+    SourceTable = "Appraisal Lines Section D";
+    SourceTableView = where(Part = const("Part 5"));
+
+    layout
+    {
+        area(content)
+        {
+            repeater(Control1)
+            {
+                field("Question Description"; Rec."Question")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Self-appraisal (Comments)"; Rec."Supervisor Rating")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Comments by the supervisor"; Rec."Supervisor Comment")
+                {
+                    ApplicationArea = Basic;
+                }
+            }
+        }
+    }
+
+    trigger OnNewRecord(BelowxRec: Boolean)
+    begin
+        Rec.Part := Rec.Part::"Part 5";
+    end;
+}
+

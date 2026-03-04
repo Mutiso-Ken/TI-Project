@@ -29,6 +29,15 @@ Page 20361 "Appraisal List"
                 }
                 field("Supervisor Name"; Rec."Supervisor Name")
                 {
+                    Caption = 'Current Approving Supervisor';
+                    ApplicationArea = Basic;
+                }
+                field(ApprovalSteps; Rec.ApprovalSteps)
+                {
+                    ApplicationArea = Basic;
+                }
+                field(Status; Rec.Status)
+                {
                     ApplicationArea = Basic;
                 }
             }

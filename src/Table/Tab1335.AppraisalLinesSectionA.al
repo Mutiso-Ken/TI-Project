@@ -1,6 +1,6 @@
 table 1335 "Appraisal Lines Section A"
 {
-    Caption = 'Appraisal Lines';
+    Caption = 'Appraisal Lines Section A';
     DataClassification = ToBeClassified;
 
     fields
@@ -22,6 +22,7 @@ table 1335 "Appraisal Lines Section A"
         }
         field(4; "What have you done"; Text[2048])
         {
+            Caption = 'What have you done to contribute to the department`s / programme`s objectives? What are the other performance objectives?';
             DataClassification = ToBeClassified;
         }
         field(5; "When?"; Text[2048])

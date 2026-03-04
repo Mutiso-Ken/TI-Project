@@ -86,10 +86,10 @@ Report 80025 LPO
                 column(Purchase_Line_Quantity; Quantity)
                 {
                 }
-                column(Description2_PurchaseLine; "Purchase Line"."Description 4")
+                column(Description2_PurchaseLine; DescriptionText)
                 {
                 }
-                column(Description_PurchaseLine; "Purchase Line".Description)
+                column(Description_PurchaseLine; DescriptionText)
                 {
                 }
                 column(Purchase_Line__Unit_Cost_; "Unit Cost")
@@ -242,6 +242,13 @@ Report 80025 LPO
 
                 trigger OnAfterGetRecord()
                 begin
+
+                    DescriptionText := '';
+                    if "Purchase Line"."Description 4" = '' then begin
+                        DescriptionText := "Purchase Line"."Description 3"
+                    end else begin
+                        DescriptionText := "Purchase Line"."Description 4"
+                    end;
                     if VendorInfo.Get("Purchase Header"."Buy-from Vendor No.") then
                         VendorAddr := VendorInfo.Address;
                     VendorCity := VendorInfo.City;
@@ -280,6 +287,7 @@ Report 80025 LPO
     end;
 
     var
+        DescriptionText: Text;
         LastFieldNo: Integer;
         FooterPrinted: Boolean;
         VendorInfo: Record Vendor;

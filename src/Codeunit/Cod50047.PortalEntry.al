@@ -14,7 +14,7 @@ codeunit 50047 PortalEntry
         NoticesTable: Record "Notice Board";
         HrSetUpTable: Record "HR Setup";
         BaseCalendar: Record "Base Calendar Change";
-        NumberSeries: Codeunit NoSeriesManagement;
+        NumberSeries: Codeunit "No. Series";
         DimensionsTable: Record "Dimension Value";
         StandardTextTable: Record "Standard Text";
         CountryRegionTable: Record "Country/Region";
@@ -26,8 +26,12 @@ codeunit 50047 PortalEntry
         lJsonArray: JsonArray;
         lJObject: JsonObject;
         AppraisalHeader: Record "Appraisal Header";
-        AppraisalSectionAPart1: record "Appraisal Lines Section A";
-
+        AppraisalLinesSectionA: record "Appraisal Lines Section A";
+        AppraisalLinesSectionB: record "Appraisal Lines Section B";
+        AppraisalLinesSectionC: record "Appraisal Lines Section C";
+        AppraisalLinesSectionD: record "Appraisal Lines Section D";
+        TrainingScheduleTable: Record "Training Schedule";
+        TrainingRequestsTable: record "Training Requests";
 
     procedure GetVariousOptions(args: Text): Text
     var
@@ -130,10 +134,273 @@ codeunit 50047 PortalEntry
 
         if (RequestType = 'appraisals') then
             exit(GetAppraisals(RequestEmployeeID));
+
         if (RequestType = 'appraisal_details') then
             exit(GetAppraisalDetails(optionType));
 
+        if (RequestType = 'training_schedules') then
+            exit(GetTrainingSchedulesDetails());
+
+        if (RequestType = 'training_requests') then
+            exit(GetTrainingRequests(RequestEmployeeID));
+
         exit(Format(AddResponseHead(OutputJson, false)));
+    end;
+
+    local procedure GetTrainingRequests(employeeID: Code[50]): Text
+    var
+        outputjson: JsonObject;
+        object: JsonObject;
+        array: JsonArray;
+    begin
+        Clear(outputjson);
+        Clear(array);
+        TrainingRequestsTable.Reset();
+        TrainingRequestsTable.SetRange("Employee Code", employeeID);
+        if TrainingRequestsTable.FindSet() then
+            repeat
+                Clear(object);
+                object.Add('application_code', TrainingRequestsTable."Application Code");
+                object.Add('employee_code', TrainingRequestsTable."Employee Code");
+                object.Add('employee_name', TrainingRequestsTable."Employee Name");
+                object.Add('training_development_needed', TrainingRequestsTable."Training Need");
+                object.Add('names_of_employees', TrainingRequestsTable."Employees Involved");
+                object.Add('link_with_business', TrainingRequestsTable."Business Linkage");
+                object.Add('relate_to_job', TrainingRequestsTable."Job Relation");
+                object.Add('hope_to_learn', TrainingRequestsTable."Hope to Learn");
+                object.Add('training_details', TrainingRequestsTable."Details of Training");
+                object.Add('other_details', TrainingRequestsTable."Other Details");
+                object.Add('status', Format(TrainingRequestsTable.Status));
+                object.Add('request_date', TrainingRequestsTable."Request Date");
+                array.add(object);
+            until TrainingRequestsTable.Next() = 0;
+        outputjson.add('training_requests_list', array);
+        exit(format(addresponsehead(outputjson, true)));
+    end;
+
+    local procedure GetTrainingRequestDetails(requestID: Code[50]): Text
+    var
+        outputjson: JsonObject;
+        object: JsonObject;
+    begin
+        Clear(outputjson);
+        TrainingRequestsTable.Reset();
+        TrainingRequestsTable.SetRange("Application Code", requestID);
+        if TrainingRequestsTable.Find('-') then begin
+            Clear(object);
+            object.Add('application_code', TrainingRequestsTable."Application Code");
+            object.Add('employee_code', TrainingRequestsTable."Employee Code");
+            object.Add('employee_name', TrainingRequestsTable."Employee Name");
+            object.Add('training_development_needed', TrainingRequestsTable."Training Need");
+            object.Add('names_of_employees', TrainingRequestsTable."Employees Involved");
+            object.Add('link_with_business', TrainingRequestsTable."Business Linkage");
+            object.Add('relate_to_job', TrainingRequestsTable."Job Relation");
+            object.Add('hope_to_learn', TrainingRequestsTable."Hope to Learn");
+            object.Add('training_details', TrainingRequestsTable."Details of Training");
+            object.Add('other_details', TrainingRequestsTable."Other Details");
+            object.Add('status', Format(TrainingRequestsTable.Status));
+            object.Add('request_date', TrainingRequestsTable."Request Date");
+            outputjson.add('training_request', object);
+            exit(format(addresponsehead(outputjson, true)));
+        end;
+        exit(format(addresponsehead(outputjson, false)));
+    end;
+
+    local procedure NewTrainingRequest(RequestJson: JsonObject): Text
+    var
+        jsontoken: JsonToken;
+        outputjson: JsonObject;
+        NewNo: code[50];
+    begin
+        HrSetUpTable.Get;
+        HrSetUpTable.TestField(HrSetUpTable."Training Application Nos.");
+        NewNo := NumberSeries.GetNextNo(HrSetUpTable."Training Application Nos.", 0D, true);
+        TrainingRequestsTable.Init();
+        TrainingRequestsTable."Application Code" := NewNo;
+        RequestJson.Get('employee_code', jsontoken);
+        EmployeeTable.Reset();
+        if EmployeeTable.Get(jsontoken.AsValue().AsCode()) then begin
+            TrainingRequestsTable."Employee Code" := jsontoken.AsValue().AsCode();
+            TrainingRequestsTable."Employee Name" := EmployeeTable.FullName();
+        end;
+        if RequestJson.Get('training_development_needed', jsontoken) then
+            TrainingRequestsTable."Training Need" := jsontoken.AsValue().AsText();
+        if RequestJson.Get('names_of_employees', jsontoken) then
+            TrainingRequestsTable."Employees Involved" := jsontoken.AsValue().AsText();
+        if RequestJson.Get('link_with_business', jsontoken) then
+            TrainingRequestsTable."Business Linkage" := jsontoken.AsValue().AsText();
+        if RequestJson.Get('relate_to_job', jsontoken) then
+            TrainingRequestsTable."Job Relation" := jsontoken.AsValue().AsText();
+        if RequestJson.Get('hope_to_learn', jsontoken) then
+            TrainingRequestsTable."Hope to Learn" := jsontoken.AsValue().AsText();
+        if RequestJson.Get('training_details', jsontoken) then
+            TrainingRequestsTable."Details of Training" := jsontoken.AsValue().AsText();
+        if RequestJson.Get('other_details', jsontoken) then
+            TrainingRequestsTable."Other Details" := jsontoken.AsValue().AsText();
+        TrainingRequestsTable.Status := TrainingRequestsTable.Status::New;
+        TrainingRequestsTable."Request Date" := Today;
+        if TrainingRequestsTable.Insert(true) then
+            exit(Format(AddResponseHead(outputjson, true)));
+        exit(Format(AddResponseHead(outputjson, false)));
+    end;
+
+    local procedure UpdateTrainingRequest(RequestJson: JsonObject): Text
+    var
+        jsontoken: JsonToken;
+        outputjson: JsonObject;
+    begin
+        TrainingRequestsTable.Reset();
+        RequestJson.Get('application_code', jsontoken);
+        TrainingRequestsTable.SetRange("Application Code", jsontoken.AsValue().AsCode());
+        if TrainingRequestsTable.FindFirst() then begin
+            // if RequestJson.Get('training_development_needed', jsontoken) then
+            //     TrainingRequestsTable."Training Need" := jsontoken.AsValue().AsText();
+            if RequestJson.Get('names_of_employees', jsontoken) then
+                TrainingRequestsTable."Employees Involved" := jsontoken.AsValue().AsText();
+            if RequestJson.Get('link_with_business', jsontoken) then
+                TrainingRequestsTable."Business Linkage" := jsontoken.AsValue().AsText();
+            if RequestJson.Get('relate_to_job', jsontoken) then
+                TrainingRequestsTable."Job Relation" := jsontoken.AsValue().AsText();
+            if RequestJson.Get('hope_to_learn', jsontoken) then
+                TrainingRequestsTable."Hope to Learn" := jsontoken.AsValue().AsText();
+            if RequestJson.Get('training_details', jsontoken) then
+                TrainingRequestsTable."Details of Training" := jsontoken.AsValue().AsText();
+            if RequestJson.Get('other_details', jsontoken) then
+                TrainingRequestsTable."Other Details" := jsontoken.AsValue().AsText();
+            if TrainingRequestsTable.Modify(true) then
+                exit(Format(AddResponseHead(outputjson, true)));
+        end;
+        exit(Format(AddResponseHead(outputjson, false)));
+    end;
+
+    //    object.Add('application_code', TrainingRequestsTable."Application Code");
+    //             object.Add('employee_code', TrainingRequestsTable."Employee Code");
+    //             object.Add('employee_name', TrainingRequestsTable."Employee Name");
+    //             object.Add('training_development_needed', TrainingRequestsTable."Training Need");
+    //             object.Add('names_of_employees', TrainingRequestsTable."Employees Involved");
+    //             object.Add('link_with_business', TrainingRequestsTable."Business Linkage");
+    //             object.Add('relate_to_job', TrainingRequestsTable."Job Relation");
+    //             object.Add('hope_to_learn', TrainingRequestsTable."Hope to Learn");
+    //             object.Add('training_details', TrainingRequestsTable."Details of Training");
+    //             object.Add('other_details', TrainingRequestsTable."Other Details");
+    //             object.Add('status', Format(TrainingRequestsTable.Status));
+    //             object.Add('request_date', TrainingRequestsTable."Request Date");
+
+    local procedure GetTrainingSchedulesDetails(): Text
+    var
+        outputjson: JsonObject;
+        object: JsonObject;
+        array: JsonArray;
+    begin
+        Clear(outputjson);
+        Clear(array);
+        TrainingScheduleTable.Reset();
+        if TrainingScheduleTable.Find('-') then
+            repeat
+                Clear(object);
+                object.Add('year', TrainingScheduleTable.Year);
+                object.Add('facilitator', TrainingScheduleTable.Facilitator);
+                object.Add('department', TrainingScheduleTable."Department/Organization");
+                object.Add('topic', TrainingScheduleTable.Topic);
+                object.Add('total_cost', TrainingScheduleTable."Total Cost");
+                object.Add('scheduled_date', TrainingScheduleTable."Scheduled date");
+                object.Add('staff_trained', TrainingScheduleTable."No. of Staff trained");
+                object.Add('evidence', TrainingScheduleTable."Evidence of training");
+                object.Add('status', Format(TrainingScheduleTable.Status));
+                object.Add('updated_by', TrainingScheduleTable."Updated By");
+                array.Add(object);
+            until TrainingScheduleTable.Next() = 0;
+        outputjson.Add('training_schedule_list', array);
+        exit(Format(AddResponseHead(outputjson, true)));
+    end;
+
+    local procedure GetTrainingScheduleDetails(RequestJson: jsonobject): Text
+    var
+        outputjson: JsonObject;
+        object: JsonObject;
+        jsontoken: JsonToken;
+    begin
+        Clear(outputjson);
+        TrainingScheduleTable.Reset();
+        RequestJson.Get('year', jsontoken);
+        TrainingScheduleTable.SetRange(Year, jsontoken.AsValue().AsCode());
+        RequestJson.Get('topic', jsontoken);
+        TrainingScheduleTable.SetRange(Topic, jsontoken.AsValue().AsCode());
+        if TrainingScheduleTable.Find('-') then begin
+            Clear(object);
+            object.Add('year', TrainingScheduleTable.Year);
+            object.Add('facilitator', TrainingScheduleTable.Facilitator);
+            object.Add('department', TrainingScheduleTable."Department/Organization");
+            object.Add('topic', TrainingScheduleTable.Topic);
+            object.Add('total_cost', TrainingScheduleTable."Total Cost");
+            object.Add('scheduled_date', TrainingScheduleTable."Scheduled date");
+            object.Add('staff_trained', TrainingScheduleTable."No. of Staff trained");
+            object.Add('evidence', TrainingScheduleTable."Evidence of training");
+            object.Add('status', Format(TrainingScheduleTable.Status));
+            object.Add('updated_by', TrainingScheduleTable."Updated By");
+            outputjson.Add('training_schedule', object);
+            exit(Format(AddResponseHead(outputjson, true)));
+        end;
+        exit(Format(AddResponseHead(outputjson, false)));
+    end;
+
+    local procedure NewTrainingSchedule(RequestJson: JsonObject): text
+    var
+        jsontoken: JsonToken;
+        outputjson: JsonObject;
+    begin
+        Clear(outputjson);
+        TrainingScheduleTable.Init();
+        RequestJson.Get('year', jsontoken);
+        TrainingScheduleTable.Year := jsontoken.AsValue().AsCode();
+        if RequestJson.Get('facilitator', jsontoken) and not jsontoken.AsValue().IsNull() then
+            TrainingScheduleTable.Facilitator := jsontoken.AsValue().AsCode();
+        if RequestJson.Get('department', jsontoken) and not jsontoken.AsValue().IsNull() then
+            TrainingScheduleTable."Department/Organization" := jsontoken.AsValue().AsCode();
+        RequestJson.Get('topic', jsontoken);
+        TrainingScheduleTable.Topic := jsontoken.AsValue().AsCode();
+        if RequestJson.Get('total_cost', jsontoken) and not jsontoken.AsValue().IsNull then
+            TrainingScheduleTable."Total Cost" := jsontoken.AsValue().AsDecimal();
+        if RequestJson.Get('scheduled_date', jsontoken) and not jsontoken.AsValue().IsNull then
+            TrainingScheduleTable."Scheduled date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
+        if RequestJson.Get('staff_trained', jsontoken) and not jsontoken.AsValue().IsNull then
+            TrainingScheduleTable."No. of Staff trained" := jsontoken.AsValue().AsInteger();
+        if RequestJson.Get('evidence', jsontoken) and not jsontoken.AsValue().IsNull then
+            TrainingScheduleTable."Evidence of training" := jsontoken.AsValue().AsText();
+        TrainingScheduleTable.Status := TrainingScheduleTable.Status::Pending;
+        if TrainingScheduleTable.Insert(true) then
+            exit(Format(AddResponseHead(outputjson, true)));
+        exit(Format(AddResponseHead(outputjson, false)));
+    end;
+
+    local procedure UpdateTrainingSchedule(RequestJson: JsonObject): text
+    var
+        jsontoken: JsonToken;
+        outputjson: JsonObject;
+    begin
+        Clear(outputjson);
+        TrainingScheduleTable.Reset();
+        RequestJson.Get('year', jsontoken);
+        TrainingScheduleTable.SetRange(Year, jsontoken.AsValue().AsCode());
+        RequestJson.Get('topic', jsontoken);
+        TrainingScheduleTable.SetRange(Topic, jsontoken.AsValue().AsCode());
+        if TrainingScheduleTable.FindFirst() then begin
+            if RequestJson.Get('facilitator', jsontoken) and not jsontoken.AsValue().IsNull() then
+                TrainingScheduleTable.Facilitator := jsontoken.AsValue().AsCode();
+            if RequestJson.Get('department', jsontoken) and not jsontoken.AsValue().IsNull() then
+                TrainingScheduleTable."Department/Organization" := jsontoken.AsValue().AsCode();
+            if RequestJson.Get('total_cost', jsontoken) and not jsontoken.AsValue().IsNull then
+                TrainingScheduleTable."Total Cost" := jsontoken.AsValue().AsDecimal();
+            if RequestJson.Get('scheduled_date', jsontoken) and not jsontoken.AsValue().IsNull then
+                TrainingScheduleTable."Scheduled date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
+            if RequestJson.Get('staff_trained', jsontoken) and not jsontoken.AsValue().IsNull then
+                TrainingScheduleTable."No. of Staff trained" := jsontoken.AsValue().AsInteger();
+            if RequestJson.Get('evidence', jsontoken) and not jsontoken.AsValue().IsNull then
+                TrainingScheduleTable."Evidence of training" := jsontoken.AsValue().AsText();
+            if TrainingScheduleTable.Modify(true) then
+                exit(Format(AddResponseHead(outputjson, true)));
+        end;
+        exit(Format(AddResponseHead(outputjson, false)));
     end;
 
     local procedure GetAppraisals(EmployeeID: code[50]): Text
@@ -161,7 +428,7 @@ codeunit 50047 PortalEntry
                 jsonarray.Add(jsonobject);
             until AppraisalHeader.Next() = 0;
 
-            Outputjson.Add('appraisals', JsonArray);
+            Outputjson.Add('appraisals', jsonarray);
             exit(Format(AddResponseHead(Outputjson, true)));
         end;
         exit(Format(AddResponseHead(Outputjson, false)));
@@ -172,7 +439,11 @@ codeunit 50047 PortalEntry
         Outputjson: JsonObject;
         jsonobject: JsonObject;
         object: JsonObject;
-        array: JsonArray;
+        part1array: JsonArray;
+        part2array: JsonArray;
+        part3array: JsonArray;
+        part4array: JsonArray;
+        part5array: JsonArray;
     begin
         Clear(Outputjson);
         AppraisalHeader.Reset();
@@ -189,29 +460,435 @@ codeunit 50047 PortalEntry
             jsonobject.Add('review_period', AppraisalHeader."Review Period");
             jsonobject.Add('status', Format(AppraisalHeader.Status));
 
-            Clear(array);
-            AppraisalSectionAPart1.Reset();
-            AppraisalSectionAPart1.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
-            if AppraisalSectionAPart1.FindSet() then
+            Clear(part1array);
+            Clear(part2array);
+            AppraisalLinesSectionA.Reset();
+            AppraisalLinesSectionA.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+            if AppraisalLinesSectionA.FindSet() then
                 repeat
                     Clear(object);
-                    object.Add('line_no', AppraisalSectionAPart1."Line No");
-                    object.Add('what_done', AppraisalSectionAPart1."What have you done");
-                    object.Add('when', AppraisalSectionAPart1."When?");
-                    object.Add('expected_results', AppraisalSectionAPart1."Expected Results");
-                    object.Add('achieved', AppraisalSectionAPart1."What was Achieved?");
-                    object.Add('capacity', AppraisalSectionAPart1."Capacity Needed");
-                    object.Add('prioritize', AppraisalSectionAPart1."Why Prioritize");
-                    object.Add('supervisor_rating', AppraisalSectionAPart1."Supervisor Rating");
-                    object.Add('supervisor_commens', AppraisalSectionAPart1."Comments by the supervisor");
-                    array.Add(object);
-                until AppraisalSectionAPart1.Next() = 0;
-            jsonobject.Add('performance_results_part_a', array);
+                    object.Add('line_no', AppraisalLinesSectionA."Line No");
+                    object.Add('appraisal_number', AppraisalLinesSectionA."Appraisal Code");
+                    object.Add('what_done', AppraisalLinesSectionA."What have you done");
+                    object.Add('when', AppraisalLinesSectionA."When?");
+                    object.Add('expected_results', AppraisalLinesSectionA."Expected Results");
+                    object.Add('what_achieved', AppraisalLinesSectionA."What was Achieved?");
+                    object.Add('what_capacity', AppraisalLinesSectionA."Capacity Needed");
+                    object.Add('why_prioritize', AppraisalLinesSectionA."Why Prioritize");
+                    object.Add('supervisor_rating', AppraisalLinesSectionA."Supervisor Rating");
+                    object.Add('supervisor_comments', AppraisalLinesSectionA."Comments by the supervisor");
+                    case AppraisalLinesSectionA.Section of
+                        AppraisalLinesSectionA.Section::"Part A":
+                            part1array.Add(object);
+                        AppraisalLinesSectionA.Section::"Part B":
+                            part2array.Add(object);
+                    end;
+
+                until AppraisalLinesSectionA.Next() = 0;
+            jsonobject.Add('sectionapart1', part1array);
+            jsonobject.Add('sectionapart2', part2array);
+
+            Clear(part1array);
+            Clear(part2array);
+            Clear(part3array);
+            Clear(part4array);
+            AppraisalLinesSectionB.Reset();
+            AppraisalLinesSectionB.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+            if AppraisalLinesSectionB.FindSet() then
+                repeat
+                    Clear(object);
+                    object.Add('line_no', AppraisalLinesSectionB."Line No");
+                    object.Add('appraisal_number', AppraisalLinesSectionB."Appraisal Code");
+                    object.Add('question', AppraisalLinesSectionB."Question Description");
+                    object.Add('employee_comment', AppraisalLinesSectionB."Self-appraisal (Comments)");
+                    object.Add('supervisor_comments', AppraisalLinesSectionB."Comments by the supervisor");
+                    case AppraisalLinesSectionB.Part of
+                        AppraisalLinesSectionB.Part::"Part 1":
+                            part1array.Add(object);
+                        AppraisalLinesSectionB.Part::"Part 2":
+                            part2array.Add(object);
+                        AppraisalLinesSectionB.Part::"Part 3":
+                            part3array.Add(object);
+                        AppraisalLinesSectionB.Part::"Part 4":
+                            part4array.Add(object);
+                    end;
+                until AppraisalLinesSectionB.Next() = 0;
+            jsonobject.Add('sectionbpart1', part1array);
+            jsonobject.Add('sectionbpart2', part2array);
+            jsonobject.Add('sectionbpart3', part3array);
+            jsonobject.Add('sectionbpart4', part4array);
+
+            Clear(part1array);
+            Clear(part2array);
+            Clear(part3array);
+            Clear(part4array);
+            Clear(part5array);
+            AppraisalLinesSectionC.Reset();
+            AppraisalLinesSectionC.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+            if AppraisalLinesSectionC.FindSet() then
+                repeat
+                    Clear(object);
+                    object.Add('line_no', AppraisalLinesSectionC."Line No.");
+                    object.Add('appraisal_number', AppraisalLinesSectionC."Appraisal Code");
+                    object.Add('question', AppraisalLinesSectionC.Question);
+                    object.Add('employee_rating', Format(AppraisalLinesSectionC."Self Rating"));
+                    object.Add('supervisor_rating', Format(AppraisalLinesSectionC."Supervisor Rating"));
+                    object.Add('supervisor_comments', AppraisalLinesSectionC."Supervisor Comment");
+                    case AppraisalLinesSectionC.Part of
+                        AppraisalLinesSectionC.Part::"Part 1":
+                            part1array.Add(object);
+                        AppraisalLinesSectionC.Part::"Part 2":
+                            part2array.Add(object);
+                        AppraisalLinesSectionC.Part::"Part 3":
+                            part3array.Add(object);
+                        AppraisalLinesSectionC.Part::"Part 4":
+                            part4array.Add(object);
+                        AppraisalLinesSectionC.Part::"Part 5":
+                            part5array.Add(object);
+                    end;
+                until AppraisalLinesSectionC.Next() = 0;
+            jsonobject.Add('sectioncpart1', part1array);
+            jsonobject.Add('sectioncpart2', part2array);
+            jsonobject.Add('sectioncpart3', part3array);
+            jsonobject.Add('sectioncpart4', part4array);
+            jsonobject.Add('sectioncpart5', part5array);
+
+            Clear(part1array);
+            Clear(part2array);
+            Clear(part3array);
+            Clear(part4array);
+            Clear(part5array);
+            AppraisalLinesSectionD.Reset();
+            AppraisalLinesSectionD.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+            if AppraisalLinesSectionD.FindSet() then
+                repeat
+                    Clear(object);
+                    object.Add('line_no', AppraisalLinesSectionD."Line No.");
+                    object.Add('appraisal_number', AppraisalLinesSectionD."Appraisal Code");
+                    object.Add('question', AppraisalLinesSectionD.Question);
+                    object.Add('supervisor_rating', Format(AppraisalLinesSectionD."Supervisor Rating"));
+                    object.Add('supervisor_comments', AppraisalLinesSectionD."Supervisor Comment");
+                    case AppraisalLinesSectionD.Part of
+                        AppraisalLinesSectionD.Part::"Part 1":
+                            part1array.Add(object);
+                        AppraisalLinesSectionD.Part::"Part 2":
+                            part2array.Add(object);
+                        AppraisalLinesSectionD.Part::"Part 3":
+                            part3array.Add(object);
+                        AppraisalLinesSectionD.Part::"Part 4":
+                            part4array.Add(object);
+                        AppraisalLinesSectionD.Part::"Part 5":
+                            part5array.Add(object);
+                    end;
+                until AppraisalLinesSectionD.Next() = 0;
+            jsonobject.Add('sectiondpart1', part1array);
+            jsonobject.Add('sectiondpart2', part2array);
+            jsonobject.Add('sectiondpart3', part3array);
+            jsonobject.Add('sectiondpart4', part4array);
+            jsonobject.Add('sectiondpart5', part5array);
 
             Outputjson.Add('appraisal_details', jsonobject);
             exit(Format(AddResponseHead(Outputjson, true)));
         end;
         exit(Format(AddResponseHead(Outputjson, false)));
+    end;
+
+    local procedure CreateAppraisal(RequestJson: JsonObject): Text
+    var
+        jsontoken: JsonToken;
+        outputjson: JsonObject;
+
+    begin
+        AppraisalHeader.Reset();
+        RequestJson.Get('employee_no', jsontoken);
+        AppraisalHeader.SetRange("Employee No", jsontoken.AsValue().AsCode());
+        if AppraisalHeader.Find('-') then begin
+            AppraisalHeader.DeleteAll();
+        end;
+
+        AppraisalHeader.Init();
+        AppraisalHeader."Employee No" := jsontoken.AsValue().AsCode();
+        if AppraisalHeader.Insert(true) then
+            exit(Format(AddResponseHead(outputjson, true)));
+        exit(Format(AddResponseHead(outputjson, false)));
+
+    end;
+
+    local procedure AmendAppraisal(RequestJson: JsonObject): Text
+    var
+        jsontoken: JsonToken;
+        outputjson: JsonObject;
+
+        lines: JsonArray;
+        line: JsonObject;
+        LineNo: Integer;
+    begin
+        AppraisalHeader.Reset();
+        RequestJson.Get('appraisal_number', jsontoken);
+        AppraisalHeader.SetRange("Appraisal Code", jsontoken.AsValue().AsCode());
+        if AppraisalHeader.Find('-') then begin
+
+
+            //Section A Part 1
+            Clear(lines);
+            RequestJson.Get('sectionapart1', jsontoken);
+            lines := JsonToken.AsArray();
+            if lines.Count() > 0 then begin
+                foreach JsonToken in lines do begin
+                    if JsonToken.IsObject() then begin
+                        line := JsonToken.AsObject();
+                        if Line.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull() then
+                            LineNo := JsonToken.AsValue().AsInteger();
+                        AppraisalLinesSectionA.Reset();
+                        AppraisalLinesSectionA.SetRange("Line No", LineNo);
+                        AppraisalLinesSectionA.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+                        if AppraisalLinesSectionA.Find('-') then begin
+                            if line.Get('what_done', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."What have you done" := jsontoken.AsValue().AsText();
+                            if line.Get('when', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."When?" := jsontoken.AsValue().AsText();
+                            if line.Get('expected_results', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."Expected Results" := jsontoken.AsValue().AsText();
+                            if line.Get('what_achieved', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."What was Achieved?" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."Supervisor Rating" := jsontoken.AsValue().AsInteger();
+                            AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part A";
+                            AppraisalLinesSectionA.Modify();
+                        end else begin
+                            AppraisalLinesSectionA.Reset();
+                            LineNo := AppraisalLinesSectionA.Count() + 5;
+                            AppraisalLinesSectionA.Init();
+                            AppraisalLinesSectionA."Appraisal Code" := AppraisalHeader."Appraisal Code";
+                            AppraisalLinesSectionA."Line No" := LineNo;
+                            if line.Get('what_done', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."What have you done" := jsontoken.AsValue().AsText();
+                            if line.Get('when', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."When?" := jsontoken.AsValue().AsText();
+                            if line.Get('expected_results', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."Expected Results" := jsontoken.AsValue().AsText();
+                            if line.Get('what_achieved', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."What was Achieved?" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."Supervisor Rating" := jsontoken.AsValue().AsInteger();
+                            AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part A";
+                            AppraisalLinesSectionA.Insert();
+                        end;
+                    end;
+                end;
+            end;
+
+            //Section A Part 2
+            Clear(lines);
+            RequestJson.Get('sectionapart2', jsontoken);
+            lines := JsonToken.AsArray();
+            if lines.Count() > 0 then begin
+                foreach JsonToken in lines do begin
+                    if JsonToken.IsObject() then begin
+                        line := JsonToken.AsObject();
+                        if Line.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull() then
+                            LineNo := JsonToken.AsValue().AsInteger();
+                        AppraisalLinesSectionA.Reset();
+                        AppraisalLinesSectionA.SetRange("Line No", LineNo);
+                        AppraisalLinesSectionA.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+                        if AppraisalLinesSectionA.Find('-') then begin
+                            if line.Get('what_achieved', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."What was Achieved?" := jsontoken.AsValue().AsText();
+                            if line.Get('why_prioritize', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."Why Prioritize" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part B";
+                            AppraisalLinesSectionA.Modify();
+                        end else begin
+                            AppraisalLinesSectionA.Reset();
+                            LineNo := AppraisalLinesSectionA.Count() + 5;
+                            AppraisalLinesSectionA.Init();
+                            AppraisalLinesSectionA."Appraisal Code" := AppraisalHeader."Appraisal Code";
+                            AppraisalLinesSectionA."Line No" := LineNo;
+                            if line.Get('what_achieved', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."What was Achieved?" := jsontoken.AsValue().AsText();
+                            if line.Get('why_prioritize', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."Why Prioritize" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionA."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part B";
+                            AppraisalLinesSectionA.Insert();
+                        end;
+                    end;
+                end;
+            end;
+
+            //Section B Part 1
+            Clear(lines);
+            if RequestJson.Get('sectionbpart1', jsontoken) and jsontoken.IsArray then
+                lines := JsonToken.AsArray();
+            if lines.Count() > 0 then begin
+                foreach JsonToken in lines do begin
+                    if JsonToken.IsObject() then begin
+                        line := JsonToken.AsObject();
+                        if Line.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull() then
+                            LineNo := JsonToken.AsValue().AsInteger();
+
+                        AppraisalLinesSectionB.Reset();
+                        AppraisalLinesSectionB.SetRange("Line No", LineNo);
+                        AppraisalLinesSectionB.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+                        if AppraisalLinesSectionB.Find('-') then begin
+                            if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
+                            if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 1";
+                            AppraisalLinesSectionB.Modify();
+                        end else begin
+                            AppraisalLinesSectionB.Reset();
+                            LineNo := AppraisalLinesSectionB.Count() + 5;
+                            AppraisalLinesSectionB.Init();
+                            AppraisalLinesSectionB."Appraisal Code" := AppraisalHeader."Appraisal Code";
+                            AppraisalLinesSectionB."Line No" := LineNo;
+                            if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
+                            if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 1";
+                            AppraisalLinesSectionB.Insert();
+                        end;
+                    end;
+                end;
+            end;
+
+            //Section B Part 2
+            Clear(lines);
+            if RequestJson.Get('sectionbpart2', jsontoken) and jsontoken.IsArray then
+                lines := JsonToken.AsArray();
+            if lines.Count() > 0 then begin
+                foreach JsonToken in lines do begin
+                    if JsonToken.IsObject() then begin
+                        line := JsonToken.AsObject();
+                        if Line.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull() then
+                            LineNo := JsonToken.AsValue().AsInteger();
+
+                        AppraisalLinesSectionB.Reset();
+                        AppraisalLinesSectionB.SetRange("Line No", LineNo);
+                        AppraisalLinesSectionB.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+                        if AppraisalLinesSectionB.Find('-') then begin
+                            if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
+                            if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 2";
+                            AppraisalLinesSectionB.Modify();
+                        end else begin
+                            AppraisalLinesSectionB.Reset();
+                            LineNo := AppraisalLinesSectionB.Count() + 5;
+                            AppraisalLinesSectionB.Init();
+                            AppraisalLinesSectionB."Appraisal Code" := AppraisalHeader."Appraisal Code";
+                            AppraisalLinesSectionB."Line No" := LineNo;
+                            if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
+                            if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 2";
+                            AppraisalLinesSectionB.Insert();
+                        end;
+                    end;
+                end;
+            end;
+
+            //Section B Part 3
+            Clear(lines);
+            if RequestJson.Get('sectionbpart3', jsontoken) and jsontoken.IsArray then
+                lines := JsonToken.AsArray();
+            if lines.Count() > 0 then begin
+                foreach JsonToken in lines do begin
+                    if JsonToken.IsObject() then begin
+                        line := JsonToken.AsObject();
+                        if Line.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull() then
+                            LineNo := JsonToken.AsValue().AsInteger();
+
+                        AppraisalLinesSectionB.Reset();
+                        AppraisalLinesSectionB.SetRange("Line No", LineNo);
+                        AppraisalLinesSectionB.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+                        if AppraisalLinesSectionB.Find('-') then begin
+                            if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
+                            if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 3";
+                            AppraisalLinesSectionB.Modify();
+                        end else begin
+                            AppraisalLinesSectionB.Reset();
+                            LineNo := AppraisalLinesSectionB.Count() + 5;
+                            AppraisalLinesSectionB.Init();
+                            AppraisalLinesSectionB."Appraisal Code" := AppraisalHeader."Appraisal Code";
+                            AppraisalLinesSectionB."Line No" := LineNo;
+                            if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
+                            if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 3";
+                            AppraisalLinesSectionB.Insert();
+                        end;
+                    end;
+                end;
+            end;
+
+            //Section B Part 4
+            Clear(lines);
+            if RequestJson.Get('sectionbpart4', jsontoken) and jsontoken.IsArray then
+                lines := JsonToken.AsArray();
+            if lines.Count() > 0 then begin
+                foreach JsonToken in lines do begin
+                    if JsonToken.IsObject() then begin
+                        line := JsonToken.AsObject();
+                        if Line.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull() then
+                            LineNo := JsonToken.AsValue().AsInteger();
+
+                        AppraisalLinesSectionB.Reset();
+                        AppraisalLinesSectionB.SetRange("Line No", LineNo);
+                        AppraisalLinesSectionB.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+                        if AppraisalLinesSectionB.Find('-') then begin
+                            if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
+                            if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 4";
+                            AppraisalLinesSectionB.Modify();
+                        end else begin
+                            AppraisalLinesSectionB.Reset();
+                            LineNo := AppraisalLinesSectionB.Count() + 5;
+                            AppraisalLinesSectionB.Init();
+                            AppraisalLinesSectionB."Appraisal Code" := AppraisalHeader."Appraisal Code";
+                            AppraisalLinesSectionB."Line No" := LineNo;
+                            if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
+                            if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
+                            if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
+                                AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
+                            AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 4";
+                            AppraisalLinesSectionB.Insert();
+                        end;
+                    end;
+                end;
+            end;
+            exit(Format(AddResponseHead(outputjson, true)));
+        end;
+        exit(Format(AddResponseHead(outputjson, false)));
     end;
 
     procedure SubmitNewInformation(args: Text): Text
@@ -310,12 +987,31 @@ codeunit 50047 PortalEntry
             exit(NewHelpDeskTicket(ElementInformation));
         end;
 
+        //Time Sheet Modification
+        if (SubmissionType = 'appraisal_creation') then begin
+            RequestJson.Get('appraisal', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(CreateAppraisal(ElementInformation));
+        end;
+
         if (SubmissionType = 'pettycash_submission') then begin
             RequestJson.Get('employee_id', JsonToken);
             EmployeeID := JsonToken.AsValue().AsText();
             RequestJson.Get('pettycashline', JsonToken);
             ElementInformation := JsonToken.AsObject();
             exit(PettyCashInsertGLLine(EmployeeID, ElementInformation));
+        end;
+
+        if (SubmissionType = 'training_schedule_submission') then begin
+            RequestJson.Get('training_schedule', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(NewTrainingSchedule(ElementInformation));
+        end;
+
+        if (SubmissionType = 'training_request_submission') then begin
+            RequestJson.Get('training_request', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(NewTrainingRequest(ElementInformation));
         end;
     end;
 
@@ -368,6 +1064,27 @@ codeunit 50047 PortalEntry
             ElementInformation := JsonToken.AsObject();
             exit(AmendTimeSheet(ElementInformation));
         end;
+
+        //Time Sheet Modification
+        if (ModificationType = 'appraisal_modification') then begin
+            RequestJson.Get('appraisal', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(AmendAppraisal(ElementInformation));
+        end;
+
+        //Time Sheet Modification
+        if (ModificationType = 'training_schedule') then begin
+            RequestJson.Get('training_schedule', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(UpdateTrainingSchedule(ElementInformation));
+        end;
+
+        //Time Sheet Modification
+        if (ModificationType = 'training_request') then begin
+            RequestJson.Get('training_request', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(UpdateTrainingRequest(ElementInformation));
+        end;
     end;
 
 
@@ -386,8 +1103,8 @@ codeunit 50047 PortalEntry
 
         RequestJson.Get('element_type', JsonToken);
         ElementType := JsonToken.AsValue().AsText();
-        RequestJson.Get('element_number', JsonToken);
-        ElementNumber := JsonToken.AsValue().AsText();
+        if RequestJson.Get('element_number', JsonToken) and not jsontoken.AsValue().IsNull then
+            ElementNumber := JsonToken.AsValue().AsText();
 
         if (ElementType = 'leave_application') then
             exit(GetLeaveDetails(ElementNumber));
@@ -406,6 +1123,14 @@ codeunit 50047 PortalEntry
 
         if (ElementType = 'timesheet') then
             exit(GetTimeSheetDetails(ElementNumber));
+
+        if (ElementType = 'training_request') then
+            exit(GetTrainingRequestDetails(ElementNumber));
+
+        if (ElementType = 'training_schedule') then begin
+            RequestJson.Get('training_schedule', jsontoken);
+            exit(GetTrainingScheduleDetails(jsontoken.AsObject()));
+        end;
     end;
 
     procedure SendDocumentApproval(args: Text): Text
@@ -1378,7 +2103,7 @@ codeunit 50047 PortalEntry
             PurchasesHeaderTable.Status := PurchasesHeaderTable.Status::Open;
             PurchasesHeaderTable."Account No" := EmployeeTable.Travelaccountno;
             PurchasesHeaderTable."Account Name" := EmployeeTable.FullName();
-            PurchasesHeaderTable."Responsibility Center" := EmployeeTable."User ID";
+            PurchasesHeaderTable."Responsibility Center" := EmployeeTable."Responsibility Center";
             PurchasesHeaderTable."Assigned User ID" := EmployeeTable."User ID";
             PurchasesHeaderTable."User ID" := EmployeeTable."User ID";
             PurchasesHeaderTable."Requested Receipt Date" := Today;
@@ -1535,6 +2260,34 @@ codeunit 50047 PortalEntry
             outputjson.add('countries', GetCountryRegions('Country'));
             outputjson.add('counties', GetCountryRegions('County'));
             outputjson.add('expensecategories', GetStandardTexts('GL Category'));
+
+            PurchasesHeaderTable.Reset();
+            PurchasesHeaderTable.SetRange("Employee No", EmployeeNumber);
+            PurchasesHeaderTable.SetRange(PR, true);
+            if PurchasesHeaderTable.Findset() then begin
+                Clear(lines);
+                repeat
+                    Clear(line);
+                    line.Add('Code', PurchasesHeaderTable."No.");
+                    line.Add('Name', Format(PurchasesHeaderTable.Amount));
+                    lines.Add(line);
+                until PurchasesHeaderTable.Next() = 0;
+            end;
+            OutputJson.Add('purchase_requests_list', lines);
+
+            PurchasesHeaderTable.Reset();
+            PurchasesHeaderTable.SetRange("Employee No", EmployeeNumber);
+            PurchasesHeaderTable.SetRange(MP, true);
+            if PurchasesHeaderTable.Findset() then begin
+                Clear(lines);
+                repeat
+                    Clear(line);
+                    line.Add('Code', PurchasesHeaderTable."No.");
+                    line.Add('Name', Format(PurchasesHeaderTable.Amount));
+                    lines.Add(line);
+                until PurchasesHeaderTable.Next() = 0;
+            end;
+            OutputJson.Add('mission_proposals_list', lines);
 
             exit(format(outputjson));
         end;
@@ -1700,7 +2453,7 @@ codeunit 50047 PortalEntry
             PurchasesHeaderTable.PM := true;
             PurchasesHeaderTable."Requested Receipt Date" := Today;
             PurchasesHeaderTable.Status := PurchasesHeaderTable.Status::Open;
-            PurchasesHeaderTable."Responsibility Center" := EmployeeTable."User ID";
+            PurchasesHeaderTable."Responsibility Center" := EmployeeTable."Responsibility Center";
             PurchasesHeaderTable."Assigned User ID" := EmployeeTable."User ID";
             PurchasesHeaderTable."User ID" := EmployeeTable."User ID";
             PurchasesHeaderTable."Employee No" := StaffID;
@@ -2182,7 +2935,7 @@ codeunit 50047 PortalEntry
             PurchasesHeaderTable."Shortcut Dimension 4 Code" := BudgetCategoryCode;
             PurchasesHeaderTable."Shortcut Dimension 5 Code" := DepartmentCode;
             PurchasesHeaderTable."Account No" := EmployeeTable.Travelaccountno;
-            PurchasesHeaderTable."Responsibility Center" := EmployeeTable."User ID";
+            PurchasesHeaderTable."Responsibility Center" := EmployeeTable."Responsibility Center";
             PurchasesHeaderTable."Assigned User ID" := EmployeeTable."User ID";
             PurchasesHeaderTable."User ID" := EmployeeTable."User ID";
 
@@ -2192,6 +2945,21 @@ codeunit 50047 PortalEntry
         end;
         exit(format(AddResponseHead(outputjson, false)));
 
+    end;
+
+    procedure UpdateImprestAccount()
+    begin
+        EmployeeTable.Reset();
+        EmployeeTable.SetRange("No.", '0309');
+        if EmployeeTable.Find('-') then begin
+            PurchasesHeaderTable.Reset();
+            PurchasesHeaderTable.SetRange("Employee No", '0309');
+            if PurchasesHeaderTable.FindSet() then
+                repeat
+                    PurchasesHeaderTable."Account No" := EmployeeTable.Travelaccountno;
+                    PurchasesHeaderTable.Modify();
+                until PurchasesHeaderTable.Next() = 0;
+        end;
     end;
 
     local procedure AmendImprestRequest(RequestJson: JsonObject): Text;
@@ -2505,7 +3273,7 @@ codeunit 50047 PortalEntry
                 PurchasesHeaderTable."Vendor Posting Group" := 'TRADERS';
                 PurchasesHeaderTable."Currency Code" := PurchasesTable2."Currency Code";
                 PurchasesHeaderTable."Mission Proposal No" := PurchasesTable2."Mission Proposal No";
-                PurchasesHeaderTable."Responsibility Center" := EmployeeTable."User ID";
+                PurchasesHeaderTable."Responsibility Center" := EmployeeTable."Responsibility Center";
                 PurchasesHeaderTable."Assigned User ID" := EmployeeTable."User ID";
                 PurchasesHeaderTable."User ID" := EmployeeTable."User ID";
                 PurchasesHeaderTable."Account No" := EmployeeTable.Travelaccountno;

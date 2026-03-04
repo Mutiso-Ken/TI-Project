@@ -1157,6 +1157,23 @@ Page 20366 "Main Role Center"
                     RunObject = Page "Appraisal Questions";
                 }
             }
+            group(Trainings)
+            {
+                Caption = 'Trainings';
+                ToolTip = 'View and Edit Training Schedules';
+                //    Image= 
+                action("Trainings Schedules List")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Training Schedule";
+                }
+                action("Training Requests List")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Training Request List";
+                    ;
+                }
+            }
         }
     }
 }

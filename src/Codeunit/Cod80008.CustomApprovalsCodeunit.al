@@ -359,6 +359,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
                 begin
                     RecRef.SetTable(HRLeaveApplication);
                     HRLeaveApplication.Validate(Status, HRLeaveApplication.Status::"Pending Approval");
+
                     HRLeaveApplication.Modify;
                     Variant := HRLeaveApplication;
                     IsHandled := true;
@@ -400,6 +401,8 @@ Codeunit 80008 "Custom Approvals Codeunit"
         MissionProposal: Page "Mission Proposal Card";
         IMSurrender: Page "Imprest Surrender Card";
         IMRequest: Page "Imprest Request Card";
+
+
         PurchasRequisition: Page "Task Order Card";
     begin
         // Prevent standard BC logic
@@ -468,6 +471,24 @@ Codeunit 80008 "Custom Approvals Codeunit"
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnPopulateApprovalEntryArgument', '', false, false)]
+
+    procedure PopulateEntries(RecRef: RecordRef; WorkflowStepInstance: Record "Workflow Step Instance"; var ApprovalEntryArgument: Record "Approval Entry")
+    var
+        Hrleave: Record "HR Leave Application";
+
+
+    begin
+
+        case RecRef.Number of
+            DATABASE::"HR Leave Application":
+                begin
+                    RecRef.SetTable(Hrleave);
+                    ApprovalEntryArgument."Document No." := Hrleave."Application Code";
+                end;
+
+        end;
+    end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnAfterRejectSelectedApprovalRequest', '', false, false)]
 
@@ -487,9 +508,24 @@ Codeunit 80008 "Custom Approvals Codeunit"
         ApproverName: Text;
         Notifications: Codeunit Notifications;
         EmailSubject: Text;
+        HumanResourceLeave: Record "HR Leave Application";
+        Timesheets: record TimesheetLines;
+        Training: record "Training Requests";
+        ApprovalComment: Record "Approval Comment Line";
+        comments: Text;
     begin
+
+
+
         if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
             exit;
+
+        ApprovalComment.Reset();
+        ApprovalComment.SetRange("Table ID", ApprovalEntry."Table ID");
+        ApprovalComment.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
+        if ApprovalComment.FindLast() then begin
+            comments := ApprovalComment.Comment;
+        end;
         RecRef.SetRecFilter();
         case RecRef.Number of
             Database::"Purchase Header":
@@ -503,12 +539,136 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     HRemployees.reset;
                     if HRemployees.Get(PurchaseHeader."Employee No") then begin
                         ReceiverEmail := HRemployees."E-Mail";
-                        EmailBody := 'Your approval request for ' + PurchaseHeader."Posting Description" + ' has been rejected by' + ApproverName;
+                        EmailBody := 'Your approval request for ' + PurchaseHeader."Posting Description" + ' has been rejected by ' + ApproverName + ' comments:' + comments;
                         EmailSubject := 'REJECTED DOCUMENT ' + Format(PurchaseHeader."No.");
-                        Notifications.fnSendemail(ApproverName, EmailSubject, EmailBody, HRemployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+                        Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HRemployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+                    end;
+                end;
+            Database::"HR Leave Application":
+                begin
+                    ApproverEmployee.Reset();
+                    ApproverEmployee.SetRange(ApproverEmployee."User ID", ApprovalEntry."Approver ID");
+                    if ApproverEmployee.FindSet() then begin
+                        ApproverName := ApproverEmployee."First Name" + ' ' + ApproverEmployee."Middle Name" + ' ' + ApproverEmployee."Last Name";
+                    end;
+                    RecRef.SetTable(HumanResourceLeave);
+                    HRemployees.reset;
+                    if HRemployees.Get(HumanResourceLeave."Employee No") then begin
+                        ReceiverEmail := HRemployees."E-Mail";
+                        EmailBody := 'Your approval request for ' + HumanResourceLeave."Leave Type" + ' leave has been rejected by ' + ApproverName + ' comments:' + comments;
+                        EmailSubject := 'REJECTED DOCUMENT ' + Format(PurchaseHeader."No.");
+                        Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HRemployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+                    end;
+                end;
+            Database::TimesheetLines:
+                begin
+                    ApproverEmployee.Reset();
+                    ApproverEmployee.SetRange(ApproverEmployee."User ID", ApprovalEntry."Approver ID");
+                    if ApproverEmployee.FindSet() then begin
+                        ApproverName := ApproverEmployee."First Name" + ' ' + ApproverEmployee."Middle Name" + ' ' + ApproverEmployee."Last Name";
+                    end;
+                    RecRef.SetTable(Timesheets);
+                    HRemployees.reset;
+                    if HRemployees.Get(Timesheets."Employee No") then begin
+                        ReceiverEmail := HRemployees."E-Mail";
+                        EmailBody := 'Your approval request for ' + Timesheets.Timesheetcode + ' timesheet has been rejected by ' + ApproverName + ' comments:' + comments;
+                        EmailSubject := 'REJECTED DOCUMENT ' + Format(PurchaseHeader."No.");
+                        Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HRemployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+                    end;
+                end;
+            Database::"Training Requests":
+                begin
+                    ApproverEmployee.Reset();
+                    ApproverEmployee.SetRange(ApproverEmployee."User ID", ApprovalEntry."Approver ID");
+                    if ApproverEmployee.FindSet() then begin
+                        ApproverName := ApproverEmployee."First Name" + ' ' + ApproverEmployee."Middle Name" + ' ' + ApproverEmployee."Last Name";
+                    end;
+                    RecRef.SetTable(Training);
+                    HRemployees.reset;
+                    if HRemployees.Get(Training."Employee Code") then begin
+                        ReceiverEmail := HRemployees."E-Mail";
+                        EmailBody := 'Your approval request for ' + Training."Application Code" + ' Training request has been rejected by ' + ApproverName + ' comments:' + comments;
+                        EmailSubject := 'REJECTED DOCUMENT ' + Format(PurchaseHeader."No.");
+                        Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HRemployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
                     end;
                 end;
         end;
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
+    local procedure OnAfterFinalApproval(
+    ApprovalEntry: Record "Approval Entry")
+    var
+        RecRef: RecordRef;
+        OpenApproval: Record "Approval Entry";
+        PurchaseHeader: Record "Purchase Header";
+        HumanResourceLeave: Record "HR Leave Application";
+        Timesheets: Record TimesheetLines;
+        Training: Record "Training Requests";
+
+        HREmployees: Record "HR Employees";
+        Notifications: Codeunit Notifications;
+
+        EmailBody: Text;
+        EmailSubject: Text;
+    begin
+        OpenApproval.Reset();
+        OpenApproval.SetRange("Table ID", ApprovalEntry."Table ID");
+        OpenApproval.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
+        OpenApproval.SetRange(Status, OpenApproval.Status::Open);
+        if OpenApproval.FindFirst() then
+            exit;
+
+        if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
+            exit;
+
+        case RecRef.Number of
+
+            Database::"Purchase Header":
+                begin
+                    RecRef.SetTable(PurchaseHeader);
+
+                    if HREmployees.Get(PurchaseHeader."Employee No") then begin
+                        EmailSubject := 'APPROVED DOCUMENT ' + PurchaseHeader."No.";
+                        EmailBody := 'Your approval request ' + PurchaseHeader."Posting Description" + ' has been fully approved.';
+                        Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HREmployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+                    end;
+                end;
+
+            Database::"HR Leave Application":
+                begin
+                    RecRef.SetTable(HumanResourceLeave);
+
+                    if HREmployees.Get(HumanResourceLeave."Employee No") then begin
+                        EmailSubject := 'APPROVED LEAVE APPLICATION';
+                        EmailBody := 'Your ' + HumanResourceLeave."Leave Type" + ' leave application has been fully approved.';
+                        Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HREmployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+                    end;
+                end;
+
+            Database::TimesheetLines:
+                begin
+                    RecRef.SetTable(Timesheets);
+
+                    if HREmployees.Get(Timesheets."Employee No") then begin
+                        EmailSubject := 'APPROVED TIMESHEET';
+                        EmailBody := 'Your timesheet ' + Timesheets.Timesheetcode + ' has been fully approved.';
+                        Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HREmployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+                    end;
+                end;
+
+            Database::"Training Requests":
+                begin
+                    RecRef.SetTable(Training);
+                    if HREmployees.Get(Training."Employee Code") then begin
+                        EmailSubject := 'APPROVED TRAINING REQUEST';
+                        EmailBody := 'Your training request ' + Training."Application Code" + ' has been fully approved.';
+                        Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HREmployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+
+                    end;
+                end;
+        end;
+    end;
+
 }
 

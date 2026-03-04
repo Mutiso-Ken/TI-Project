@@ -1059,12 +1059,22 @@ Codeunit 80000 "Payroll Management_AU"
             EmpNSSF := CalculateEmployeeNSSF(NSSFBaseAmount);
             "EmpNSSF(LCY)" := CalculateEmployeeNSSF("NSSFBaseAmount(LCY)");
 
-            if EmpGrossPay < 18000 then begin
-                EmpNSSF := 0.06 * EmpGrossPay;
-                "EmpNSSF(LCY)" := 0.06 * EmpGrossPay;
-                NSSFtoUSE2 := 0;
-                NSSFtoUSE2 := EmpNSSF;
-            end;
+            // if EmpGrossPay < 9000 then begin
+            //     EmpNSSF := 0.06 * EmpGrossPay;
+            //     "EmpNSSF(LCY)" := 0.06 * EmpGrossPay;
+            //     NSSFtoUSE2 := 0;
+            //     NSSFtoUSE2 := EmpNSSF;
+            // end;
+            IF EmpGrossPay <= 9000 THEN BEGIN
+                EmpNSSF := 540;
+            END ELSE BEGIN
+                EmpNSSF := 540 + (EmpGrossPay - 9000) * 0.06;
+            END;
+
+            IF EmpNSSF > 6480 THEN BEGIN
+                EmpNSSF := 6480;
+            END;
+
 
             currentAmount := EmpNSSF;
             "currentAmount(LCY)" := "EmpNSSF(LCY)";
@@ -2330,6 +2340,7 @@ Codeunit 80000 "Payroll Management_AU"
         P9Paye: Decimal;
         P9NSSF: Decimal;
         P9NHIF: Decimal;
+        P9HousingLevy: Decimal;
         P9Deductions: Decimal;
         P9NetPay: Decimal;
         PayrollEmployee: Record "Payroll Employee_AU";
@@ -2411,6 +2422,7 @@ Codeunit 80000 "Payroll Management_AU"
                             8://Deductions
                                 begin
                                     P9Deductions := P9Deductions + MonthlyTransactions.Amount;
+                                    if "Transaction Code" = 'HL' then P9HousingLevy := MonthlyTransactions.Amount;
                                 end;
                             9: //NetPay
                                 begin
@@ -2423,12 +2435,12 @@ Codeunit 80000 "Payroll Management_AU"
                 if P9NetPay <> 0 then
                     InsertP9Information(PayrollEmployee."No.", "Payroll Period", P9BasicPay, P9Allowances, P9Benefits, P9ValueOfQuarters, P9DefinedContribution,
                        P9OwnerOccupierInterest, P9GrossPay, P9TaxablePay, P9TaxCharged, P9InsuranceRelief, P9TaxRelief, P9Paye, P9NSSF,
-                       P9NHIF, P9Deductions, P9NetPay);
+                       P9NHIF, P9Deductions, P9NetPay, P9HousingLevy);
             until PayrollEmployee.Next = 0;
         end;
     end;
 
-    local procedure InsertP9Information(EmpCode: Code[20]; "Payroll Period": Date; P9BasicPay: Decimal; P9Allowances: Decimal; P9Benefits: Decimal; P9ValueOfQuarters: Decimal; P9DefinedContribution: Decimal; P9OwnerOccupierInterest: Decimal; P9GrossPay: Decimal; P9TaxablePay: Decimal; P9TaxCharged: Decimal; P9InsuranceRelief: Decimal; P9TaxRelief: Decimal; P9Paye: Decimal; P9NSSF: Decimal; P9NHIF: Decimal; P9Deductions: Decimal; P9NetPay: Decimal)
+    local procedure InsertP9Information(EmpCode: Code[20]; "Payroll Period": Date; P9BasicPay: Decimal; P9Allowances: Decimal; P9Benefits: Decimal; P9ValueOfQuarters: Decimal; P9DefinedContribution: Decimal; P9OwnerOccupierInterest: Decimal; P9GrossPay: Decimal; P9TaxablePay: Decimal; P9TaxCharged: Decimal; P9InsuranceRelief: Decimal; P9TaxRelief: Decimal; P9Paye: Decimal; P9NSSF: Decimal; P9NHIF: Decimal; P9Deductions: Decimal; P9NetPay: Decimal; P9HousingLevy: Decimal)
     var
         Month: Integer;
         Year: Integer;
@@ -2463,6 +2475,8 @@ Codeunit 80000 "Payroll Management_AU"
         PayrollP9.Deductions := P9Deductions;
         PayrollP9."Net Pay" := P9NetPay;
         PayrollP9."Period Month" := Month;
+        PayrollP9."Housing Levy" := P9HousingLevy;
+
         //"Payroll Period":="Payroll Period";
         PayrollP9."Period Year" := Year;
         PayrollP9.Insert;

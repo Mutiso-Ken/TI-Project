@@ -74,7 +74,6 @@ Page 80009 "Payroll Employee Ded_AU"
         PayrollCalender.SetRange(PayrollCalender.Closed, false);
         if PayrollCalender.Find('-') then
             OpenPeriod := PayrollCalender."Date Opened";
-
         Rec.SetRange("Payroll Period", OpenPeriod)
     end;
 

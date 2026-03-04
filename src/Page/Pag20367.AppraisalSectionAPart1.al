@@ -16,7 +16,6 @@ page 20367 "Appraisal Section A Part 1"
             {
                 field("What have you done"; Rec."What have you done")
                 {
-                    Caption = 'What have you done to contribute to the department`s / programme`s objectives? What are the other performance objectives?';
                     ApplicationArea = Basic;
                 }
                 field("When?"; Rec."When?")
@@ -31,11 +30,7 @@ page 20367 "Appraisal Section A Part 1"
                 {
                     ApplicationArea = Basic;
                 }
-                field("Capacity Needed"; Rec."Capacity Needed")
-                {
-                    ApplicationArea = Basic;
-                }
-                field("Comments by the supervisor"; Rec."Comments by the supervisor")
+                field("Supervisor Rating"; Rec."Supervisor Rating")
                 {
                     ApplicationArea = Basic;
                 }

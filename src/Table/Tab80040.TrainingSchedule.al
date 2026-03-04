@@ -28,7 +28,7 @@ Table 80040 "Training Schedule"
         {
             DataClassification = ToBeClassified;
         }
-        field(7; "No. of Staff trained"; Text[250])
+        field(7; "No. of Staff trained"; Integer)
         {
             DataClassification = ToBeClassified;
         }
@@ -48,6 +48,10 @@ Table 80040 "Training Schedule"
         field(11; "Updated On"; Date)
         {
             DataClassification = ToBeClassified;
+        }
+        field(12; "Line No"; Integer)
+        {
+            AutoIncrement = true;
         }
     }
 

@@ -379,7 +379,6 @@ Page 80048 "HR Leave Application Card"
                     var
                         ApprovalEntries: Page "Approval Entries";
                     begin
-                        //DocumentType := Documenttype::Leave;
                         ApprovalEntries.SetRecordFilters(Database::"HR Leave Application", Documenttype::Leave, Rec."Application Code");
                         ApprovalEntries.Run;
                     end;

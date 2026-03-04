@@ -5,9 +5,9 @@ page 2 "Appraisal Questions"
     ApplicationArea = All;
     Caption = 'Appraisal Questions';
     PageType = List;
-    SourceTable = AppraisalQuestions;
+    SourceTable = "Appraisal Questions";
     UsageCategory = Lists;
-    
+
     layout
     {
         area(Content)
@@ -17,6 +17,7 @@ page 2 "Appraisal Questions"
                 field("Code"; Rec."Code")
                 {
                     ToolTip = 'Specifies the value of the Code field.', Comment = '%';
+                    Editable = false;
                 }
                 field(Description; Rec.Description)
                 {
@@ -25,6 +26,10 @@ page 2 "Appraisal Questions"
                 field(Section; Rec.Section)
                 {
                     ToolTip = 'Specifies the value of the Section field.', Comment = '%';
+                }
+                field(Part; Rec.Part)
+                {
+                    ToolTip = 'Specifies the value of the Part field.', Comment = '%';
                 }
             }
         }

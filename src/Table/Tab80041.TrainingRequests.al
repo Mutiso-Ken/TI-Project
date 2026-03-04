@@ -77,6 +77,7 @@ Table 80041 "Training Requests"
         {
             DataClassification = ToBeClassified;
         }
+        field(12; "Request Date"; Date){}
     }
 
     keys
