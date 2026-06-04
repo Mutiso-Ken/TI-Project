@@ -150,6 +150,10 @@ Page 80007 "Payroll Employee Card_AU"
                 {
                     ApplicationArea = Basic;
                 }
+                field("Works on the Weekends"; Rec."Works on the Weekends")
+                {
+                    ApplicationArea = all;
+                }
                 field("Paid per Hour"; Rec."Paid per Hour")
                 {
                     ApplicationArea = Basic;
@@ -207,7 +211,7 @@ Page 80007 "Payroll Employee Card_AU"
                 {
                     ApplicationArea = all;
                 }
-               
+
             }
         }
     }
@@ -343,6 +347,7 @@ Page 80007 "Payroll Employee Card_AU"
                 RunObject = Page "Payroll Employee Ded_AU";
                 RunPageLink = "No." = field("No.");
             }
+
             action("Employee Assignments")
             {
                 ApplicationArea = Basic;
@@ -353,6 +358,7 @@ Page 80007 "Payroll Employee Card_AU"
                 RunObject = Page "Payroll Employee Assignp_AU";
                 RunPageLink = "No." = field("No.");
             }
+
             action("Employee Cummulatives")
             {
                 ApplicationArea = Basic;
@@ -363,6 +369,7 @@ Page 80007 "Payroll Employee Card_AU"
                 RunObject = Page "Payroll Emp. Cummulati_AU";
                 RunPageLink = "No." = field("No.");
             }
+
             action("View PaySlip 2")
             {
                 ApplicationArea = Basic;

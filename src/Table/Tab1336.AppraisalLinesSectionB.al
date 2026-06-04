@@ -38,4 +38,15 @@ table 1336 "Appraisal Lines Section B"
             Clustered = true;
         }
     }
+
+    trigger OnInsert()
+    var
+        Lines: Integer;
+        ApplinesB: Record "Appraisal Lines Section B";
+    begin
+        ApplinesB.Reset();
+        if ApplinesB.FindLast() then
+            "Line No" := ApplinesB."Line No" + 100;
+        ;
+    end;
 }

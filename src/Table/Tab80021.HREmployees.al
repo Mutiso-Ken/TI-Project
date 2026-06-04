@@ -151,9 +151,17 @@ Table 80021 "HR Employees"
         {
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(4));
         }
-        field(36; "Department Code"; Code[20])
+        field(36; "Department Code"; Code[50])
         {
             TableRelation = "Standard Text".Code where(Type = const(Department));
+
+            trigger OnValidate()
+            var
+                StandardText: Record "Standard Text";
+            begin
+                if StandardText.Get("Department Code") then
+                    "Department Name" := StandardText.Description;
+            end;
         }
         field(37; Office; Code[40])
         {
@@ -1048,8 +1056,9 @@ Table 80021 "HR Employees"
         {
             Description = 'Service';
         }
-        field(328; "Department Name"; Text[20])
+        field(328; "Department Name"; Text[200])
         {
+            Editable = false;
         }
         field(2004; "Total Leave Taken"; Decimal)
         {
@@ -1524,27 +1533,35 @@ Table 80021 "HR Employees"
 
         field(51516005; "Appraisal Supervisor1"; Text[100])
         {
-            Caption = 'First Appraisal Supervisor';
+            Caption = 'Immediate Supervisor';
             DataClassification = ToBeClassified;
             TableRelation = "HR Employees"."No.";
         }
         field(51516006; "Appraisal Supervisor2"; Text[100])
         {
-            Caption = 'Second Appraisal Supervisor';
+            Caption = 'General Appraiser';
             DataClassification = ToBeClassified;
             TableRelation = "HR Employees"."No.";
         }
         field(51516007; "Appraisal Supervisor3"; Text[100])
         {
-            Caption = 'Third Appraisal Supervisor';
+            Caption = 'Head of Section/Programme';
             DataClassification = ToBeClassified;
             TableRelation = "HR Employees"."No.";
         }
         field(51516008; "Appraisal Supervisor4"; Text[100])
         {
-            Caption = 'Fourth Appraisal Supervisor';
+            Caption = 'HR Supervisor';
             DataClassification = ToBeClassified;
             TableRelation = "HR Employees"."No.";
+        }
+        // field(51516010; "Head of Department"; Blob)
+        // {
+        //     DataClassification = ToBeClassified;
+        // }
+        field(51516009; "ED Appraiser"; Boolean)
+        {
+            DataClassification = ToBeClassified;
         }
 
     }

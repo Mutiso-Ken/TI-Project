@@ -4,21 +4,17 @@ Report 80016 "Payroll Detailed Summary_AU"
     UsageCategory = ReportsAndAnalysis;
     RDLCLayout = 'Layouts/Payroll Detailed Summary_AU.rdlc';
     DefaultLayout = RDLC;
-
     dataset
     {
         dataitem("Payroll Employee_AU"; "Payroll Employee_AU")
         {
 
             column(No; "Payroll Employee_AU"."No.")
-            {
-            }
+            { }
             column(Basic; Basicc)
-            {
-            }
+            { }
             column(HouseAllowance; PerdiumAllowance)
-            {
-            }
+            { }
             column(CommuterAllowance; CommuterAllowance)
             {
             }
@@ -162,6 +158,7 @@ Report 80016 "Payroll Detailed Summary_AU"
                 "EXTRA MILE." := 0;
                 HL := 0;
                 RECOVERY := 0;
+
                 PayrollMonthly.Reset;
                 PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
                 PayrollMonthly.SetRange(PayrollMonthly."Payroll Period", Period);
@@ -242,7 +239,7 @@ Report 80016 "Payroll Detailed Summary_AU"
                 PayrollMonthly.Reset;
                 PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
                 PayrollMonthly.SetRange(PayrollMonthly."Payroll Period", Period);
-                PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'IN LIEU');
+                PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'ACTING');
                 if PayrollMonthly.Find('-') then begin
                     PerdiumAllowance := PayrollMonthly.Amount;
                 end;
@@ -281,6 +278,7 @@ Report 80016 "Payroll Detailed Summary_AU"
                 if PayrollMonthly.Find('-') then begin
                     Pension := PayrollMonthly.Amount;
                 end;
+
                 Housing := 0;
                 PayrollMonthly.Reset;
                 PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");

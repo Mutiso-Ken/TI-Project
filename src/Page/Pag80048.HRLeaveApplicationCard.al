@@ -5,7 +5,7 @@ Page 80048 "HR Leave Application Card"
     PageType = Card;
     PromotedActionCategories = 'New,Process,Report,Functions,Comments';
     SourceTable = "HR Leave Application";
- 
+
 
     layout
     {
@@ -379,7 +379,9 @@ Page 80048 "HR Leave Application Card"
                     var
                         ApprovalEntries: Page "Approval Entries";
                     begin
-                        ApprovalEntries.SetRecordFilters(Database::"HR Leave Application", Documenttype::Leave, Rec."Application Code");
+                        ApprovalEntry.reset;
+                        ApprovalEntry.setrange("Document No.", Rec."Application Code");
+                        ApprovalEntries.SetTableView(ApprovalEntry);
                         ApprovalEntries.Run;
                     end;
 

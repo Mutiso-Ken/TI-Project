@@ -192,6 +192,24 @@ Table 80027 "HR Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
         }
+        field(50024; "Appraisal Sessions Active"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            trigger OnValidate()
+            begin
+                if "Appraisal Sessions Active" then begin
+                    Message('Kindly set up Review Start and End Dates!');
+                end;
+            end;
+        }
+        field(50025; "Review Start Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50026; "Review End Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
         field(50019; Email; Text[50])
         {
             DataClassification = ToBeClassified;

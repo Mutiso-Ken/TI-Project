@@ -148,6 +148,7 @@ Codeunit 80000 "Payroll Management_AU"
         TCODE_PFUND: label 'PROVIDENT';
         curTotalDeductions: Decimal;
         ExcessPension: Decimal;
+        Pension: Decimal;
         curPensionStaff: Decimal;
         TotEmpBenefit: Decimal;
         InsuranceAmount: Decimal;
@@ -212,13 +213,6 @@ Codeunit 80000 "Payroll Management_AU"
         ProcessEmployerProvident("Employee No", "Payroll Period", "Posting Group", BasicPay, "BasicPay(LCY)", "Currency Code", "Currency Factor", "Joining Date", "Leaving Date",
                            BasedOnTimeSheet, "Global Dimension 1 Code", "Global Dimension 2 Code", Department);
 
-        //  //NHIF
-        //  IF PaysNHIF=TRUE THEN BEGIN
-        //    ProcessNHIF("Employee No","Payroll Period","Posting Group",BasicPay,"BasicPay(LCY)","Currency Code","Currency Factor","Joining Date","Leaving Date",
-        //                    BasedOnTimeSheet,"Global Dimension 1 Code","Global Dimension 2 Code",Department,PaysNHIF);
-        //  END;
-        //  CalculateInsuranceRelief("Employee No",CurMonth,CurYear,SpecialTransType::"Defined Contribution",FALSE);
-        //Gross Taxable
         ProcessGrossTaxable();
 
         //Taxable Pay
@@ -359,6 +353,7 @@ Codeunit 80000 "Payroll Management_AU"
         DaysInMonth: Integer;
         DaysWorked: Integer;
         Employee: Record "Payroll Employee_AU";
+        WorksOnWeekendAmount: Decimal;
     begin
         //Setup Constants
         "Transaction Code" := TCODE_BPAY;
@@ -370,6 +365,7 @@ Codeunit 80000 "Payroll Management_AU"
         "EmpBasicPay(LCY)" := 0;
         currentAmount := 0;
         "currentAmount(LCY)" := 0;
+        WorksOnWeekendAmount := 0;
 
         //Calculate the Basic Pay
         EmpBasicPay := BasicPay;
@@ -378,7 +374,7 @@ Codeunit 80000 "Payroll Management_AU"
         //If Based on Timesheet then Prorate
         PayrollGenSetup.Get;
         if BasedOnTimeSheet then begin
-            DaysInMonth := GetDaysInMonth("Payroll Period");
+            DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
             DaysWorked := GetDaysWorkedTimesheet("Employee No", "Payroll Period");
             EmpBasicPay := CalculateProratedAmount("Employee No", EmpBasicPay, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
             "EmpBasicPay(LCY)" := CalculateProratedAmount("Employee No", "EmpBasicPay(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
@@ -387,23 +383,40 @@ Codeunit 80000 "Payroll Management_AU"
         end else begin
             //If Employed on this Payroll Period then Prorate Amount
             if (Date2dmy("Joining Date", 2) = Date2dmy("Payroll Period", 2)) and (Date2dmy("Joining Date", 3) = Date2dmy("Payroll Period", 3)) then begin
-                DaysInMonth := GetDaysInMonth("Joining Date");
-                DaysWorked := GetDaysWorked("Joining Date", false);
+                DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
+                DaysWorked := GetDaysWorked("Joining Date", 0D, false, "Employee No");
                 EmpBasicPay := CalculateProratedAmount2("Employee No", EmpBasicPay, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                 "EmpBasicPay(LCY)" := CalculateProratedAmount2("Employee No", "EmpBasicPay(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
             end;
             //If Terminated on this Payroll Period then Prorate Amount
             if "Leaving Date" <> 0D then
                 if (Date2dmy("Leaving Date", 2) = Date2dmy("Payroll Period", 2)) and (Date2dmy("Leaving Date", 3) = Date2dmy("Payroll Period", 3)) then begin
-                    DaysInMonth := GetDaysInMonth("Joining Date");
-                    DaysWorked := GetDaysWorked("Joining Date", true);
+                    DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
+                    DaysWorked := GetDaysWorked("Joining Date", "Leaving Date", true, "Employee No");
+
                     EmpBasicPay := CalculateProratedAmount2("Employee No", EmpBasicPay, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                     "EmpBasicPay(LCY)" := CalculateProratedAmount2("Employee No", "EmpBasicPay(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                 end;
         end;
+
+        // if Employee.Get("Employee No") then begin
+        //     if Employee."Works on the Weekends" then begin
+        //         DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
+        //         WorksOnWeekendAmount := CalculateProratedAmount2("Employee No", EmpBasicPay, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, GetNonWorkingDays("Payroll Period", "Employee No"));
+        //         EmpBasicPay := EmpBasicPay + WorksOnWeekendAmount;
+        //         "EmpBasicPay(LCY)" := EmpBasicPay + WorksOnWeekendAmount;
+        //         currentAmount := EmpBasicPay;
+        //         "currentAmount(LCY)" := "EmpBasicPay(LCY)";
+        //     end else begin
+        //         currentAmount := EmpBasicPay;
+        //         "currentAmount(LCY)" := "EmpBasicPay(LCY)";
+        //     end;
+        // end;
+
         //Insert Into Monthly Transactions
         currentAmount := EmpBasicPay;
         "currentAmount(LCY)" := "EmpBasicPay(LCY)";
+
 
         if Employee.Get("Employee No") then begin
             "Account Type" := "account type"::"G/L Account";
@@ -431,10 +444,6 @@ Codeunit 80000 "Payroll Management_AU"
             else
                 currentAmount := curPensionStaff;
 
-
-
-
-
             "Transaction Code" := 'PNSR';
             TransDescription := 'Pension Relief';
             "Transaction Type" := 'TAX CALCULATIONS';
@@ -450,7 +459,6 @@ Codeunit 80000 "Payroll Management_AU"
                 ExcessPension := curPensionStaff - MaxPensionContrib
             else
                 ExcessPension := 0;
-
 
             currentAmount := ExcessPension;
 
@@ -586,7 +594,7 @@ Codeunit 80000 "Payroll Management_AU"
                     //If Based on Timesheet then Prorate
                     PayrollGenSetup.Get;
                     if BasedOnTimesheet then begin
-                        DaysInMonth := GetDaysInMonth("Payroll Period");
+                        DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
                         DaysWorked := GetDaysWorkedTimesheet("Employee No", "Payroll Period");
                         currentAmount := CalculateProratedAmount("Employee No", currentAmount, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                         "currentAmount(LCY)" := CalculateProratedAmount("Employee No", "currentAmount(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
@@ -595,8 +603,8 @@ Codeunit 80000 "Payroll Management_AU"
                         //If Employed on this Payroll Period then Prorate Amount
                         if EmployeeTransactions."Not Prorate" = false then
                             if (Date2dmy("Joining Date", 2) = Date2dmy("Payroll Period", 2)) and (Date2dmy("Joining Date", 3) = Date2dmy("Payroll Period", 3)) then begin
-                                DaysInMonth := GetDaysInMonth("Joining Date");
-                                DaysWorked := GetDaysWorked("Joining Date", false);
+                                DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
+                                DaysWorked := GetDaysWorked("Joining Date", 0D, false, "Employee No");
                                 currentAmount := CalculateProratedAmount("Employee No", currentAmount, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                                 "currentAmount(LCY)" := CalculateProratedAmount("Employee No", "currentAmount(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                             end;
@@ -604,8 +612,9 @@ Codeunit 80000 "Payroll Management_AU"
                         //If Terminated on this Payroll Period then Prorate Amount
                         if "Leaving Date" <> 0D then
                             if (Date2dmy("Leaving Date", 2) = Date2dmy("Payroll Period", 2)) and (Date2dmy("Leaving Date", 3) = Date2dmy("Payroll Period", 3)) then begin
-                                DaysInMonth := GetDaysInMonth("Joining Date");
-                                DaysWorked := GetDaysWorked("Joining Date", true);
+                                DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
+                                DaysWorked := GetDaysWorked("Joining Date", "Leaving Date", true, "Employee No");
+
                                 currentAmount := CalculateProratedAmount("Employee No", currentAmount, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                                 "currentAmount(LCY)" := CalculateProratedAmount("Employee No", "currentAmount(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                             end;
@@ -634,9 +643,12 @@ Codeunit 80000 "Payroll Management_AU"
                         "currentAmount(LCY)" := 0;
                     end;
                     //Sum All Allowances
+
+
+
+
                     EmpTotalAllowances := EmpTotalAllowances + currentAmount;
                     "EmpTotalAllowances(LCY)" := "EmpTotalAllowances(LCY)" + "currentAmount(LCY)";
-
                     TransDescription := PayrollTransactions."Transaction Name";
                     "Transaction Type" := TALLOWANCE;
                     Grouping := 3;
@@ -692,6 +704,7 @@ Codeunit 80000 "Payroll Management_AU"
         currentAmount := 0;
         "currentAmount(LCY)" := 0;
         HousinRf := 0;
+        Pension := 0;
 
         EmpGrossPay := (EmpBasicPay + EmpTotalAllowances + EmpSalaryArrear);
         "EmpGrossPay(LCY)" := ("EmpBasicPay(LCY)" + "EmpTotalAllowances(LCY)" + "EmpSalaryArrear(LCY)");
@@ -699,6 +712,17 @@ Codeunit 80000 "Payroll Management_AU"
         currentAmount := EmpGrossPay;
         "currentAmount(LCY)" := "EmpGrossPay(LCY)";
         "co-op" := "co-op"::None;
+
+
+        EmployeeTransactions.Reset;
+        EmployeeTransactions.SetRange(EmployeeTransactions."No.", "Employee No");
+        EmployeeTransactions.SetRange(EmployeeTransactions."Period Month", CurMonth);
+        EmployeeTransactions.SetRange(EmployeeTransactions."Transaction Code", 'EXCESS PEN');
+        if EmployeeTransactions.Find('-') then begin
+            Pension := EmployeeTransactions.Amount;
+        end;
+
+        //Message('%1', Pension);
 
         //Insert into Monthly Transaction
         InsertMonthlyTransactions("Employee No", "Transaction Code", "Transaction Type", Grouping, SubGrouping,
@@ -729,9 +753,9 @@ Codeunit 80000 "Payroll Management_AU"
             EmployeeTransactions."Transaction Type" := EmployeeTransactions."transaction type"::Deduction;
             EmployeeTransactions."Payroll Period" := "Payroll Period";
             EmployeeTransactions."Transaction Name" := 'Housing Levy';
-            EmployeeTransactions.Amount := 0.015 * EmpGrossPay;
-            EmployeeTransactions."Amount(LCY)" := 0.015 * EmpGrossPay;
-            EmployeeTransactions."Original Amount" := 0.015 * EmpGrossPay;
+            EmployeeTransactions.Amount := 0.015 * (EmpGrossPay - Pension);
+            EmployeeTransactions."Amount(LCY)" := 0.015 * (EmpGrossPay - Pension);
+            EmployeeTransactions."Original Amount" := 0.015 * (EmpGrossPay - Pension);
             EmployeeTransactions.Insert(true);
         end;
 
@@ -1059,12 +1083,7 @@ Codeunit 80000 "Payroll Management_AU"
             EmpNSSF := CalculateEmployeeNSSF(NSSFBaseAmount);
             "EmpNSSF(LCY)" := CalculateEmployeeNSSF("NSSFBaseAmount(LCY)");
 
-            // if EmpGrossPay < 9000 then begin
-            //     EmpNSSF := 0.06 * EmpGrossPay;
-            //     "EmpNSSF(LCY)" := 0.06 * EmpGrossPay;
-            //     NSSFtoUSE2 := 0;
-            //     NSSFtoUSE2 := EmpNSSF;
-            // end;
+
             IF EmpGrossPay <= 9000 THEN BEGIN
                 EmpNSSF := 540;
             END ELSE BEGIN
@@ -1075,11 +1094,8 @@ Codeunit 80000 "Payroll Management_AU"
                 EmpNSSF := 6480;
             END;
 
-
             currentAmount := EmpNSSF;
             "currentAmount(LCY)" := "EmpNSSF(LCY)";
-
-
             "Transaction Code" := TCODE_NSSF;
             TransDescription := 'N.S.S.F';
             "Transaction Type" := TTYPE_STATUTORIES;
@@ -1774,7 +1790,7 @@ Codeunit 80000 "Payroll Management_AU"
     end;
 
 
-    procedure GetDaysInMonth(dtDate: Date) DaysInMonth: Integer
+    procedure GetDaysInMonth(dtDate: Date; EmployeeNumber: Code[50]) DaysInMonth: Integer
     var
         Day: Integer;
         SysDate: Record Date;
@@ -1790,7 +1806,9 @@ Codeunit 80000 "Payroll Management_AU"
         Expr2: Text[30];
         ReferenceDate: Date;
         DaysDifference: Integer;
+        Employee: Record "Payroll Employee_AU";
     begin
+
         NonWorkDays := 0;
         TodayDate := dtDate;
         Day := Date2dmy(TodayDate, 1);
@@ -1812,17 +1830,22 @@ Codeunit 80000 "Payroll Management_AU"
             BaseCalender.Reset;
             BaseCalender.SetRange(BaseCalender.Nonworking, true);
             BaseCalender.SetRange(BaseCalender.Date, FirstDay, LastDate);
-
             if BaseCalender.FindSet then
                 DaysDifference := BaseCalender.Count;
-            NonWorkDays := NonWorkDays + DaysDifference - 1;
-            DaysInMonth := TotDays - NonWorkDays;
+            if Employee.Get(EmployeeNumber) then begin
+                if Employee."Works on the Weekends" then begin
+                    DaysInMonth := TotDays;
+                end else begin
+                    DaysInMonth := TotDays - NonWorkDays;
+                end;
+            end;
+
         end;
-        //Message('%1|%2|%3', DaysInMonth, NonWorkDays, TotDays);
+
     end;
 
 
-    procedure GetDaysWorked(dtDate: Date; IsTermination: Boolean) DaysWorked: Integer
+    procedure GetDaysWorked(dtDate: Date; LeavingDate: Date; IsTermination: Boolean; EmployeeNumber: code[50]) DaysWorked: Integer
     var
         Day: Integer;
         SysDate: Record Date;
@@ -1836,7 +1859,13 @@ Codeunit 80000 "Payroll Management_AU"
         TempDate: Integer;
         DayOfWeek: Integer;
         DaysDifference: Integer;
+        LastDayFirstDay: Date;
+        PayrollEmployee: Record "Payroll Employee_AU";
+        Employee: Record "Payroll Employee_AU";
     begin
+
+        TotDays := 0;
+        DaysWorked := 0;
         TodayDate := dtDate;
 
         Day := Date2dmy(TodayDate, 1);
@@ -1844,35 +1873,74 @@ Codeunit 80000 "Payroll Management_AU"
         FirstDay := CalcDate(Expr1, TodayDate);
         LastDate := CalcDate('1M-1D', FirstDay);
 
+        if IsTermination then begin
+            LastDayFirstDay := CalcDate('-CM', LeavingDate);
+        end;
+
 
         SysDate.Reset;
         SysDate.SetRange(SysDate."Period Type", SysDate."period type"::Date);
         if not IsTermination then
             SysDate.SetRange(SysDate."Period Start", dtDate, LastDate)
         else
-            SysDate.SetRange(SysDate."Period Start", FirstDay, dtDate);
+            SysDate.SetRange(SysDate."Period Start", LastDayFirstDay, LeavingDate);
         if SysDate.FindSet then begin
             repeat
                 if ((SysDate."Period Name" = 'Saturday') or (SysDate."Period Name" = 'Sunday')) then
                     NonWorkDays := NonWorkDays + 1;
             until SysDate.Next = 0;
             TotDays := SysDate.Count;
+            if Employee.Get(EmployeeNumber) then begin
+                if Employee."Works on the Weekends" then begin
+                    DaysWorked := TotDays;
+                end else begin
+                    DaysWorked := TotDays - NonWorkDays;
+                end;
+            end;
+        End;
 
-
-            // baseCalender.Reset;
-            // baseCalender.SetRange(baseCalender.Nonworking, true);
-            // baseCalender.SetRange(baseCalender.Date, dtDate, LastDate);
-            // if baseCalender.FindSet then
-            //     DaysDifference := baseCalender.Count;
-
-            // NonWorkDays := NonWorkDays + DaysDifference;
-
-            DaysWorked := TotDays - NonWorkDays;
-
-
-        end;
     end;
 
+    procedure GetNonWorkingDays(dtDate: Date; EmployeeNumber: code[50]) NonWorkingdays: Integer
+    var
+        Day: Integer;
+        SysDate: Record Date;
+        Expr1: Text[30];
+        FirstDay: Date;
+        LastDate: Date;
+        TodayDate: Date;
+        baseCalender: Record "Base Calendar Change";
+        TotDays: Integer;
+        NonWorkDays: Integer;
+        TempDate: Integer;
+        DayOfWeek: Integer;
+        DaysDifference: Integer;
+
+        PayrollEmployee: Record "Payroll Employee_AU";
+        Employee: Record "Payroll Employee_AU";
+    begin
+
+        TotDays := 0;
+        NonWorkingdays := 0;
+        TodayDate := dtDate;
+
+        Day := Date2dmy(TodayDate, 1);
+        Expr1 := '<-CM>';
+        FirstDay := CalcDate(Expr1, TodayDate);
+        LastDate := CalcDate('CM', FirstDay);
+
+        SysDate.Reset;
+        SysDate.SetRange(SysDate."Period Type", SysDate."period type"::Date);
+        SysDate.SetRange(SysDate."Period Start", FirstDay, LastDate);
+        if SysDate.FindSet then begin
+            repeat
+                if ((SysDate."Period Name" = 'Saturday') or (SysDate."Period Name" = 'Sunday')) then
+                    NonWorkDays := NonWorkDays + 1;
+            until SysDate.Next = 0;
+
+        End;
+        NonWorkingdays := NonWorkDays;
+    end;
 
     procedure GetDaysWorkedTimesheet(EmployeeNo: Code[20]; PayrollPeriod: Date) DaysWorked: Integer
     var
@@ -2757,5 +2825,8 @@ Codeunit 80000 "Payroll Management_AU"
 
         Amount := ROUND((DaysWorked / DaysInMonth) * "Basic Pay");
     end;
+
+
+
 }
 

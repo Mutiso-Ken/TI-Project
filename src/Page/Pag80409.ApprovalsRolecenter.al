@@ -10,35 +10,11 @@ page 80409 ApprovalsRolecenter
             {
                 ApplicationArea = all;
             }
-
+            part(AppraisalApprovalsActivities; "Appraisal Approvals Activities")
+            {
+                ApplicationArea = all;
+            }
         }
-    }
 
-    // actions
-    // {
-    //     area(Creation)
-    //     {
-    //         action(ActionBarAction)
-    //         {
-    //             RunObject = Page ObjectName;
-    //         }
-    //     }
-    //     area(Sections)
-    //     {
-    //         group(SectionsGroupName)
-    //         {
-    //             action(SectionsAction)
-    //             {
-    //                 RunObject = Page ObjectName;
-    //             }
-    //         }
-    //     }
-    //     area(Embedding)
-    //     {
-    //         action(EmbeddingAction)
-    //         {
-    //             RunObject = Page ObjectName;
-    //         }
-    //     }
-    // }
+    }
 }

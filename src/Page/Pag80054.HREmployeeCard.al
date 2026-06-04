@@ -476,6 +476,10 @@ Page 80054 "HR Employee Card"
                 {
                     ApplicationArea = Basic;
                 }
+                field("Department Name"; Rec."Department Name")
+                {
+                    ApplicationArea = Basic;
+                }
                 field("Payroll Code"; Rec."Payroll Code")
                 {
                     ApplicationArea = Basic;
@@ -484,10 +488,29 @@ Page 80054 "HR Employee Card"
                 {
                     ApplicationArea = Basic;
                 }
-                field("Appraisal Supervisor1"; Rec."Appraisal Supervisor1") { ApplicationArea = Basic; }
-                field("Appraisal Supervisor2"; Rec."Appraisal Supervisor2") { ApplicationArea = Basic; }
-                field("Appraisal Supervisor3"; Rec."Appraisal Supervisor3") { ApplicationArea = Basic; }
-                field("Appraisal Supervisor4"; Rec."Appraisal Supervisor4") { ApplicationArea = Basic; }
+            }
+            group("Appraisal Approval Workflow")
+            {
+                field("Appraisal Supervisor1"; Rec."Appraisal Supervisor1")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Appraisal Supervisor2"; Rec."Appraisal Supervisor2")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Appraisal Supervisor3"; Rec."Appraisal Supervisor3")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Appraisal Supervisor4"; Rec."Appraisal Supervisor4")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("ED Appraiser"; Rec."ED Appraiser")
+                {
+                    ApplicationArea = Basic;
+                }
             }
             group("Terms of Service")
             {
@@ -1151,7 +1174,7 @@ Page 80054 "HR Employee Card"
 
 
             end else begin
-                Error('User' + ' ' + sUserID + ' ' + 'does not exist in the user setup table');
+                // Error('User' + ' ' + sUserID + ' ' + 'does not exist in the user setup table');
                 SupervisorName := '';
             end;
         end;

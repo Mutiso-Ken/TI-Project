@@ -448,6 +448,9 @@ Table 80000 "Payroll Employee_AU"
             DataClassification = ToBeClassified;
             TableRelation = "G/L Account"."No.";
         }
+         field(100; "Works on the Weekends"; Boolean)
+        {
+        }
     }
 
     keys

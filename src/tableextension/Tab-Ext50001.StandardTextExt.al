@@ -15,7 +15,7 @@ tableextension 50001 "Standard Text Ext" extends "Standard Text"
         field(5; Type; Option)
         {
             DataClassification = ToBeClassified;
-            OptionMembers = ,"Focus Area","Sub Pillar","GL Category",Department;
+            OptionMembers = ,"Focus Area","Sub Pillar","GL Category",Department,Others;
         }
     }
 }

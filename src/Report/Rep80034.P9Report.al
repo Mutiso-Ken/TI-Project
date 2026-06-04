@@ -149,6 +149,7 @@ Report 80034 P9Report
                         Amount1 := FixedContribution;
                     Amount2 := Amount1 + "Payroll Employee P9"."Owner Occupier Interest";
                     Amount3 := "Payroll Employee P9"."Gross Pay" - Amount2;
+                    
                     Bpay := 0;
                     PayrollMonthlyTransactions.Reset;
                     PayrollMonthlyTransactions.SetRange("No.", "Payroll Employee P9"."Employee Code");
@@ -157,6 +158,7 @@ Report 80034 P9Report
                     PayrollMonthlyTransactions.SetRange("Transaction Code", 'BPAY');
                     if PayrollMonthlyTransactions.FindFirst then
                         Bpay := PayrollMonthlyTransactions.Amount;
+
                     TXBP := 0;
                     PayrollMonthlyTransactions.Reset;
                     PayrollMonthlyTransactions.SetRange("No.", "Payroll Employee P9"."Employee Code");

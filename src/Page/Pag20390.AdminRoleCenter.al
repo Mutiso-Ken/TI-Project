@@ -1,7 +1,7 @@
 #pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006 // ForNAV settings
-Page 20366 "Main Role Center"
+Page 20390 "Admin Role Center"
 {
-    Caption = 'Main Role Center', Comment = '{Dependency=Match,"ProfileDescription_SMALLBUSINESS"}';
+    Caption = 'Admin Role Center', Comment = '{Dependency=Match,"ProfileDescription_SMALLBUSINESS"}';
     PageType = RoleCenter;
 
     layout
@@ -1132,35 +1132,35 @@ Page 20366 "Main Role Center"
             //         RunObject = Page "Staff Project Allocation";
             //     }
             // }
-            // group(Appraisals)
-            // {
-            //     Caption = 'Appraisals';
-            //     Image = Calculator;
-            //     ToolTip = 'View and edit Employee Perfomance Appraisals.';
-            //     action("New Appraisals")
-            //     {
-            //         ApplicationArea = Basic, Suite;
-            //         RunObject = Page "Appraisal List";
-            //         RunPageView = where(Status = const(Open));
-            //     }
-            //     action("Pending Approval Appraisals")
-            //     {
-            //         ApplicationArea = Basic, Suite;
-            //         RunObject = Page "Appraisal List";
-            //         RunPageView = where(Status = const("Pending Supervisor Approval"));
-            //     }
-            //     action("Approved Appraisals")
-            //     {
-            //         ApplicationArea = Basic, Suite;
-            //         RunObject = Page "Appraisal List";
-            //         RunPageView = where(Status = const(Approved));
-            //     }
-            //     action("Appraisal Questions")
-            //     {
-            //         ApplicationArea = Basic, Suite;
-            //         RunObject = Page "Appraisal Questions";
-            //     }
-            // }
+            group(Appraisals)
+            {
+                Caption = 'Appraisals';
+                Image = Calculator;
+                ToolTip = 'View and edit Employee Perfomance Appraisals.';
+                action("New Appraisals")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Appraisal List";
+                    RunPageView = where(Status = const(Open));
+                }
+                action("Pending Approval Appraisals")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Appraisal List";
+                    RunPageView = where(Status = const("Pending Supervisor Approval"));
+                }
+                action("Approved Appraisals")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Appraisal List";
+                    RunPageView = where(Status = const(Approved));
+                }
+                action("Appraisal Questions")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Appraisal Questions";
+                }
+            }
             group(Trainings)
             {
                 Caption = 'Trainings';
@@ -1181,9 +1181,9 @@ Page 20366 "Main Role Center"
         }
     }
 }
-profile "Main Profile"
+profile "Administrator Profile"
 {
-    Caption = 'Main Role Center';
-    RoleCenter = "Main Role Center";
-    ProfileDescription = 'Main Role Center';
+    Caption = 'Admin Role Center';
+    RoleCenter = "Admin Role Center";
+    ProfileDescription = 'Admin Role Center';
 }

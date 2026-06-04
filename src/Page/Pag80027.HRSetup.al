@@ -36,10 +36,6 @@ Page 80027 "HR Setup"
                 {
                     ApplicationArea = Basic;
                 }
-                field("Max Appraisal Rating"; Rec."Max Appraisal Rating")
-                {
-                    ApplicationArea = Basic;
-                }
                 field("Training GL"; Rec."Training GL")
                 {
                     ApplicationArea = Basic;
@@ -74,14 +70,7 @@ Page 80027 "HR Setup"
                 {
                     ApplicationArea = Basic;
                 }
-                field("Appraisal Nos."; Rec."Appraisal Nos.")
-                {
-                    ApplicationArea = Basic;
-                }
-                field("Appraisal Question Nos."; Rec."Appraisal Question Nos.")
-                {
-                    ApplicationArea = Basic;
-                }
+
                 field("Training Analysis Nos"; Rec."Training Analysis Nos")
                 {
                     ApplicationArea = Basic;
@@ -114,10 +103,6 @@ Page 80027 "HR Setup"
                 {
                     ApplicationArea = Basic;
                 }
-                // field("Appraisal Nos"; Rec."Appraisal Nos")
-                // {
-                //     ApplicationArea = Basic;
-                // }
                 field("Company Activities"; Rec."Company Activities")
                 {
                     ApplicationArea = Basic;
@@ -179,6 +164,30 @@ Page 80027 "HR Setup"
                     ApplicationArea = Basic;
                 }
                 field("Leave Batch"; Rec."Leave Batch")
+                {
+                    ApplicationArea = Basic;
+                }
+            }
+            group(Appraisal)
+            {
+                Caption = 'Appraisal';
+                field("Appraisal Nos."; Rec."Appraisal Nos.")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Appraisal Question Nos."; Rec."Appraisal Question Nos.")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Appraisal Sessions Active"; Rec."Appraisal Sessions Active")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Review Start Date"; Rec."Review Start Date")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Review End Date"; Rec."Review End Date")
                 {
                     ApplicationArea = Basic;
                 }

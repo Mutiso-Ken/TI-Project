@@ -17,15 +17,18 @@ page 20369 "Appraisal Section B Part 1"
                 field("Question Description"; Rec."Question Description")
                 {
                     ApplicationArea = Basic;
+                    Editable = MakeAppraiseeEditingTrue;
                 }
                 field("Self-appraisal (Comments)"; Rec."Self-appraisal (Comments)")
                 {
                     ApplicationArea = Basic;
+                    Editable = MakeAppraiseeEditingTrue;
                 }
                 field("Comments by the supervisor"; Rec."Comments by the supervisor")
                 {
                     Caption = 'Supervisor`s Feedback';
                     ApplicationArea = Basic;
+                    Editable = MakeSupervisorEditingTrue;
                 }
             }
         }
@@ -35,6 +38,37 @@ page 20369 "Appraisal Section B Part 1"
     begin
         Rec.Part := Rec.Part::"Part 1";
     end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        SetControlAppearance();
+    end;
+
+    local procedure SetControlAppearance()
+    begin
+        if AppraisalHeader.Get(Rec."Appraisal Code") then begin
+            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                HREmployees.Reset();
+                if HREmployees.Get(AppraisalHeader."Immediate Supervisor") then begin
+                    if HrEmployees."User ID" = UserId then
+                        MakeSupervisorEditingTrue := true;
+                end;
+            end;
+            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                HREmployees.Reset();
+                if HREmployees.Get(AppraisalHeader."Employee No") then begin
+                    if HrEmployees."User ID" = UserId then
+                        MakeAppraiseeEditingTrue := true;
+                end;
+            end;
+        end;
+    end;
+
+    var
+        MakeAppraiseeEditingTrue: Boolean;
+        MakeSupervisorEditingTrue: Boolean;
+        HREmployees: Record "HR Employees";
+        AppraisalHeader: Record "Appraisal Header";
 }
 page 20370 "Appraisal Section B Part 2"
 {
@@ -53,15 +87,18 @@ page 20370 "Appraisal Section B Part 2"
                 field("Question Description"; Rec."Question Description")
                 {
                     ApplicationArea = Basic;
+                    Editable = MakeAppraiseeEditingTrue;
                 }
                 field("Self-appraisal (Comments)"; Rec."Self-appraisal (Comments)")
                 {
                     ApplicationArea = Basic;
+                    Editable = MakeAppraiseeEditingTrue;
                 }
                 field("Comments by the supervisor"; Rec."Comments by the supervisor")
                 {
                     Caption = 'Supervisor`s Feedback';
                     ApplicationArea = Basic;
+                    Editable = MakeSupervisorEditingTrue;
                 }
             }
         }
@@ -70,6 +107,37 @@ page 20370 "Appraisal Section B Part 2"
     begin
         Rec.Part := Rec.Part::"Part 2";
     end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        SetControlAppearance();
+    end;
+
+    local procedure SetControlAppearance()
+    begin
+        if AppraisalHeader.Get(Rec."Appraisal Code") then begin
+            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                HREmployees.Reset();
+                if HREmployees.Get(AppraisalHeader."Immediate Supervisor") then begin
+                    if HrEmployees."User ID" = UserId then
+                        MakeSupervisorEditingTrue := true;
+                end;
+            end;
+            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                HREmployees.Reset();
+                if HREmployees.Get(AppraisalHeader."Employee No") then begin
+                    if HrEmployees."User ID" = UserId then
+                        MakeAppraiseeEditingTrue := true;
+                end;
+            end;
+        end;
+    end;
+
+    var
+        MakeAppraiseeEditingTrue: Boolean;
+        MakeSupervisorEditingTrue: Boolean;
+        HREmployees: Record "HR Employees";
+        AppraisalHeader: Record "Appraisal Header";
 }
 page 20371 "Appraisal Section B Part 3"
 {
@@ -88,15 +156,18 @@ page 20371 "Appraisal Section B Part 3"
                 field("Question Description"; Rec."Question Description")
                 {
                     ApplicationArea = Basic;
+                    Editable = MakeAppraiseeEditingTrue;
                 }
                 field("Self-appraisal (Comments)"; Rec."Self-appraisal (Comments)")
                 {
                     ApplicationArea = Basic;
+                    Editable = MakeAppraiseeEditingTrue;
                 }
                 field("Comments by the supervisor"; Rec."Comments by the supervisor")
                 {
                     Caption = 'Supervisor`s Feedback';
                     ApplicationArea = Basic;
+                    Editable = MakeSupervisorEditingTrue;
                 }
             }
         }
@@ -105,6 +176,37 @@ page 20371 "Appraisal Section B Part 3"
     begin
         Rec.Part := Rec.Part::"Part 3";
     end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        SetControlAppearance();
+    end;
+
+    local procedure SetControlAppearance()
+    begin
+        if AppraisalHeader.Get(Rec."Appraisal Code") then begin
+            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                HREmployees.Reset();
+                if HREmployees.Get(AppraisalHeader."Immediate Supervisor") then begin
+                    if HrEmployees."User ID" = UserId then
+                        MakeSupervisorEditingTrue := true;
+                end;
+            end;
+            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                HREmployees.Reset();
+                if HREmployees.Get(AppraisalHeader."Employee No") then begin
+                    if HrEmployees."User ID" = UserId then
+                        MakeAppraiseeEditingTrue := true;
+                end;
+            end;
+        end;
+    end;
+
+    var
+        MakeAppraiseeEditingTrue: Boolean;
+        MakeSupervisorEditingTrue: Boolean;
+        HREmployees: Record "HR Employees";
+        AppraisalHeader: Record "Appraisal Header";
 }
 page 20372 "Appraisal Section B Part 4"
 {
@@ -123,15 +225,18 @@ page 20372 "Appraisal Section B Part 4"
                 field("Question Description"; Rec."Question Description")
                 {
                     ApplicationArea = Basic;
+                    Editable = MakeAppraiseeEditingTrue;
                 }
                 field("Self-appraisal (Comments)"; Rec."Self-appraisal (Comments)")
                 {
                     ApplicationArea = Basic;
+                    Editable = MakeAppraiseeEditingTrue;
                 }
                 field("Comments by the supervisor"; Rec."Comments by the supervisor")
                 {
                     Caption = 'Supervisor`s Feedback';
                     ApplicationArea = Basic;
+                    Editable = MakeSupervisorEditingTrue;
                 }
             }
         }
@@ -140,4 +245,37 @@ page 20372 "Appraisal Section B Part 4"
     begin
         Rec.Part := Rec.Part::"Part 4";
     end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        SetControlAppearance();
+    end;
+
+    local procedure SetControlAppearance()
+    begin
+        if AppraisalHeader.Get(Rec."Appraisal Code") then begin
+            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                HREmployees.Reset();
+                if HREmployees.Get(AppraisalHeader."Immediate Supervisor") then begin
+                    if HrEmployees."User ID" = UserId then
+                        MakeSupervisorEditingTrue := true;
+                end;
+            end;
+            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                HREmployees.Reset();
+                if HREmployees.Get(AppraisalHeader."Employee No") then begin
+                    if HrEmployees."User ID" = UserId then
+                        MakeAppraiseeEditingTrue := true;
+                end;
+            end;
+        end;
+    end;
+
+    var
+        MakeAppraiseeEditingTrue: Boolean;
+        MakeSupervisorEditingTrue: Boolean;
+        HREmployees: Record "HR Employees";
+        AppraisalHeader: Record "Appraisal Header";
 }
+
+

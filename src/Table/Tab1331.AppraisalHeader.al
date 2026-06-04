@@ -17,22 +17,23 @@ Table 1331 "Appraisal Header"
             begin
                 HREmployees.Reset();
                 if HREmployees.Get("Employee No") then begin
-                    ApprovalSteps := 0;
-                    if Status = Status::Open then begin
-                        "Supervisor Name" := '';
-                        "Immediate Supervisor" := '';
-                    end else begin
-                        "Immediate Supervisor" := HREmployees."Appraisal Supervisor1";
-                        Validate("Immediate Supervisor");
-                    end;
-
                     "Employee Name" := HREmployees.FullName();
                     "Job Title" := HREmployees."Job Title";
                     "Employee Deparment" := HREmployees."Department Name";
                     "Appraisal Supervisor1" := HREmployees."Appraisal Supervisor1";
                     "Appraisal Supervisor2" := HREmployees."Appraisal Supervisor2";
-                    "Appraisal Supervisor3" := HREmployees."Appraisal Supervisor3";
-                    "Appraisal Supervisor4" := HREmployees."Appraisal Supervisor4";
+                    // "Appraisal Supervisor3" := HREmployees."Appraisal Supervisor3";
+                    // "Appraisal Supervisor4" := HREmployees."Appraisal Supervisor4";
+                    HOD := HREmployees."Appraisal Supervisor3";
+                    "General Appraiser" := HREmployees."Appraisal Supervisor4";
+                    ApprovalSteps := 0;
+                    if Status = Status::Open then begin
+                        "Supervisor Name" := '';
+                        // "Immediate Supervisor" := '';
+                    end else begin
+                        "Immediate Supervisor" := HREmployees."Appraisal Supervisor1";
+                        Validate("Immediate Supervisor");
+                    end;
 
                     if "Appraisal Supervisor1" <> '' then
                         Validate("Appraisal Supervisor1");
@@ -50,9 +51,26 @@ Table 1331 "Appraisal Header"
             DataClassification = ToBeClassified;
             Editable = false;
         }
-        field(3; "Review Period"; Code[50])
+        field(3; "Review Period"; Code[200])
         {
             DataClassification = ToBeClassified;
+            trigger OnValidate()
+            var
+                StartMonth: Text;
+                EndMonth: Text;
+            begin
+                "Review Period" := '';
+                HRsetup.Get();
+                if HRsetup."Appraisal Sessions Active" then begin
+                    if (HRsetup."Review Start Date" <> 0D) and (HRsetup."Review End Date" <> 0D) then begin
+                        StartMonth := UpperCase(Format(HRsetup."Review Start Date", 0, '<Month Text,3> <Year4>'));
+                        EndMonth := UpperCase(Format(HRsetup."Review End Date", 0, '<Month Text,3> <Year4>'));
+                        "Review Period" := StrSubstNo('%1 - %2', StartMonth, EndMonth);
+                    end;
+                end else
+                    Error('The Appraisal period has not been activated at the moment! Kindly await for the appraisal period to be active!');
+            end;
+
         }
         field(4; "Employee Deparment"; Text[200])
         {
@@ -67,6 +85,7 @@ Table 1331 "Appraisal Header"
         field(6; "Immediate Supervisor"; Code[50])
         {
             DataClassification = ToBeClassified;
+            Editable = false;
             trigger OnValidate()
             begin
                 HREmployees.Reset();
@@ -78,12 +97,26 @@ Table 1331 "Appraisal Header"
         field(7; "Supervisor Name"; Text[300])
         {
             DataClassification = ToBeClassified;
+            Editable = false;
         }
         field(9; Status; Option)
         {
             DataClassification = ToBeClassified;
             OptionCaption = 'Open,Pending Supervisor Approval,Approved';
             OptionMembers = Open,"Pending Supervisor Approval",Approved;
+            // Editable = false;
+            trigger OnValidate()
+            begin
+                if Status = Status::"Pending Supervisor Approval" then begin
+                    Validate("Employee No");
+                    if ("Immediate Supervisor" = '') then begin
+                        if ("Appraisal Supervisor1" <> '') then
+                            "Immediate Supervisor" := "Appraisal Supervisor1"
+                        else
+                            Error('Aproval workflow for Employee not set! Kindly set up approval workflow to proceed');
+                    end;
+                end;
+            end;
         }
         field(10; "Supervisor Section B Comments"; Text[2048])
         {
@@ -106,6 +139,9 @@ Table 1331 "Appraisal Header"
                     "Appraisal SupervisorName1" := HREmployees.FullName();
                     ApprovalSteps += 1;
                 end;
+                if not ("Immediate Supervisor" <> '') then
+                    "Immediate Supervisor" := "Appraisal Supervisor1";
+                Validate("Immediate Supervisor");
             end;
         }
         field(13; "Appraisal Supervisor2"; Text[100])
@@ -154,6 +190,7 @@ Table 1331 "Appraisal Header"
         {
             Caption = 'Approval Steps';
             DataClassification = ToBeClassified;
+            Editable = false;
         }
         field(17; "Appraisal SupervisorName1"; Text[300])
         {
@@ -168,6 +205,81 @@ Table 1331 "Appraisal Header"
             DataClassification = ToBeClassified;
         }
         field(20; "Appraisal SupervisorName4"; Text[300])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(21; "Start Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(22; "End Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(23; "Overall Score"; Integer)
+        {
+            Editable = false;
+            trigger OnValidate()
+            begin
+                CalcFields("Part A", "Part C", "Part D");
+                "Overall Score" := "Part A" + "Part C" + "Part D";
+            end;
+        }
+        field(24; "Part A"; Integer)
+        {
+            MaxValue = 50;
+            FieldClass = FlowField;
+            CalcFormula = sum("Appraisal Lines Section A"."Supervisor Rating" where("Appraisal Code" = field("Appraisal Code")));
+        }
+        field(25; "Part C"; Integer)
+        {
+            MaxValue = 25;
+            FieldClass = FlowField;
+            CalcFormula = sum("Appraisal Lines Section C"."Supervisor Integer" where("Appraisal Code" = field("Appraisal Code")));
+        }
+        field(26; "Part D"; Integer)
+        {
+            MaxValue = 25;
+            FieldClass = FlowField;
+            CalcFormula = sum("Appraisal Lines Section D"."Supervisor Integer" where("Appraisal Code" = field("Appraisal Code")));
+        }
+        field(27; "Appraisee Signature"; MediaSet)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(28; "General Appraiser Comments"; Text[2048])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(29; "Employee Comments"; Text[2048])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(30; "Observer Comments"; Text[2048])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(31; "Head Comments"; Text[2048])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(32; "ED Comments"; Text[2048])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(33; "General Appraiser"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(34; "Observer Code"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(35; "HOD"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(36; "ED Code"; Code[50])
         {
             DataClassification = ToBeClassified;
         }
@@ -193,6 +305,8 @@ Table 1331 "Appraisal Header"
             "Appraisal Code" := NoSeriesManagement.GetNextNo(HRsetup."Appraisal Nos.", 0D, true);
         end;
         Validate("Employee No");
+        Validate("Review Period");
+        "Creation Date" := Today;
 
         AppraisalLinesSectionA.Reset();
         AppraisalLinesSectionA.SetRange("Appraisal Code", "Appraisal Code");
@@ -252,7 +366,31 @@ Table 1331 "Appraisal Header"
                 AppraisalLinesSectionD.Insert();
             until AppraisalQuestions.Next() = 0;
 
+        AppraisalApprovalsTracking.Reset();
+        AppraisalApprovalsTracking.SetRange("Appraisal Code", "Appraisal Code");
+        if AppraisalApprovalsTracking.FindSet() then
+            repeat
+                AppraisalApprovalsTracking.Delete();
+            until AppraisalApprovalsTracking.Next() = 0;
+    end;
 
+    trigger OnModify()
+    begin
+        Validate("Overall Score");
+        Validate("Review Period");
+        AppraisalLinesSectionC.Reset();
+        AppraisalLinesSectionC.SetRange("Appraisal Code", Rec."Appraisal Code");
+        if AppraisalLinesSectionC.FindSet() then
+            repeat
+                AppraisalLinesSectionC.Modify(true);
+            until AppraisalLinesSectionC.Next() = 0;
+
+        AppraisalLinesSectionD.Reset();
+        AppraisalLinesSectionD.SetRange("Appraisal Code", Rec."Appraisal Code");
+        if AppraisalLinesSectionD.FindSet() then
+            repeat
+                AppraisalLinesSectionD.Modify(true);
+            until AppraisalLinesSectionD.Next() = 0;
     end;
 
     var
@@ -264,6 +402,7 @@ Table 1331 "Appraisal Header"
         AppraisalLinesSectionC: record "Appraisal Lines Section C";
         AppraisalLinesSectionD: record "Appraisal Lines Section D";
         AppraisalQuestions: record "Appraisal Questions";
+        AppraisalApprovalsTracking: record "Appraisal Approvals Tracking";
         LineNo: Integer;
 }
 

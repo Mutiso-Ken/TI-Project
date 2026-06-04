@@ -5,6 +5,8 @@ pageextension 80000 "ColumnLayout" extends "Column Layout"
         addafter("Comparison Date Formula")
         {
             field(ComparisonPeriodFormula; rec."Comparison Period Formula") { ApplicationArea = all; }
+
+            field("Dimension1 Totaling"; Rec."Dimension 1 Totaling") { ApplicationArea = all; }
         }
     }
 
