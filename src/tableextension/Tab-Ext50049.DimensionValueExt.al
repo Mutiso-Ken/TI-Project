@@ -10,7 +10,14 @@ tableextension 50049 "Dimension Value Ext" extends "Dimension Value"
                                                           "Dimension Value Type" = CONST(Standard),
                                                           Blocked = filter(false));
         }
-        field(70003; "Budget Category"; code[450])
+           field(70003; "Budget Line"; code[450])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
+                                                          "Dimension Value Type" = CONST(Standard),
+                                                          Blocked = filter(false));
+        }
+        field(70004; "Budget Category"; code[450])
         {
             DataClassification = ToBeClassified;
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(4),

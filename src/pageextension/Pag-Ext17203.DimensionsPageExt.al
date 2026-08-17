@@ -12,6 +12,10 @@ pageextension 17203 DimensionsPageExt extends "Dimension Values"
             {
                 ApplicationArea = all;
             }
+            field("Budget Line"; Rec."Budget Line")
+            {
+                ApplicationArea = all;
+            }
             field("Budget Category"; Rec."Budget Category")
             {
                 ApplicationArea = all;
@@ -32,6 +36,18 @@ pageextension 17203 DimensionsPageExt extends "Dimension Values"
                 PromotedCategory = Process;
                 PromotedOnly = true;
                 RunObject = Page "Fund Budget";
+                RunPageLink = "Dimension Code" = filter('BUDGET LINES'),
+                                  "Fund Code" = field(Code);
+            }
+             action("BudgetCategory")
+            {
+                ApplicationArea = Dimensions;
+                Caption = 'Budget Category';
+                Image = Dimensions;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+                RunObject = Page "Budget category";
                 RunPageLink = "Dimension Code" = filter('BUDGET LINES'),
                                   "Fund Code" = field(Code);
             }
