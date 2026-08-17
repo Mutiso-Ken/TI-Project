@@ -233,7 +233,7 @@ Page 80067 "Mission Proposal Card"
                 PromotedCategory = Category4;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-               // Visible = ReleasedDocument;
+                // Visible = ReleasedDocument;
 
                 trigger OnAction()
                 var
@@ -315,7 +315,7 @@ Page 80067 "Mission Proposal Card"
                     Image = CancelApprovalRequest;
                     Promoted = true;
                     PromotedCategory = Category4;
-                    Visible = false;
+                    Visible = true;
                     PromotedIsBig = true;
                     PromotedOnly = true;
                     ToolTip = 'Request approval of the document.';

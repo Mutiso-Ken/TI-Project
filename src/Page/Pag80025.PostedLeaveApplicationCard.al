@@ -298,6 +298,20 @@ Page 80025 "Posted  Leave Application Card"
 
     actions
     {
+        area(Processing)
+        {
+            action(Attachments)
+            {
+                ApplicationArea = Basic;
+                Ellipsis = true;
+                Image = Attachments;
+                Promoted = true;
+                PromotedCategory = Process;
+                RunObject = Page "Document Uploads";
+                RunPageLink = "Document Number" = field("Application Code");
+            }
+        }
+
         area(navigation)
         {
             group("F&unctions")

@@ -513,6 +513,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
         Training: record "Training Requests";
         ApprovalComment: Record "Approval Comment Line";
         comments: Text;
+        commentnumber: Integer;
     begin
 
 
@@ -523,8 +524,13 @@ Codeunit 80008 "Custom Approvals Codeunit"
         ApprovalComment.Reset();
         ApprovalComment.SetRange("Table ID", ApprovalEntry."Table ID");
         ApprovalComment.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
-        if ApprovalComment.FindLast() then begin
-            comments := ApprovalComment.Comment;
+        if ApprovalComment.FindSet() then begin
+            comments += '<br>';
+            commentnumber := 0;
+            repeat
+                commentnumber += 1;
+                comments += (Format(commentnumber) + ApprovalComment.Comment + '<br>');
+            until ApprovalComment.Next() = 0;
         end;
         RecRef.SetRecFilter();
         case RecRef.Number of

@@ -16,6 +16,11 @@ table 1339 "Appraisal Approvals Tracking"
         }
         field(3; "Supervisor Code"; Code[50])
         {
+            trigger OnValidate()
+            begin
+                if HREMp.Get(Rec."Supervisor Code") then
+                    "Supervisor Name" := HREMp.FullName();
+            end;
         }
         field(4; Approved; Boolean)
         {
@@ -26,12 +31,16 @@ table 1339 "Appraisal Approvals Tracking"
         }
         field(6; "Update Date"; Date) { }
         field(7; "Update Time"; Time) { }
+        field(8; "Supervisor Name"; Text[2000]) { }
     }
     keys
     {
-        key(PK; "Line No.")
+        key(PK;
+        "Line No.")
         {
             Clustered = true;
         }
     }
+    var
+        HREMp: Record "HR Employees";
 }

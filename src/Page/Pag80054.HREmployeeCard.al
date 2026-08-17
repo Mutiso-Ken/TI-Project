@@ -491,21 +491,35 @@ Page 80054 "HR Employee Card"
             }
             group("Appraisal Approval Workflow")
             {
+                field("No. of Appraisals"; Rec."No. of Appraisals")
+                {
+                    ApplicationArea = Basic;
+                    Editable = true;
+
+                    trigger OnValidate()
+                    begin
+                        UpdateEmployeeAppraisers();
+                    end;
+                }
                 field("Appraisal Supervisor1"; Rec."Appraisal Supervisor1")
                 {
                     ApplicationArea = Basic;
+                    Editable = firstapproval;
                 }
                 field("Appraisal Supervisor2"; Rec."Appraisal Supervisor2")
                 {
                     ApplicationArea = Basic;
+                    Editable = secondapproval;
                 }
                 field("Appraisal Supervisor3"; Rec."Appraisal Supervisor3")
                 {
                     ApplicationArea = Basic;
+                    Editable = thirdapproval;
                 }
                 field("Appraisal Supervisor4"; Rec."Appraisal Supervisor4")
                 {
                     ApplicationArea = Basic;
+                    Editable = fourthapproval;
                 }
                 field("ED Appraiser"; Rec."ED Appraiser")
                 {
@@ -1097,6 +1111,7 @@ Page 80054 "HR Employee Card"
         //Recalculate Leave Days
         Rec.Validate("Allocated Leave Days");
         SupervisorNames := GetSupervisor(Rec."User ID");
+        UpdateEmployeeAppraisers();
     end;
 
     trigger OnClosePage()
@@ -1118,6 +1133,10 @@ Page 80054 "HR Employee Card"
     end;
 
     var
+        firstapproval: boolean;
+        secondapproval: boolean;
+        thirdapproval: boolean;
+        fourthapproval: boolean;
         Text001: label 'Do you want to replace the existing picture of %1 %2?';
         Text002: label 'Do you want to delete the picture of %1 %2?';
         Text003: label 'Welcome to Lotus Capital Limited';
@@ -1152,6 +1171,58 @@ Page 80054 "HR Employee Card"
         ExitInterviews: Record "Exit Interviews";
         InductionSchedule: Record "Induction Schedule";
 
+    procedure UpdateAppraisers()
+    begin
+        if ((Rec."Appraisal Supervisor3" <> '') and (Rec."Appraisal Supervisor3" <> Rec."Appraisal Supervisor1")) then
+            Rec."No. of Appraisals" := Rec."No. of Appraisals"::Three
+        else
+            Rec."Appraisal Supervisor3" := '';
+        if ((Rec."Appraisal Supervisor3" <> '') and (Rec."Appraisal Supervisor2" <> '')) then begin
+            if ((Rec."Appraisal Supervisor1" = Rec."Appraisal Supervisor2")) then
+                Rec."Appraisal Supervisor2" := ''
+            else if ((Rec."Appraisal Supervisor2" = Rec."Appraisal Supervisor3")) then
+                Rec."Appraisal Supervisor2" := ''
+            else
+                Rec."No. of Appraisals" := Rec."No. of Appraisals"::Four;
+        end;
+        Rec.Modify();
+    end;
+
+
+    procedure UpdateEmployeeAppraisers()
+    begin
+        firstapproval := true;
+        secondapproval := false;
+        thirdapproval := false;
+        fourthapproval := true;
+
+        // Rec."No. of Appraisals" := Rec."No. of Appraisals"::Two;
+        // Rec.Modify();
+        firstapproval := true;
+        fourthapproval := true;
+
+        UpdateAppraisers();
+
+        if ((Rec."Appraisal Supervisor1" <> '') and (Rec."Appraisal Supervisor4" <> '')) then begin
+
+            if Rec."No. of Appraisals" = HREmp."No. of Appraisals"::Two then begin
+                firstapproval := true;
+                fourthapproval := true;
+            end;
+            if Rec."No. of Appraisals" = HREmp."No. of Appraisals"::Three then begin
+                firstapproval := true;
+                thirdapproval := true;
+                fourthapproval := true;
+            end;
+            if Rec."No. of Appraisals" = HREmp."No. of Appraisals"::Four then begin
+                firstapproval := true;
+                secondapproval := true;
+                thirdapproval := true;
+                fourthapproval := true;
+            end;
+        end else
+            Message('Please provide an Immediate Supervisor and the HR Approver in the Appraisal workflow!');
+    end;
 
     procedure GetSupervisor(var sUserID: Code[50]) SupervisorName: Text[200]
     var

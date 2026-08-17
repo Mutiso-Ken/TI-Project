@@ -261,6 +261,14 @@ Report 80025 LPO
                     LastFieldNo := FieldNo("Document Type");
                 end;
             }
+            dataitem("Approval Entry"; "Approval Entry")
+            {
+                DataItemLink = "Document No." = field("No.");
+                column(Document_No_; "Document No.") { }
+                column(Approval_Code; "Approval Code") { }
+               
+
+            }
         }
     }
 

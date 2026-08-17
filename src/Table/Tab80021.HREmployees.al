@@ -1555,10 +1555,11 @@ Table 80021 "HR Employees"
             DataClassification = ToBeClassified;
             TableRelation = "HR Employees"."No.";
         }
-        // field(51516010; "Head of Department"; Blob)
-        // {
-        //     DataClassification = ToBeClassified;
-        // }
+        field(51516010; "No. of Appraisals"; Option)
+        {
+            DataClassification = ToBeClassified;
+            OptionMembers = Two,Three,Four;
+        }
         field(51516009; "ED Appraiser"; Boolean)
         {
             DataClassification = ToBeClassified;

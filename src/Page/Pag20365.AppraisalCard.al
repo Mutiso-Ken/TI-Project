@@ -183,6 +183,39 @@ Page 20365 "Appraisal Card"
                 SubPageLink = "Appraisal Code" = field("Appraisal Code");
                 Editable = MakeSupervisorEditingTrue;
             }
+            group("Comments")
+            {
+                field("Employee Comments"; Rec."Employee Comments")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("Immediate Supervisor Comments"; Rec."Immediate Supervisor Comments")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("General Appraiser Comments"; Rec."General Appraiser Comments")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("Head Comments"; Rec."Head Comments")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("HR Comments"; Rec."HR Comments")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("ED Comments"; Rec."ED Comments")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+            }
         }
     }
 
@@ -213,12 +246,7 @@ Page 20365 "Appraisal Card"
                         if Confirm('Are you sure you want to send this appraisal for approval?') then begin
                             if Rec.Status <> rec.Status::Open then
                                 Error('You cannot send the appraisal for approval at this moment!');
-                            Rec.Status := Rec.Status::"Pending Supervisor Approval";
-                            if rec."Immediate Supervisor" <> rec."Appraisal Supervisor1" then
-                                rec."Immediate Supervisor" := rec."Appraisal Supervisor1";
-                            // Portalcodeunit.UpdateAppraisalApprovers(Rec."Appraisal Code", true);
-                            // Portalcodeunit.ConfirmApprovalCompletion(Rec."Appraisal Code");
-                            Rec.Modify(true);
+                            AppraisalHeader.SendForApproval();
                         end;
                     end;
                 }
@@ -239,27 +267,9 @@ Page 20365 "Appraisal Card"
                     trigger OnAction()
                     begin
                         if Confirm('Are you sure you want to approve this appraisal?') then begin
-                            AppraisalApprovalsTracking.Reset();
-                            AppraisalApprovalsTracking.SetRange("Appraisal Code", Rec."Appraisal Code");
-                            AppraisalApprovalsTracking.SetRange("Supervisor Code", Rec."Immediate Supervisor");
-                            if AppraisalApprovalsTracking.FindFirst() then begin
-                                if AppraisalApprovalsTracking.Approved = true then
-                                    Error('You have already approved this document');
-                                AppraisalApprovalsTracking.Approved := true;
-                                AppraisalApprovalsTracking."Update Date" := Today;
-                                AppraisalApprovalsTracking."Update Time" := Time;
-                                AppraisalApprovalsTracking.Modify();
-                            end else begin
-                                AppraisalApprovalsTracking.Init();
-                                AppraisalApprovalsTracking."Appraisal Code" := Rec."Appraisal Code";
-                                AppraisalApprovalsTracking."Supervisor Code" := Rec."Immediate Supervisor";
-                                AppraisalApprovalsTracking.Approved := true;
-                                AppraisalApprovalsTracking."Update Date" := Today;
-                                AppraisalApprovalsTracking."Update Time" := Time;
-                                AppraisalApprovalsTracking.Insert();
-                            end;
-                            Portalcodeunit.UpdateAppraisalApprovers(Rec."Appraisal Code", true);
-                            Portalcodeunit.ConfirmApprovalCompletion(Rec."Appraisal Code");
+                            Rec.UpdateApprovalSteps();
+                            Rec.ApproveDocument(Rec."Immediate Supervisor");
+                            Rec.UpdateApprovalWorkflow();
                         end;
                     end;
                 }
@@ -278,27 +288,9 @@ Page 20365 "Appraisal Card"
                     trigger OnAction()
                     begin
                         if Confirm('Are you sure you want to reject this appraisal?') then begin
-                            AppraisalApprovalsTracking.Reset();
-                            AppraisalApprovalsTracking.SetRange("Appraisal Code", Rec."Appraisal Code");
-                            AppraisalApprovalsTracking.SetRange("Supervisor Code", Rec."Immediate Supervisor");
-                            if AppraisalApprovalsTracking.FindFirst() then begin
-                                if AppraisalApprovalsTracking.Approved = true then
-                                    Error('You have already approved this document');
-                                AppraisalApprovalsTracking.Approved := false;
-                                AppraisalApprovalsTracking."Update Date" := Today;
-                                AppraisalApprovalsTracking."Update Time" := Time;
-                                AppraisalApprovalsTracking.Modify();
-                            end else begin
-                                AppraisalApprovalsTracking.Init();
-                                AppraisalApprovalsTracking."Appraisal Code" := Rec."Appraisal Code";
-                                AppraisalApprovalsTracking."Supervisor Code" := Rec."Immediate Supervisor";
-                                AppraisalApprovalsTracking.Approved := false;
-                                AppraisalApprovalsTracking."Update Date" := Today;
-                                AppraisalApprovalsTracking."Update Time" := Time;
-                                AppraisalApprovalsTracking.Insert();
-                            end;
-                            Portalcodeunit.UpdateAppraisalApprovers(Rec."Appraisal Code", false);
-                            Portalcodeunit.ConfirmApprovalCompletion(Rec."Appraisal Code");
+                            Rec.UpdateApprovalSteps();
+                            Rec.RejectDocument(Rec."Immediate Supervisor");
+                            Rec.UpdateApprovalWorkflow();
                         end;
                     end;
                 }
@@ -338,6 +330,19 @@ Page 20365 "Appraisal Card"
                     begin
                         Message(UpdateApprisalApprovers());
                     end;
+                }
+                action("View Approval Entries")
+                {
+                    ApplicationArea = Basic;
+                    Ellipsis = true;
+                    Image = ApplyEntries;
+                    Promoted = true;
+                    PromotedCategory = Process;
+                    // Visible = false;
+
+
+                    RunObject = page "Appraisal Approval Tracking";
+                    RunPageLink = "Appraisal Code" = field("Appraisal Code");
                 }
             }
         }
@@ -382,115 +387,11 @@ Page 20365 "Appraisal Card"
 
     local procedure UpdateApprisalApprovers(): Text
     begin
-        HrEmployees.Reset();
-        if HrEmployees.Get(Rec."Employee No") then begin
-            if Rec."Appraisal Supervisor1" <> HrEmployees."Appraisal Supervisor1" then begin
-                Rec."Appraisal Supervisor1" := '';
-                Rec."Appraisal Supervisor2" := '';
-                Rec."Appraisal Supervisor3" := '';
-                Rec."Appraisal Supervisor4" := '';
-                Rec.Validate("Employee No");
-                if rec.Modify(true) then
-                    exit('Record has been updated successfully!');
-            end;
-            // rec.Status := rec.Status::Open;
-            // rec."Immediate Supervisor" := rec."Appraisal Supervisor1";
-            // rec.Validate("Immediate Supervisor");
-            rec."Appraisal Supervisor3" := '';
-            rec."Appraisal Supervisor4" := '';
-            rec.HOD := HrEmployees."Appraisal Supervisor3";
-            rec."General Appraiser" := HrEmployees."Appraisal Supervisor4";
-            UpdateApprovalWorkFlow();
-            exit('Record approval workflow is okay!');
-            StatusEdit := true;
-        end;
+        // if AppraisalHeader.Get(Rec."Appraisal Code") then
+        Rec.UpdateApprovalWorkflow();
+        exit('Record approval workflow is okay!');
+        // StatusEdit := true;
     end;
-
-
-    local procedure UpdateApprovalWorkFlow(): Text
-    var
-        approvalsneeded: Integer;
-        approvalsattained: Integer;
-    begin
-        if Rec.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
-            if Rec."Appraisal Supervisor1" <> '' then
-                approvalsneeded += 1;
-            if Rec."Appraisal Supervisor2" <> '' then
-                approvalsneeded += 1;
-            if Rec.HOD <> '' then
-                approvalsneeded += 1;
-            if Rec."General Appraiser" <> '' then
-                approvalsneeded += 1;
-
-            Rec.ApprovalSteps := approvalsneeded;
-            Rec.Modify();
-
-            if Rec."Appraisal Supervisor1" <> '' then
-                Rec."Immediate Supervisor" := Rec."Appraisal Supervisor1";
-            Rec.Modify();
-
-            if Rec."Immediate Supervisor" <> '' then begin
-                if ConfirmApproverApproved(Rec."Immediate Supervisor") then begin
-                    approvalsneeded += 1;
-                    if Rec."Appraisal Supervisor2" <> '' then
-                        Rec."Immediate Supervisor" := Rec."Appraisal Supervisor2"
-                    else if Rec.HOD <> '' then
-                        Rec."Immediate Supervisor" := Rec.HOD
-                    else if Rec."General Appraiser" <> '' then
-                        Rec."Immediate Supervisor" := Rec."General Appraiser";
-                    Rec.Modify();
-                end;
-                if rec."Immediate Supervisor" <> '' then begin
-                    if ConfirmApproverApproved(rec."Immediate Supervisor") then begin
-                        approvalsattained += 1;
-                        if Rec.HOD <> '' then
-                            Rec."Immediate Supervisor" := Rec.HOD
-                        else if Rec."General Appraiser" <> '' then
-                            Rec."Immediate Supervisor" := Rec."General Appraiser";
-                        Rec.Modify();
-                    end;
-                    
-                    if rec."Immediate Supervisor" <> '' then begin
-                        if ConfirmApproverApproved(rec."Immediate Supervisor") then begin
-                            approvalsattained += 1;
-                            if Rec."General Appraiser" <> '' then
-                                Rec."Immediate Supervisor" := Rec."General Appraiser";
-                            Rec.Modify();
-                        end;
-
-                        if Rec."Immediate Supervisor" <> Rec."General Appraiser" then begin
-                            if ConfirmApproverApproved(rec."Immediate Supervisor") then
-                                approvalsattained += 1;
-                            Rec.Modify();
-                        end;
-                    end;
-                end;
-            End;
-
-
-            if approvalsattained >= approvalsneeded then begin
-                Rec."Immediate Supervisor" := '';
-                Rec.Status := AppraisalHeader.Status::Approved;
-            end;
-            Rec.Validate("Immediate Supervisor");
-            Rec.Modify();
-        end;
-    end;
-
-    local procedure ConfirmApproverApproved(Appraiser: Code[100]): Boolean
-    begin
-        AppraisalApprovalsTracking.Reset();
-        AppraisalApprovalsTracking.SetRange("Appraisal Code", Rec."Appraisal Code");
-        AppraisalApprovalsTracking.SetRange("Supervisor Code", Appraiser);
-        if AppraisalApprovalsTracking.FindFirst() then begin
-            if AppraisalApprovalsTracking.Approved = true then
-                exit(true);
-        end;
-        exit(false)
-    end;
-
-
-
 
     var
         HrSetup: Record "HR Setup";

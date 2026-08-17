@@ -449,7 +449,7 @@ codeunit 50047 PortalEntry
         Clear(JsonArray);
         AppraisalHeader.Reset();
         AppraisalHeader.SetRange("Immediate Supervisor", EmployeeID);
-        // AppraisalHeader.SetRange(Status, AppraisalHeader.Status::"Pending Supervisor Approval");
+        AppraisalHeader.SetRange(Status, AppraisalHeader.Status::"Pending Supervisor Approval");
         if AppraisalHeader.FindSet() then begin
             repeat
                 Clear(jsonobject);
@@ -487,6 +487,9 @@ codeunit 50047 PortalEntry
         AppraisalHeader.Reset();
         AppraisalHeader.SetRange("Appraisal Code", appraisalNumber);
         if AppraisalHeader.Find('-') then begin
+            AppraisalHeader.UpdateApprovalSteps();
+            AppraisalHeader.UpdateSupervisorApprovals();
+            AppraisalHeader.UpdateApprovalWorkflow();
             Clear(jsonobject);
             jsonobject.Add('appraisal_number', AppraisalHeader."Appraisal Code");
             jsonobject.Add('employee_no', AppraisalHeader."Employee No");
@@ -500,13 +503,17 @@ codeunit 50047 PortalEntry
             jsonobject.Add('start_date', AppraisalHeader."Start Date");
             jsonobject.Add('end_date', AppraisalHeader."End Date");
             jsonobject.Add('status', Format(AppraisalHeader.Status));
-            jsonobject.Add('generalAppraisersComments', AppraisalHeader."General Appraiser Comments");
-            jsonobject.Add('generalEmployeesComments', AppraisalHeader."Employee Comments");
-            jsonobject.Add('generalObserversComments', AppraisalHeader."Observer Comments");
-            jsonobject.Add('HODComments', AppraisalHeader."Head Comments");
-            jsonobject.Add('EDSComments', AppraisalHeader."ED Comments");
-            jsonobject.Add('hodCode', AppraisalHeader.HOD);
-            jsonobject.Add('generalAppraiser', AppraisalHeader."General Appraiser");
+            jsonobject.Add('approvalsteps', AppraisalHeader.ApprovalSteps);
+            jsonobject.Add('immediatesupervisorcode', AppraisalHeader."Appraisal Supervisor1");
+            jsonobject.Add('generalAppraisercode', AppraisalHeader."Appraisal Supervisor2");
+            jsonobject.Add('hodProgrammecode', AppraisalHeader."Appraisal Supervisor3");
+            jsonobject.Add('hrcode', AppraisalHeader."Appraisal Supervisor4");
+            jsonobject.Add('employeesComments', AppraisalHeader."Employee Comments");
+            jsonobject.Add('immediateSupervisorComments', AppraisalHeader."Immediate Supervisor Comments");
+            jsonobject.Add('generalAppraiserComments', AppraisalHeader."General Appraiser Comments");
+            jsonobject.Add('hodProgrammeComments', AppraisalHeader."Head Comments");
+            jsonobject.Add('hrComments', AppraisalHeader."HR Comments");
+            jsonobject.Add('EDcomments', AppraisalHeader."ED Comments");
 
             Clear(part1array);
             Clear(part2array);
@@ -683,99 +690,51 @@ codeunit 50047 PortalEntry
                     RequestJson.Get('supervisor_code', jsontoken);
                     currentSupervisor := jsontoken.AsValue().AsCode();
                     if AppraisalHeader."Immediate Supervisor" = currentSupervisor then begin
-                        AppraisalApprovalsTracking.Reset();
-                        AppraisalApprovalsTracking.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
-                        AppraisalApprovalsTracking.SetRange("Supervisor Code", currentSupervisor);
-                        if AppraisalApprovalsTracking.FindFirst() then begin
-                            if statusCode = '0' then
-                                AppraisalApprovalsTracking.Approved := true;
-                            if statusCode = '1' then
-                                AppraisalApprovalsTracking.Approved := false;
-                            AppraisalApprovalsTracking."Update Date" := Today;
-                            AppraisalApprovalsTracking."Update Time" := Time;
-                            AppraisalApprovalsTracking.Modify();
-                        end else begin
-                            AppraisalApprovalsTracking.Init();
-                            AppraisalApprovalsTracking."Appraisal Code" := AppraisalHeader."Appraisal Code";
-                            AppraisalApprovalsTracking."Supervisor Code" := currentSupervisor;
-                            if statusCode = '0' then
-                                AppraisalApprovalsTracking.Approved := true;
-                            if statusCode = '1' then
-                                AppraisalApprovalsTracking.Approved := false;
-                            AppraisalApprovalsTracking."Update Date" := Today;
-                            AppraisalApprovalsTracking."Update Time" := Time;
-                            AppraisalApprovalsTracking.Insert();
-                        end;
                         if statusCode = '0' then
-                            UpdateAppraisalApprovers(AppraisalHeader."Appraisal Code", true);
+                            AppraisalHeader.ApproveDocument(currentSupervisor);
                         if statusCode = '1' then
-                            UpdateAppraisalApprovers(AppraisalHeader."Appraisal Code", false);
+                            AppraisalHeader.RejectDocument(currentSupervisor);
+                        exit(Format(AddResponseHead(outputjson, true)));
                     end;
-
-                    AppraisalHeader.Modify();
-                    ConfirmApprovalCompletion(AppraisalHeader."Appraisal Code");
-                    exit(Format(AddResponseHead(outputjson, true)));
                 end;
             end;
+            exit(Format(AddResponseHead(outputjson, false)));
         end;
-        exit(Format(AddResponseHead(outputjson, false)));
     end;
 
-    procedure UpdateAppraisalApprovers(RecordNumber: Code[20]; AppType: Boolean)
-    begin
-        if AppraisalHeader.Get(RecordNumber) then begin
-            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
-                AppraisalHeader.Status := AppraisalHeader.Status::"Pending Supervisor Approval";
-                if AppType = true then begin
-                    if AppraisalHeader."Immediate Supervisor" = AppraisalHeader."Appraisal Supervisor1" then
-                        AppraisalHeader."Immediate Supervisor" := AppraisalHeader."Appraisal Supervisor2"
-                    else if AppraisalHeader."Immediate Supervisor" = AppraisalHeader."Appraisal Supervisor2" then
-                        AppraisalHeader."Immediate Supervisor" := AppraisalHeader."Appraisal Supervisor3"
-                    else if AppraisalHeader."Immediate Supervisor" = AppraisalHeader."Appraisal Supervisor3" then
-                        AppraisalHeader."Immediate Supervisor" := AppraisalHeader."Appraisal Supervisor4";
-                end else begin
-                    if AppraisalHeader."Immediate Supervisor" = AppraisalHeader."Appraisal Supervisor1" then begin
-                        AppraisalHeader."Immediate Supervisor" := '';
-                        AppraisalHeader.Status := AppraisalHeader.Status::Open;
-                    end
-                    else if AppraisalHeader."Immediate Supervisor" = AppraisalHeader."Appraisal Supervisor2" then
-                        AppraisalHeader."Immediate Supervisor" := AppraisalHeader."Appraisal Supervisor1"
-                    else if AppraisalHeader."Immediate Supervisor" = AppraisalHeader."Appraisal Supervisor3" then
-                        AppraisalHeader."Immediate Supervisor" := AppraisalHeader."Appraisal Supervisor2"
-                    else if AppraisalHeader."Immediate Supervisor" = AppraisalHeader."Appraisal Supervisor4" then
-                        AppraisalHeader."Immediate Supervisor" := AppraisalHeader."Appraisal Supervisor3";
-                end;
-                AppraisalHeader.Validate("Immediate Supervisor");
-                AppraisalHeader.Modify(true);
-            end
-        end
-    end;
+    // procedure UpdateAppraisalApprovers(RecordNumber: Code[20]; AppType: Boolean)
+    // begin
+    //     if AppraisalHeader.Get(RecordNumber) then begin
+    //         AppraisalHeader.UpdateApprovalSteps();
+    //         AppraisalHeader.UpdateApprovalWorkflow();
+    //     end;
+    // end;
 
-    procedure ConfirmApprovalCompletion(appraisalNumber: Code[50]): Text;
-    var
-        approvalStepsNeeded: Integer;
-        approvalStepsAchieved: Integer;
-    begin
-        approvalStepsNeeded := 0;
-        approvalStepsAchieved := 0;
-        AppraisalHeader.Reset();
-        AppraisalHeader.SetRange("Appraisal Code", appraisalNumber);
-        if AppraisalHeader.FindFirst() then begin
-            approvalStepsNeeded := AppraisalHeader.ApprovalSteps;
-            AppraisalApprovalsTracking.Reset();
-            AppraisalApprovalsTracking.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
-            AppraisalApprovalsTracking.SetFilter("Supervisor Code", '%1|%2|%3|%4', AppraisalHeader."Appraisal Supervisor1", AppraisalHeader."Appraisal Supervisor2", AppraisalHeader."Appraisal Supervisor3", AppraisalHeader."Appraisal Supervisor4");
-            AppraisalApprovalsTracking.SetRange(Approved, true);
-            if AppraisalApprovalsTracking.FindSet() then
-                repeat
-                    approvalStepsAchieved += 1;
-                until AppraisalApprovalsTracking.Next() = 0;
+    // procedure ConfirmApprovalCompletion(appraisalNumber: Code[50]): Text;
+    // var
+    //     approvalStepsNeeded: Integer;
+    //     approvalStepsAchieved: Integer;
+    // begin
+    //     approvalStepsNeeded := 0;
+    //     approvalStepsAchieved := 0;
+    //     AppraisalHeader.Reset();
+    //     AppraisalHeader.SetRange("Appraisal Code", appraisalNumber);
+    //     if AppraisalHeader.FindFirst() then begin
+    //         approvalStepsNeeded := AppraisalHeader.ApprovalSteps;
+    //         AppraisalApprovalsTracking.Reset();
+    //         AppraisalApprovalsTracking.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+    //         AppraisalApprovalsTracking.SetFilter("Supervisor Code", '%1|%2|%3|%4', AppraisalHeader."Appraisal Supervisor1", AppraisalHeader."Appraisal Supervisor2", AppraisalHeader."Appraisal Supervisor3", AppraisalHeader."Appraisal Supervisor4");
+    //         AppraisalApprovalsTracking.SetRange(Approved, true);
+    //         if AppraisalApprovalsTracking.FindSet() then
+    //             repeat
+    //                 approvalStepsAchieved += 1;
+    //             until AppraisalApprovalsTracking.Next() = 0;
 
-            if approvalStepsAchieved >= approvalStepsNeeded then
-                AppraisalHeader.Status := AppraisalHeader.Status::Approved;
-            AppraisalHeader.Modify();
-        end
-    end;
+    //         if approvalStepsAchieved >= approvalStepsNeeded then
+    //             AppraisalHeader.Status := AppraisalHeader.Status::Approved;
+    //         AppraisalHeader.Modify();
+    //     end
+    // end;
 
     local procedure AmendAppraisal(RequestJson: JsonObject): Text
     var
@@ -785,22 +744,47 @@ codeunit 50047 PortalEntry
         lines: JsonArray;
         line: JsonObject;
         LineNo: Integer;
+
+        updatingUser: code[50];
     begin
+        RequestJson.Get('loggedInUser', jsontoken);
+        updatingUser := jsontoken.AsValue().AsCode();
+
+
+        // jsonobject.Add('immediatesupervisorcode', AppraisalHeader."Appraisal Supervisor1");
+        // jsonobject.Add('generalAppraisercode', AppraisalHeader."Appraisal Supervisor2");
+        // jsonobject.Add('hodProgrammecode', AppraisalHeader."Appraisal Supervisor3");
+        // jsonobject.Add('hrcode', AppraisalHeader."Appraisal Supervisor4");
+
         AppraisalHeader.Reset();
         RequestJson.Get('appraisal_number', jsontoken);
         AppraisalHeader.SetRange("Appraisal Code", jsontoken.AsValue().AsCode());
         if AppraisalHeader.Find('-') then begin
             AppraisalHeader.Validate("Employee No");
-            if RequestJson.Get('generalAppraisersComments', jsontoken) and not jsontoken.AsValue().IsNull then
-                AppraisalHeader."General Appraiser Comments" := jsontoken.AsValue().AsText();
-            if RequestJson.Get('generalEmployeesComments', jsontoken) and not jsontoken.AsValue().IsNull then
-                AppraisalHeader."Employee Comments" := jsontoken.AsValue().AsText();
-            if RequestJson.Get('generalObserversComments', jsontoken) and not jsontoken.AsValue().IsNull then
-                AppraisalHeader."Observer Comments" := jsontoken.AsValue().AsText();
-            if RequestJson.Get('HODComments', jsontoken) and not jsontoken.AsValue().IsNull then
-                AppraisalHeader."Head Comments" := jsontoken.AsValue().AsText();
-            if RequestJson.Get('EDSComments', jsontoken) and not jsontoken.AsValue().IsNull then
-                AppraisalHeader."ED Comments" := jsontoken.AsValue().AsText();
+            if updatingUser = AppraisalHeader."Appraisal Supervisor2" then begin
+                if RequestJson.Get('generalAppraiserComments', jsontoken) and not jsontoken.AsValue().IsNull then
+                    AppraisalHeader."General Appraiser Comments" := jsontoken.AsValue().AsText();
+            end;
+            if updatingUser = AppraisalHeader."Employee No" then begin
+                if RequestJson.Get('employeesComments', jsontoken) and not jsontoken.AsValue().IsNull then
+                    AppraisalHeader."Employee Comments" := jsontoken.AsValue().AsText();
+            end;
+            if updatingUser = AppraisalHeader."Appraisal Supervisor1" then begin
+                if RequestJson.Get('immediateSupervisorComments', jsontoken) and not jsontoken.AsValue().IsNull then
+                    AppraisalHeader."Immediate Supervisor Comments" := jsontoken.AsValue().AsText();
+            end;
+            if updatingUser = AppraisalHeader."Appraisal Supervisor3" then begin
+                if RequestJson.Get('hodProgrammeComments', jsontoken) and not jsontoken.AsValue().IsNull then
+                    AppraisalHeader."Head Comments" := jsontoken.AsValue().AsText();
+            end;
+            if updatingUser = '0149' then begin
+                if RequestJson.Get('EDcomments', jsontoken) and not jsontoken.AsValue().IsNull then
+                    AppraisalHeader."ED Comments" := jsontoken.AsValue().AsText();
+            end;
+            if updatingUser = AppraisalHeader."Appraisal Supervisor4" then begin
+                if RequestJson.Get('hrComments', jsontoken) and not jsontoken.AsValue().IsNull then
+                    AppraisalHeader."HR Comments" := jsontoken.AsValue().AsText();
+            end;
             AppraisalHeader.Modify();
             //Section A Part 1
             Clear(lines);
@@ -817,7 +801,7 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionA.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionA.SetRange(Section, AppraisalLinesSectionA.Section::"Part A");
                         if AppraisalLinesSectionA.Find('-') then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('what_done', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."What have you done" := jsontoken.AsValue().AsText();
                                 if line.Get('when', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -827,7 +811,7 @@ codeunit 50047 PortalEntry
                                 if line.Get('what_achieved', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."What was Achieved?" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                             end;
@@ -840,7 +824,7 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionA.Init();
                             AppraisalLinesSectionA."Appraisal Code" := AppraisalHeader."Appraisal Code";
                             // AppraisalLinesSectionA."Line No" := LineNo;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('what_done', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."What have you done" := jsontoken.AsValue().AsText();
                                 if line.Get('when', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -850,7 +834,7 @@ codeunit 50047 PortalEntry
                                 if line.Get('what_achieved', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."What was Achieved?" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                             end;
@@ -877,13 +861,13 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionA.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionA.SetRange(Section, AppraisalLinesSectionA.Section::"Part B");
                         if AppraisalLinesSectionA.Find('-') then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('what_achieved', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."What was Achieved?" := jsontoken.AsValue().AsText();
                                 if line.Get('why_prioritize', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."Why Prioritize" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -895,13 +879,13 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionA.Init();
                             AppraisalLinesSectionA."Appraisal Code" := AppraisalHeader."Appraisal Code";
                             // AppraisalLinesSectionA."Line No" := LineNo;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('what_achieved', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."What was Achieved?" := jsontoken.AsValue().AsText();
                                 if line.Get('why_prioritize', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."Why Prioritize" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionA."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -928,13 +912,13 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionB.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionB.SetRange(Part, AppraisalLinesSectionB.Part::"Part 1");
                         if AppraisalLinesSectionB.Find('-') then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
                                 if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -946,13 +930,13 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionB.Init();
                             AppraisalLinesSectionB."Appraisal Code" := AppraisalHeader."Appraisal Code";
                             // AppraisalLinesSectionB."Line No" := LineNo;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
                                 if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -979,13 +963,13 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionB.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionB.SetRange(Part, AppraisalLinesSectionB.Part::"Part 2");
                         if AppraisalLinesSectionB.Find('-') then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
                                 if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -997,13 +981,13 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionB.Init();
                             AppraisalLinesSectionB."Appraisal Code" := AppraisalHeader."Appraisal Code";
                             // AppraisalLinesSectionB."Line No" := LineNo;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
                                 if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -1030,13 +1014,13 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionB.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionB.SetRange(Part, AppraisalLinesSectionB.Part::"Part 3");
                         if AppraisalLinesSectionB.Find('-') then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
                                 if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -1048,13 +1032,13 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionB.Init();
                             AppraisalLinesSectionB."Appraisal Code" := AppraisalHeader."Appraisal Code";
                             // AppraisalLinesSectionB."Line No" := LineNo;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
                                 if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -1081,13 +1065,13 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionB.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionB.SetRange(Part, AppraisalLinesSectionB.Part::"Part 4");
                         if AppraisalLinesSectionB.Find('-') then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
                                 if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -1099,13 +1083,13 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionB.Init();
                             AppraisalLinesSectionB."Appraisal Code" := AppraisalHeader."Appraisal Code";
                             // AppraisalLinesSectionB."Line No" := LineNo;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('question', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Question Description" := jsontoken.AsValue().AsText();
                                 if line.Get('employee_comment', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Self-appraisal (Comments)" := jsontoken.AsValue().AsText();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionB."Comments by the supervisor" := jsontoken.AsValue().AsText();
                             end;
@@ -1132,11 +1116,11 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionC.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionC.SetRange(Part, AppraisalLinesSectionC.Part::"Part 1");
                         if AppraisalLinesSectionC.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('employee_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Self Rating" := jsontoken.AsValue().AsInteger();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1164,11 +1148,11 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionC.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionC.SetRange(Part, AppraisalLinesSectionC.Part::"Part 2");
                         if AppraisalLinesSectionC.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('employee_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Self Rating" := jsontoken.AsValue().AsInteger();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1196,11 +1180,11 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionC.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionC.SetRange(Part, AppraisalLinesSectionC.Part::"Part 3");
                         if AppraisalLinesSectionC.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('employee_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Self Rating" := jsontoken.AsValue().AsInteger();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1228,11 +1212,11 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionC.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionC.SetRange(Part, AppraisalLinesSectionC.Part::"Part 4");
                         if AppraisalLinesSectionC.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('employee_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Self Rating" := jsontoken.AsValue().AsInteger();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1260,11 +1244,12 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionC.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionC.SetRange(Part, AppraisalLinesSectionC.Part::"Part 5");
                         if AppraisalLinesSectionC.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            // if AppraisalHeader.Status = AppraisalHeader.Status::Open then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::Open) and (updatingUser = AppraisalHeader."Employee No")) then begin
                                 if line.Get('employee_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Self Rating" := jsontoken.AsValue().AsInteger();
                             end;
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionC."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1292,7 +1277,7 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionD.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionD.SetRange(Part, AppraisalLinesSectionD.Part::"Part 1");
                         if AppraisalLinesSectionD.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionD."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1321,7 +1306,7 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionD.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionD.SetRange(Part, AppraisalLinesSectionD.Part::"Part 2");
                         if AppraisalLinesSectionD.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionD."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1348,7 +1333,7 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionD.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionD.SetRange(Part, AppraisalLinesSectionD.Part::"Part 3");
                         if AppraisalLinesSectionD.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionD."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1375,7 +1360,7 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionD.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionD.SetRange(Part, AppraisalLinesSectionD.Part::"Part 4");
                         if AppraisalLinesSectionD.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionD."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1402,7 +1387,7 @@ codeunit 50047 PortalEntry
                         AppraisalLinesSectionD.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
                         AppraisalLinesSectionD.SetRange(Part, AppraisalLinesSectionD.Part::"Part 5");
                         if AppraisalLinesSectionD.FindFirst() then begin
-                            if AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval" then begin
+                            if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
                                     AppraisalLinesSectionD."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                                 if line.Get('supervisor_comments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -1681,6 +1666,7 @@ codeunit 50047 PortalEntry
     begin
 
         Clear(RequestJson);
+        Clear(OutputJson);
         if not RequestJson.ReadFrom(args) then
             Error('Invalid JSON input');
 
@@ -1757,30 +1743,32 @@ codeunit 50047 PortalEntry
             end;
         end;
 
-        if (ApprovalType = '6') then begin//Time Sheet
-            PurchasesHeaderTable.Reset();
-            PurchasesHeaderTable.SetRange("No.", ElementNumber);
-            if PurchasesHeaderTable.Find('-') then begin
-                ApprovalsMgmt.OnSendPurchaseDocForApproval(PurchasesHeaderTable);
-                exit(Format(AddResponseHead(OutputJson, true)));
-            end;
-        end;
 
         if (ApprovalType = '7') then begin//Appraisal
             exit(Format(AddResponseHead(OutputJson, SendAppraisalApproval(ElementNumber))));
+            // exit(Format(AddResponseHead(OutputJson, true)));
         end;
 
     end;
 
     local procedure SendAppraisalApproval(ElementNumber: Code[20]): Boolean
     begin
+        AppraisalHeader.Reset();
         if AppraisalHeader.Get(ElementNumber) then begin
-            AppraisalHeader.Status := AppraisalHeader.Status::"Pending Supervisor Approval";
-            AppraisalHeader.Validate(Status);
-            if AppraisalHeader.Modify(true) then
-                exit(true);
-            exit(false);
+            AppraisalApprovalsTracking.Reset();
+            AppraisalApprovalsTracking.SetRange("Appraisal Code", AppraisalHeader."Appraisal Code");
+            AppraisalApprovalsTracking.SetRange(Approved, false);
+            if AppraisalApprovalsTracking.FindSet() then begin
+                AppraisalApprovalsTracking.DeleteAll();
+            end;
+            AppraisalHeader."First Decline" := false;
+            AppraisalHeader."Second Decline" := false;
+            AppraisalHeader."Third Decline" := false;
+            AppraisalHeader."Fourth Decline" := false;
+            AppraisalHeader.Modify();
+            exit(AppraisalHeader.SendForApproval());
         end;
+        exit(false);
     end;
 
     procedure GetApprovalEntries(ElementNumber: code[20]): Text
@@ -3522,22 +3510,22 @@ codeunit 50047 PortalEntry
         NextNo: code[20];
     begin
 
-        RequestJson.Get('employee_id', JsonToken);
+        if RequestJson.Get('employee_id', JsonToken) and not JsonToken.AsValue().IsNull() then
         StaffID := JsonToken.AsValue().AsText();
-        RequestJson.Get('purpose', JsonToken);
+        if RequestJson.Get('purpose', JsonToken) and not JsonToken.AsValue().IsNull() then
         Purpose := JsonToken.AsValue().AsText();
-        RequestJson.Get('fund_code', JsonToken);
+        if RequestJson.Get('fund_code', JsonToken) and not JsonToken.AsValue().IsNull() then
         FundCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('program_code', JsonToken);
+        if RequestJson.Get('program_code', JsonToken) and not JsonToken.AsValue().IsNull() then
         ProgramCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('department_code', JsonToken);
+        if RequestJson.Get('department_code', JsonToken) and not JsonToken.AsValue().IsNull() then
         DepartmentCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('budget_code', JsonToken);
+        if RequestJson.Get('budget_code', JsonToken) and not JsonToken.AsValue().IsNull() then
         BudgetCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('shortcut_4', JsonToken);
+        if RequestJson.Get('shortcut_4', JsonToken) and not JsonToken.AsValue().IsNull() then
         BudgetCategoryCode := JsonToken.AsValue().AsText();
-        // RequestJson.Get('currency_code', JsonToken);
-        // Currency := JsonToken.AsValue().AsText();
+        if RequestJson.Get('currency_code', JsonToken) and not JsonToken.AsValue().IsNull() then
+        Currency := JsonToken.AsValue().AsText();
 
         EmployeeTable.Reset();
         EmployeeTable.SetRange("No.", StaffID);
@@ -3611,22 +3599,22 @@ codeunit 50047 PortalEntry
         Currency: Code[100];
     begin
 
-        RequestJson.Get('request_number', JsonToken);
+        if RequestJson.Get('request_number', JsonToken) and not JsonToken.AsValue().IsNull() then
         RequestNumber := JsonToken.AsValue().AsText();
-        RequestJson.Get('purpose', JsonToken);
+        if RequestJson.Get('purpose', JsonToken) and not JsonToken.AsValue().IsNull() then
         Purpose := JsonToken.AsValue().AsText();
-        RequestJson.Get('fund_code', JsonToken);
+        if RequestJson.Get('fund_code', JsonToken) and not JsonToken.AsValue().IsNull() then
         FundCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('program_code', JsonToken);
+        if RequestJson.Get('program_code', JsonToken) and not JsonToken.AsValue().IsNull() then
         ProgramCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('department_code', JsonToken);
+        if RequestJson.Get('department_code', JsonToken) and not JsonToken.AsValue().IsNull() then
         DepartmentCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('budget_code', JsonToken);
+        if RequestJson.Get('budget_code', JsonToken) and not JsonToken.AsValue().IsNull() then
         BudgetCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('shortcut_4', JsonToken);
+        if RequestJson.Get('shortcut_4', JsonToken) and not JsonToken.AsValue().IsNull() then
         BudgetCategoryCode := JsonToken.AsValue().AsText();
-        // RequestJson.Get('currency_code', JsonToken);
-        // Currency := JsonToken.AsValue().AsText();
+        if RequestJson.Get('currency_code', JsonToken) and not JsonToken.AsValue().IsNull() then
+        Currency := JsonToken.AsValue().AsText();
 
         PurchasesHeaderTable.Reset();
         PurchasesHeaderTable.SetRange("No.", RequestNumber);
@@ -3678,21 +3666,21 @@ codeunit 50047 PortalEntry
         ImprestAmountSpent: Decimal;
     begin
 
-        RequestJson.Get('imprest_number', JsonToken);
+        if RequestJson.Get('imprest_number', JsonToken) and not JsonToken.AsValue().IsNull() then
         ImprestNumber := JsonToken.AsValue().AsText();
-        RequestJson.Get('line_no', JsonToken);
+        if RequestJson.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull() then
         LineNo := JsonToken.AsValue().AsInteger();
-        RequestJson.Get('expense_category', JsonToken);
+        if RequestJson.Get('expense_category', JsonToken) and not JsonToken.AsValue().IsNull() then
         ExpenseCategory := JsonToken.AsValue().AsText();
         // RequestJson.Get('account_no', JsonToken);
         // GLAccount := JsonToken.AsValue().AsText();
         // RequestJson.Get('description', JsonToken);
         // Description := JsonToken.AsValue().AsText();
-        RequestJson.Get('item_specification', JsonToken);
+        if RequestJson.Get('item_specification', JsonToken) and not JsonToken.AsValue().IsNull() then
         ItemSpecification := JsonToken.AsValue().AsText();
-        RequestJson.Get('quantity', JsonToken);
+        if RequestJson.Get('quantity', JsonToken) and not JsonToken.AsValue().IsNull() then
         Quantity := JsonToken.AsValue().AsInteger();
-        RequestJson.Get('unit_cost', JsonToken);
+        if RequestJson.Get('unit_cost', JsonToken) and not JsonToken.AsValue().IsNull() then
         UnitCost := JsonToken.AsValue().AsDecimal();
         if RequestJson.Get('amount_spent', JsonToken) then
             ImprestAmountSpent := JsonToken.AsValue().AsDecimal();
