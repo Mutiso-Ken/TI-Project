@@ -104,6 +104,10 @@ Page 80067 "Mission Proposal Card"
                 {
                     ApplicationArea = Basic;
                 }
+                field("Approval Entries"; Rec."Approval Entries")
+                {
+                    ApplicationArea = all;
+                }
             }
             group(Background)
             {
@@ -341,7 +345,7 @@ Page 80067 "Mission Proposal Card"
                     Promoted = true;
                     PromotedCategory = Category4;
                     PromotedIsBig = true;
-                    Visible = OpenDocument;
+                    //Visible = OpenDocument;
 
                     trigger OnAction()
                     var

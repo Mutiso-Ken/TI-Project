@@ -10,6 +10,7 @@ Report 80025 LPO
         {
             DataItemTableView = sorting("No.", "Document Type") where("Document Type" = filter(Order));
             RequestFilterFields = "No.", "Document Type";
+            
             column(ReportForNavId_4458; 4458)
             {
             }
@@ -176,6 +177,8 @@ Report 80025 LPO
                 column(V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaption; V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaptionLbl)
                 {
                 }
+                column(CorrruptionFreeorgLabel; CorrruptionFreeorgLabel) { }
+                column(EtimsCompliantLabel; EtimsCompliantLabel) { }
                 column(Date_Caption; Date_CaptionLbl)
                 {
                 }
@@ -266,7 +269,7 @@ Report 80025 LPO
                 DataItemLink = "Document No." = field("No.");
                 column(Document_No_; "Document No.") { }
                 column(Approval_Code; "Approval Code") { }
-               
+
 
             }
         }
@@ -342,6 +345,8 @@ Report 80025 LPO
         EmptyStringCaption_Control1000000039Lbl: label '__________________________';
         EmptyStringCaption_Control1000000040Lbl: label '__________________________';
         V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaptionLbl: label '7. Payment Terms: Payment shall be made 30 days after the invoice date';
+        CorrruptionFreeorgLabel: label '8 . TI Kenya is a Corruption free organisation.';
+        EtimsCompliantLabel: label '9. An eTIMS-compliant invoice must be shared in accordance with KRA requirements';
         Prepared_By_Finance_Officer__CaptionLbl: label 'Prepared By Finance Officer: ';
         Checked_By_Head_of_Finance__CaptionLbl: label 'Checked By Head of Finance: ';
         Authorised_By_Executive_Director_CaptionLbl: label 'Authorised By Executive Director:';

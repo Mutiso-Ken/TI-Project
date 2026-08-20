@@ -8,6 +8,13 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
             OptionCaption = 'Purchase,Requisition,Quote,Capex';
             OptionMembers = Purchase,Requisition,Quote,Capex;
         }
+        field(8089; "Approval Entries"; Integer)
+        {
+            CalcFormula = Count("Approval Entry" WHERE("Document No." = FIELD("No.")));
+            Editable = false;
+            FieldClass = FlowField;
+        }
+
         field(9003; PR; Boolean)
         {
             DataClassification = ToBeClassified;

@@ -84,6 +84,8 @@ codeunit 50047 PortalEntry
         optionType: Text;
 
         outputjson: JsonObject;
+        fundCode: Code[50];
+        budgetLineCode: Code[50];
     begin
         Clear(RequestJson);
         if not RequestJson.ReadFrom(args) then
@@ -148,7 +150,66 @@ codeunit 50047 PortalEntry
         if (RequestType = 'training_requests') then
             exit(GetTrainingRequests(RequestEmployeeID));
 
+        if RequestType = 'budget_lines' then begin
+            if RequestJson.Get('element_type', JsonToken) and not JsonToken.AsValue().IsNull then
+                fundCode := JsonToken.AsValue().AsCode();
+            exit(GetBudgetLineCodes(JsonToken.AsValue().AsCode()));
+        end;
+        if RequestType = 'budget_categories' then begin
+            if RequestJson.Get('element_type', JsonToken) and not JsonToken.AsValue().IsNull then
+                fundCode := JsonToken.AsValue().AsCode();
+            if RequestJson.Get('line_type', JsonToken) and not JsonToken.AsValue().IsNull then
+                budgetLineCode := JsonToken.AsValue().AsCode();
+            exit(GetBudgetCategoryCodes(fundCode, budgetLineCode));
+        end;
         exit(Format(AddResponseHead(OutputJson, false)));
+    end;
+
+    local procedure GetBudgetLineCodes(fundCode: Code[50]): Text
+    var
+        jarray: JsonArray;
+        jobject: JsonObject;
+    begin
+        Clear(jarray);
+        DimensionsTable.RESET;
+        DimensionsTable.SetFilter("Global Dimension No.", '3');
+        DimensionsTable.SetFilter(Name, '<>', '');
+        DimensionsTable.SetRange(Blocked, false);
+        DimensionsTable.SETRANGE("Fund Code", fundCode);
+        DimensionsTable.SETCURRENTKEY(Name);
+        DimensionsTable.ASCENDING(TRUE);
+        IF DimensionsTable.FINDFIRST THEN
+            REPEAT
+                Clear(jobject);
+                jobject.Add('Code', DimensionsTable.Code);
+                jobject.Add('Name', DimensionsTable.Name);
+                jarray.Add(jobject);
+            UNTIL DimensionsTable.NEXT = 0;
+        exit(Format(jarray));
+    end;
+
+    local procedure GetBudgetCategoryCodes(fundCode: Code[50]; budgetLineCode: Code[50]): Text
+    var
+        jarray: JsonArray;
+        jobject: JsonObject;
+    begin
+        Clear(jarray);
+        DimensionsTable.RESET;
+        DimensionsTable.SetFilter("Global Dimension No.", '5');
+        DimensionsTable.SetFilter(Name, '<>', '');
+        DimensionsTable.SetRange(Blocked, false);
+        DimensionsTable.SETRANGE("Fund Code", fundCode);
+        DimensionsTable.SetRange("Budget Line", budgetLineCode);
+        DimensionsTable.SETCURRENTKEY(Name);
+        DimensionsTable.ASCENDING(TRUE);
+        IF DimensionsTable.FINDFIRST THEN
+            REPEAT
+                Clear(jobject);
+                jobject.Add('Code', DimensionsTable.Code);
+                jobject.Add('Name', DimensionsTable.Name);
+                jarray.Add(jobject);
+            UNTIL DimensionsTable.NEXT = 0;
+        exit(Format(jarray));
     end;
 
     local procedure GetTrainingRequests(employeeID: Code[50]): Text
@@ -3511,21 +3572,21 @@ codeunit 50047 PortalEntry
     begin
 
         if RequestJson.Get('employee_id', JsonToken) and not JsonToken.AsValue().IsNull() then
-        StaffID := JsonToken.AsValue().AsText();
+            StaffID := JsonToken.AsValue().AsText();
         if RequestJson.Get('purpose', JsonToken) and not JsonToken.AsValue().IsNull() then
-        Purpose := JsonToken.AsValue().AsText();
+            Purpose := JsonToken.AsValue().AsText();
         if RequestJson.Get('fund_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        FundCode := JsonToken.AsValue().AsText();
+            FundCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('program_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        ProgramCode := JsonToken.AsValue().AsText();
+            ProgramCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('department_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        DepartmentCode := JsonToken.AsValue().AsText();
+            DepartmentCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('budget_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        BudgetCode := JsonToken.AsValue().AsText();
+            BudgetCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('shortcut_4', JsonToken) and not JsonToken.AsValue().IsNull() then
-        BudgetCategoryCode := JsonToken.AsValue().AsText();
+            BudgetCategoryCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('currency_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        Currency := JsonToken.AsValue().AsText();
+            Currency := JsonToken.AsValue().AsText();
 
         EmployeeTable.Reset();
         EmployeeTable.SetRange("No.", StaffID);
@@ -3600,21 +3661,21 @@ codeunit 50047 PortalEntry
     begin
 
         if RequestJson.Get('request_number', JsonToken) and not JsonToken.AsValue().IsNull() then
-        RequestNumber := JsonToken.AsValue().AsText();
+            RequestNumber := JsonToken.AsValue().AsText();
         if RequestJson.Get('purpose', JsonToken) and not JsonToken.AsValue().IsNull() then
-        Purpose := JsonToken.AsValue().AsText();
+            Purpose := JsonToken.AsValue().AsText();
         if RequestJson.Get('fund_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        FundCode := JsonToken.AsValue().AsText();
+            FundCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('program_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        ProgramCode := JsonToken.AsValue().AsText();
+            ProgramCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('department_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        DepartmentCode := JsonToken.AsValue().AsText();
+            DepartmentCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('budget_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        BudgetCode := JsonToken.AsValue().AsText();
+            BudgetCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('shortcut_4', JsonToken) and not JsonToken.AsValue().IsNull() then
-        BudgetCategoryCode := JsonToken.AsValue().AsText();
+            BudgetCategoryCode := JsonToken.AsValue().AsText();
         if RequestJson.Get('currency_code', JsonToken) and not JsonToken.AsValue().IsNull() then
-        Currency := JsonToken.AsValue().AsText();
+            Currency := JsonToken.AsValue().AsText();
 
         PurchasesHeaderTable.Reset();
         PurchasesHeaderTable.SetRange("No.", RequestNumber);
@@ -3667,21 +3728,21 @@ codeunit 50047 PortalEntry
     begin
 
         if RequestJson.Get('imprest_number', JsonToken) and not JsonToken.AsValue().IsNull() then
-        ImprestNumber := JsonToken.AsValue().AsText();
+            ImprestNumber := JsonToken.AsValue().AsText();
         if RequestJson.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull() then
-        LineNo := JsonToken.AsValue().AsInteger();
+            LineNo := JsonToken.AsValue().AsInteger();
         if RequestJson.Get('expense_category', JsonToken) and not JsonToken.AsValue().IsNull() then
-        ExpenseCategory := JsonToken.AsValue().AsText();
+            ExpenseCategory := JsonToken.AsValue().AsText();
         // RequestJson.Get('account_no', JsonToken);
         // GLAccount := JsonToken.AsValue().AsText();
         // RequestJson.Get('description', JsonToken);
         // Description := JsonToken.AsValue().AsText();
         if RequestJson.Get('item_specification', JsonToken) and not JsonToken.AsValue().IsNull() then
-        ItemSpecification := JsonToken.AsValue().AsText();
+            ItemSpecification := JsonToken.AsValue().AsText();
         if RequestJson.Get('quantity', JsonToken) and not JsonToken.AsValue().IsNull() then
-        Quantity := JsonToken.AsValue().AsInteger();
+            Quantity := JsonToken.AsValue().AsInteger();
         if RequestJson.Get('unit_cost', JsonToken) and not JsonToken.AsValue().IsNull() then
-        UnitCost := JsonToken.AsValue().AsDecimal();
+            UnitCost := JsonToken.AsValue().AsDecimal();
         if RequestJson.Get('amount_spent', JsonToken) then
             ImprestAmountSpent := JsonToken.AsValue().AsDecimal();
 

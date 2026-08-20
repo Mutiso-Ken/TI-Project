@@ -28,8 +28,8 @@ table 2 "HelpDesk Tickets"
         field(6; Status; Option)
         {
             Caption = 'Status';
-            OptionCaption = 'New,Pending,Resolved';
-            OptionMembers = New,Pending,Resolved;
+            OptionCaption = 'New,Pending,In Progress,Resolved';
+            OptionMembers = New,Pending,"In Progress",Resolved;
         }
         field(7; "Placed On"; Date)
         {

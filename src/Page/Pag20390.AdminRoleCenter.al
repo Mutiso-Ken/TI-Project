@@ -1008,7 +1008,6 @@ Page 20390 "Admin Role Center"
                     RunPageView = where(Status = const(Approved));
                     ApplicationArea = all;
                 }
-
             }
             group("HR Management")
             {
@@ -1176,6 +1175,27 @@ Page 20390 "Admin Role Center"
                     ApplicationArea = Basic, Suite;
                     RunObject = Page "Training Request List";
                     ;
+                }
+            }
+            group("IT Management")
+            {
+                Caption = 'IT Management';
+                ToolTip = 'Action on IT management issues';
+                //    Image= 
+                action("Staff Support Tickets")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page Tickets;
+                }
+                action("Asset Assignment Tracking")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Asset Tracker";
+                }
+                action("Subscriptions Management")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Subscription List";
                 }
             }
         }
