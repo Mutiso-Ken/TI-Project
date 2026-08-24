@@ -108,6 +108,22 @@ Page 80067 "Mission Proposal Card"
                 {
                     ApplicationArea = all;
                 }
+                field("Buy-from Vendor No."; Rec."Buy-from Vendor No.")
+                {
+                    ApplicationArea = Basic;
+                    ToolTip = 'Specifies the vendor to purchase from when this mission proposal is converted to a Purchase Order (LPO).';
+                }
+                field("Buy-from Vendor Name"; Rec."Buy-from Vendor Name")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("Order No"; Rec."Order No")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                    ToolTip = 'Specifies the Purchase Order that was generated from this mission proposal, if any.';
+                }
             }
             group(Background)
             {
@@ -372,6 +388,87 @@ Page 80067 "Mission Proposal Card"
                         PurchHeader.SetRange("No.", Rec."No.");
                         if PurchHeader.FindFirst then
                             Report.Run(80033, true, false, PurchHeader);
+                    end;
+                }
+                action("Convert to LPO")
+                {
+                    ApplicationArea = Basic;
+                    Image = MakeOrder;
+                    Promoted = true;
+                    PromotedCategory = Category4;
+                    PromotedIsBig = true;
+                    ToolTip = 'Generate a real Purchase Order from this mission proposal''s budget lines, ready to print as an LPO.';
+
+                    trigger OnAction()
+                    var
+                        ExistingPurchHeader: Record "Purchase Header";
+                        NewPurchHeader: Record "Purchase Header";
+                        NewPurchLine: Record "Purchase Line";
+                        BudgetLine: Record "Purchase Line";
+                        NewLineNo: Integer;
+                    begin
+                        Rec.TestField(Status, Rec.Status::Released);
+                        Rec.TestField(Completed, false);
+                        Rec.TestField("Buy-from Vendor No.");
+
+                        ExistingPurchHeader.Reset();
+                        ExistingPurchHeader.SetRange("Requisition No", Rec."No.");
+                        ExistingPurchHeader.SetRange("Document Type", ExistingPurchHeader."Document Type"::Order);
+                        if ExistingPurchHeader.FindFirst() then begin
+                            Page.Run(Page::"Purchase Order", ExistingPurchHeader);
+                            exit;
+                        end;
+
+                        BudgetLine.Reset();
+                        BudgetLine.SetRange("Document Type", Rec."Document Type");
+                        BudgetLine.SetRange("Document No.", Rec."No.");
+                        BudgetLine.SetRange("Line Type", BudgetLine."Line Type"::"Budget Info");
+                        BudgetLine.SetFilter("Total Ksh", '<>%1', 0);
+                        if not BudgetLine.FindSet() then
+                            Error('This mission proposal has no budget lines with an amount to convert.');
+                        repeat
+                            BudgetLine.TestField("Budget G/L Account");
+                        until BudgetLine.Next() = 0;
+
+                        if not Confirm('Generate a Purchase Order for vendor %1 from this mission proposal''s budget lines?', false, Rec."Buy-from Vendor No.") then
+                            exit;
+
+                        NewPurchHeader.Init();
+                        NewPurchHeader."Document Type" := NewPurchHeader."Document Type"::Order;
+                        NewPurchHeader.Insert(true);
+                        NewPurchHeader.Validate("Buy-from Vendor No.", Rec."Buy-from Vendor No.");
+                        NewPurchHeader."Requisition No" := Rec."No.";
+                        if Rec."Shortcut Dimension 1 Code" <> '' then
+                            NewPurchHeader.Validate("Shortcut Dimension 1 Code", Rec."Shortcut Dimension 1 Code");
+                        if Rec."Shortcut Dimension 2 Code" <> '' then
+                            NewPurchHeader.Validate("Shortcut Dimension 2 Code", Rec."Shortcut Dimension 2 Code");
+                        NewPurchHeader.Modify(true);
+
+                        BudgetLine.FindSet();
+                        repeat
+                            NewLineNo += 10000;
+                            NewPurchLine.Init();
+                            NewPurchLine."Document Type" := NewPurchHeader."Document Type";
+                            NewPurchLine."Document No." := NewPurchHeader."No.";
+                            NewPurchLine."Line No." := NewLineNo;
+                            NewPurchLine.Type := NewPurchLine.Type::"G/L Account";
+                            NewPurchLine."No." := BudgetLine."Budget G/L Account";
+                            NewPurchLine.Validate("No.");
+                            NewPurchLine.Description := CopyStr(BudgetLine."Description 3", 1, MaxStrLen(NewPurchLine.Description));
+                            NewPurchLine.Quantity := 1;
+                            NewPurchLine.Validate(Quantity);
+                            NewPurchLine."Direct Unit Cost" := BudgetLine."Total Ksh";
+                            NewPurchLine.Validate("Direct Unit Cost");
+                            NewPurchLine.Insert(true);
+                        until BudgetLine.Next() = 0;
+
+                        Rec."Order No" := NewPurchHeader."No.";
+                        Rec.Completed := true;
+                        Rec.Modify(true);
+
+
+                        Message('Purchase Order %1 has been generated from %2.', NewPurchHeader."No.", Rec."No.");
+                        Page.Run(Page::"Purchase Order", NewPurchHeader);
                     end;
                 }
 

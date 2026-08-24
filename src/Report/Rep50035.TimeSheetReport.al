@@ -6,91 +6,91 @@ Report 50035 "TimeSheet Report"
 
     dataset
     {
-        dataitem("TE Time Sheet1";"TE Time Sheet1")
+        dataitem("TE Time Sheet1"; "TE Time Sheet1")
         {
-            RequestFilterFields = "Global Dimension 1 Code","Employee No";
+            RequestFilterFields = "Global Dimension 1 Code", "Employee No";
             column(ReportForNavId_1000000000; 1000000000)
             {
             }
-            column(EmployeeNo;"TE Time Sheet1"."Employee No")
+            column(EmployeeNo; "TE Time Sheet1"."Employee No")
             {
             }
-            column(DocumentNo_TETimeSheet1;"TE Time Sheet1"."Document No.")
+            column(DocumentNo_TETimeSheet1; "TE Time Sheet1"."Document No.")
             {
             }
-            column(EmployeeName;"TE Time Sheet1"."Employee Name")
+            column(EmployeeName; "TE Time Sheet1"."Employee Name")
             {
             }
-            column(Narration;"TE Time Sheet1".Narration)
+            column(Narration; "TE Time Sheet1".Narration)
             {
             }
-            column(Date;"TE Time Sheet1".Date)
+            column(Date; "TE Time Sheet1".Date)
             {
             }
-            column(Hours;"TE Time Sheet1".Hours)
+            column(Hours; "TE Time Sheet1".Hours)
             {
             }
-            column(ProjectCode;"TE Time Sheet1"."Global Dimension 1 Code")
+            column(ProjectCode; "TE Time Sheet1"."Global Dimension 1 Code")
             {
             }
-            column(ProjectName;"TE Time Sheet1".Description)
+            column(ProjectName; "TE Time Sheet1".Description)
             {
             }
-            column(Period;Period)
+            column(Period; Period)
             {
             }
-            column(LeaveType;"TE Time Sheet1"."Leave Type")
+            column(LeaveType; "TE Time Sheet1"."Leave Type")
             {
             }
-            column(Status_TETimeSheet;"TE Time Sheet1".Status)
+            column(Status_TETimeSheet; "TE Time Sheet1".Status)
             {
             }
-            column(ApprovedBy;ApprovedBy)
+            column(ApprovedBy; ApprovedBy)
             {
             }
-            column(LastDate;LastDate)
+            column(LastDate; LastDate)
             {
             }
-            column(Signature;HREmployees.Signature)
+            column(Signature; HREmployees.Signature)
             {
             }
-            column(AsAt;AsAt)
+            column(AsAt; AsAt)
             {
             }
-            column(Picture;CompanyInfo.Picture)
+            column(Picture; CompanyInfo.Picture)
             {
             }
-            column(phone;CompanyInfo."Phone No.")
+            column(phone; CompanyInfo."Phone No.")
             {
             }
-            column(Address;CompanyInfo.Address)
+            column(Address; CompanyInfo.Address)
             {
             }
-            column(Email;CompanyInfo."E-Mail")
+            column(Email; CompanyInfo."E-Mail")
             {
             }
-            column(PostalCode;CompanyInfo."Post Code")
+            column(PostalCode; CompanyInfo."Post Code")
             {
             }
-            column(Address2;CompanyInfo."Address 2")
+            column(Address2; CompanyInfo."Address 2")
             {
             }
-            column(Name;CompanyInfo.Name)
+            column(Name; CompanyInfo.Name)
             {
             }
 
             trigger OnAfterGetRecord()
             begin
 
-                "TE Time Sheet1".SetFilter(Date,'%1..%2',CalcDate('-CM',AsAt),CalcDate('CM',AsAt));
-                ApprovedBy:='';
-                LastDate:=CalcDate('<CM>',AsAt);
-                 HREmployees.Reset;
-                 HREmployees.SetRange(HREmployees."No.","TE Time Sheet1"."Employee No");
-                 if HREmployees.FindFirst then begin
-                  Name:=HREmployees.FullName;
-                  HREmployees.CalcFields(HREmployees.Signature);
-                  end;
+                "TE Time Sheet1".SetFilter(Date, '%1..%2', CalcDate('-CM', AsAt), CalcDate('CM', AsAt));
+                ApprovedBy := '';
+                LastDate := CalcDate('<CM>', AsAt);
+                HREmployees.Reset;
+                HREmployees.SetRange(HREmployees."No.", "TE Time Sheet1"."Employee No");
+                if HREmployees.FindFirst then begin
+                    Name := HREmployees.FullName;
+                    HREmployees.CalcFields(HREmployees.Signature);
+                end;
             end;
         }
     }
@@ -102,7 +102,7 @@ Report 50035 "TimeSheet Report"
         {
             area(content)
             {
-                field(Date;AsAt)
+                field(Date; AsAt)
                 {
                     ApplicationArea = Basic;
                 }

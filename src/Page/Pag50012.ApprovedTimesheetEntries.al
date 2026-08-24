@@ -61,7 +61,7 @@ Page 50012 "Approved Timesheet Entries"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-               // RunObject = Report "Update Dates";
+                // RunObject = Report "Update Dates";
             }
             action("TimeSheet Report Summary")
             {

@@ -3,7 +3,7 @@ namespace TISolution.TISolution;
 enum 80002 "Appraisal Section B quizs"
 {
     Extensible = true;
-    
+
     value(0; "What did you do well in relation to your objectives?")
     {
         Caption = 'What did you do well in relation to your objectives?';

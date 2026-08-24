@@ -94,7 +94,7 @@ Table 80004 "Payroll Employee P9_AU"
             OptionCaption = 'Contract,Secondment,Casual,Temporary,Volunteer,Project Staff,Consultant-Contract,Consultant,Deployed,Board,Committee,Full Time';
             OptionMembers = Contract,Secondment,Casual,"Temporary",Volunteer,"Project Staff","Consultant-Contract",Consultant,Deployed,Board,Committee,"Full Time";
         }
-        field(37;"Housing Levy"; Decimal)
+        field(37; "Housing Levy"; Decimal)
         {
             DataClassification = ToBeClassified;
         }

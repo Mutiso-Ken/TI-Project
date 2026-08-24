@@ -12,7 +12,7 @@ Report 80027 "Imprest Requisition"
             column(No_PurchaseHeader; "Purchase Header"."No.")
             {
             }
-            column(Description;Description)
+            column(Description; Description)
             {
             }
             column(DocumentDate_PurchaseHeader; "Purchase Header"."Document Date")
@@ -42,7 +42,7 @@ Report 80027 "Imprest Requisition"
             column(USERID; "Purchase Header"."User ID")
             {
             }
-    
+
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -65,7 +65,7 @@ Report 80027 "Imprest Requisition"
                 column(Quantity_PurchaseLine; "Purchase Line".Quantity)
                 {
                 }
-               
+
                 column(sno; SNo)
                 {
                 }
@@ -103,7 +103,7 @@ Report 80027 "Imprest Requisition"
                 column(LastDateTimeModified_ApprovalEntry; "Approval Entry"."Last Date-Time Modified")
                 {
                 }
-                    column(SequenceNo_ApprovalEntry; "Sequence No.") { }
+                column(SequenceNo_ApprovalEntry; "Sequence No.") { }
                 trigger OnPreDataItem();
                 begin
 

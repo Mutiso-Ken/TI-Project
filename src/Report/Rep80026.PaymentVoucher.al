@@ -7,197 +7,197 @@ Report 80026 "Payment Voucher"
 
     dataset
     {
-        dataitem("Gen. Journal Line";"Gen. Journal Line")
+        dataitem("Gen. Journal Line"; "Gen. Journal Line")
         {
-            DataItemTableView = sorting("Journal Template Name","Journal Batch Name","Line No.");
-            RequestFilterFields = "Journal Template Name","Journal Batch Name";
+            DataItemTableView = sorting("Journal Template Name", "Journal Batch Name", "Line No.");
+            RequestFilterFields = "Journal Template Name", "Journal Batch Name";
             column(ReportForNavId_7024; 7024)
             {
             }
-            column(Gen__Journal_Line__Posting_Date_;"Posting Date")
+            column(Gen__Journal_Line__Posting_Date_; "Posting Date")
             {
             }
-            column(Gen__Journal_Line__Document_Date_;"Document Date")
+            column(Gen__Journal_Line__Document_Date_; "Document Date")
             {
             }
-            column(CompanyInfo_Picture;CompanyInfo.Picture)
+            column(CompanyInfo_Picture; CompanyInfo.Picture)
             {
             }
-            column(CompanyInfo_Name;CompanyInfo.Name)
+            column(CompanyInfo_Name; CompanyInfo.Name)
             {
             }
-            column(CompanyInfo_Address;CompanyInfo.Address)
+            column(CompanyInfo_Address; CompanyInfo.Address)
             {
             }
-            column(CompanyInfo_City;CompanyInfo.City)
+            column(CompanyInfo_City; CompanyInfo.City)
             {
             }
-            column(CompanyInfo__Address_2_;CompanyInfo."Address 2")
+            column(CompanyInfo__Address_2_; CompanyInfo."Address 2")
             {
             }
-            column(CompanyInfo__Country_Region_Code_;CompanyInfo."Country/Region Code")
+            column(CompanyInfo__Country_Region_Code_; CompanyInfo."Country/Region Code")
             {
             }
-            column(CompanyInfo__Phone_No__;CompanyInfo."Phone No.")
+            column(CompanyInfo__Phone_No__; CompanyInfo."Phone No.")
             {
             }
-            column(CompanyInfo__Fax_No__;CompanyInfo."Fax No.")
+            column(CompanyInfo__Fax_No__; CompanyInfo."Fax No.")
             {
             }
-            column(CompanyInfo__E_Mail_;CompanyInfo."E-Mail")
+            column(CompanyInfo__E_Mail_; CompanyInfo."E-Mail")
             {
             }
-            column(CompanyInfo__Home_Page_;CompanyInfo."Home Page")
+            column(CompanyInfo__Home_Page_; CompanyInfo."Home Page")
             {
             }
-            column(Gen__Journal_Line__Document_No__;"Document No.")
+            column(Gen__Journal_Line__Document_No__; "Document No.")
             {
             }
-            column(ReportTitle;ReportTitle)
+            column(ReportTitle; ReportTitle)
             {
             }
-            column(Gen__Journal_Line_Amount;Amount)
+            column(Gen__Journal_Line_Amount; Amount)
             {
             }
-            column(Gen__Journal_Line_Description;Description)
+            column(Gen__Journal_Line_Description; Description)
             {
             }
-            column(Gen__Journal_Line__Account_No__;"Account No.")
+            column(Gen__Journal_Line__Account_No__; "Account No.")
             {
             }
-            column(Gen__Journal_Line__Account_Name_;AccName)
+            column(Gen__Journal_Line__Account_Name_; AccName)
             {
             }
-            column(Gen__Journal_Line__Applies_to_Doc__No__;"Applies-to Doc. No.")
+            column(Gen__Journal_Line__Applies_to_Doc__No__; "Applies-to Doc. No.")
             {
             }
-            column(Gen__Journal_Line__External_Document_No__;"External Document No.")
+            column(Gen__Journal_Line__External_Document_No__; "External Document No.")
             {
             }
-            column(AMOUNT_IN_WORDS____AmtInWords_1_;'AMOUNT IN WORDS: '+AmtInWords[1])
+            column(AMOUNT_IN_WORDS____AmtInWords_1_; 'AMOUNT IN WORDS: ' + AmtInWords[1])
             {
             }
-            column(TotalAmt;TotAmt)
+            column(TotalAmt; TotAmt)
             {
             }
-            column(P_Date;P_Date)
+            column(P_Date; P_Date)
             {
             }
-            column(FinUser;FinUser)
+            column(FinUser; FinUser)
             {
             }
-            column(Gen__Journal_Line__Posting_Date__Control1000000060;"Posting Date")
+            column(Gen__Journal_Line__Posting_Date__Control1000000060; "Posting Date")
             {
             }
-            column(VOUCHER_NO_Caption;VOUCHER_NO_CaptionLbl)
+            column(VOUCHER_NO_Caption; VOUCHER_NO_CaptionLbl)
             {
             }
-            column(VOUCHER_DATECaption;VOUCHER_DATECaptionLbl)
+            column(VOUCHER_DATECaption; VOUCHER_DATECaptionLbl)
             {
             }
-            column(CHEQUE_DATECaption;CHEQUE_DATECaptionLbl)
+            column(CHEQUE_DATECaption; CHEQUE_DATECaptionLbl)
             {
             }
-            column(Tel_Caption;Tel_CaptionLbl)
+            column(Tel_Caption; Tel_CaptionLbl)
             {
             }
-            column(Fax_Caption;Fax_CaptionLbl)
+            column(Fax_Caption; Fax_CaptionLbl)
             {
             }
-            column(Email_Caption;Email_CaptionLbl)
+            column(Email_Caption; Email_CaptionLbl)
             {
             }
-            column(Web_Caption;Web_CaptionLbl)
+            column(Web_Caption; Web_CaptionLbl)
             {
             }
-            column(Other_DetailsCaption;Other_DetailsCaptionLbl)
+            column(Other_DetailsCaption; Other_DetailsCaptionLbl)
             {
             }
-            column(Account_Details_DescriptionCaption;Account_Details_DescriptionCaptionLbl)
+            column(Account_Details_DescriptionCaption; Account_Details_DescriptionCaptionLbl)
             {
             }
-            column(Cheque_Reference_No_Caption;Cheque_Reference_No_CaptionLbl)
+            column(Cheque_Reference_No_Caption; Cheque_Reference_No_CaptionLbl)
             {
             }
-            column(KES_AmountCaption;KES_AmountCaptionLbl)
+            column(KES_AmountCaption; KES_AmountCaptionLbl)
             {
             }
-            column(Invoice_No_Caption;Invoice_No_CaptionLbl)
+            column(Invoice_No_Caption; Invoice_No_CaptionLbl)
             {
             }
-            column(TOTALCaption;TOTALCaptionLbl)
+            column(TOTALCaption; TOTALCaptionLbl)
             {
             }
-            column(EmptyStringCaption;EmptyStringCaptionLbl)
+            column(EmptyStringCaption; EmptyStringCaptionLbl)
             {
             }
-            column(Signature_Caption;Signature_CaptionLbl)
+            column(Signature_Caption; Signature_CaptionLbl)
             {
             }
-            column(Signature_Caption_Control1000000012;Signature_Caption_Control1000000012Lbl)
+            column(Signature_Caption_Control1000000012; Signature_Caption_Control1000000012Lbl)
             {
             }
-            column(EmptyStringCaption_Control1000000025;EmptyStringCaption_Control1000000025Lbl)
+            column(EmptyStringCaption_Control1000000025; EmptyStringCaption_Control1000000025Lbl)
             {
             }
-            column(EmptyStringCaption_Control1000000028;EmptyStringCaption_Control1000000028Lbl)
+            column(EmptyStringCaption_Control1000000028; EmptyStringCaption_Control1000000028Lbl)
             {
             }
-            column(EmptyStringCaption_Control1000000034;EmptyStringCaption_Control1000000034Lbl)
+            column(EmptyStringCaption_Control1000000034; EmptyStringCaption_Control1000000034Lbl)
             {
             }
-            column(Date_Caption;Date_CaptionLbl)
+            column(Date_Caption; Date_CaptionLbl)
             {
             }
-            column(Date_Caption_Control1000000039;Date_Caption_Control1000000039Lbl)
+            column(Date_Caption_Control1000000039; Date_Caption_Control1000000039Lbl)
             {
             }
-            column(EmptyStringCaption_Control1000000041;EmptyStringCaption_Control1000000041Lbl)
+            column(EmptyStringCaption_Control1000000041; EmptyStringCaption_Control1000000041Lbl)
             {
             }
-            column(EmptyStringCaption_Control1000000045;EmptyStringCaption_Control1000000045Lbl)
+            column(EmptyStringCaption_Control1000000045; EmptyStringCaption_Control1000000045Lbl)
             {
             }
-            column(Signature_Caption_Control1000000046;Signature_Caption_Control1000000046Lbl)
+            column(Signature_Caption_Control1000000046; Signature_Caption_Control1000000046Lbl)
             {
             }
-            column(EmptyStringCaption_Control1000000047;EmptyStringCaption_Control1000000047Lbl)
+            column(EmptyStringCaption_Control1000000047; EmptyStringCaption_Control1000000047Lbl)
             {
             }
-            column(Date_Caption_Control1000000048;Date_Caption_Control1000000048Lbl)
+            column(Date_Caption_Control1000000048; Date_Caption_Control1000000048Lbl)
             {
             }
-            column(EmptyStringCaption_Control1000000049;EmptyStringCaption_Control1000000049Lbl)
+            column(EmptyStringCaption_Control1000000049; EmptyStringCaption_Control1000000049Lbl)
             {
             }
-            column(EmptyStringCaption_Control1000000050;EmptyStringCaption_Control1000000050Lbl)
+            column(EmptyStringCaption_Control1000000050; EmptyStringCaption_Control1000000050Lbl)
             {
             }
-            column(Authorised_By_Executive_Director_Caption;Authorised_By_Executive_Director_CaptionLbl)
+            column(Authorised_By_Executive_Director_Caption; Authorised_By_Executive_Director_CaptionLbl)
             {
             }
-            column(Prepared_By_Finance_Officer__Caption;Prepared_By_Finance_Officer__CaptionLbl)
+            column(Prepared_By_Finance_Officer__Caption; Prepared_By_Finance_Officer__CaptionLbl)
             {
             }
-            column(Checked_By_Head_of_Finance__Caption;Checked_By_Head_of_Finance__CaptionLbl)
+            column(Checked_By_Head_of_Finance__Caption; Checked_By_Head_of_Finance__CaptionLbl)
             {
             }
-            column(Gen__Journal_Line_Journal_Template_Name;"Journal Template Name")
+            column(Gen__Journal_Line_Journal_Template_Name; "Journal Template Name")
             {
             }
-            column(Gen__Journal_Line_Journal_Batch_Name;"Journal Batch Name")
+            column(Gen__Journal_Line_Journal_Batch_Name; "Journal Batch Name")
             {
             }
-            column(Gen__Journal_Line_Line_No_;"Line No.")
+            column(Gen__Journal_Line_Line_No_; "Line No.")
             {
             }
-            column(FundNo;"Gen. Journal Line"."Shortcut Dimension 1 Code")
+            column(FundNo; "Gen. Journal Line"."Shortcut Dimension 1 Code")
             {
             }
-            column(AccName;AccName)
+            column(AccName; AccName)
             {
             }
-            column(vendorname;"vendor name")
+            column(vendorname; "vendor name")
             {
             }
 
@@ -205,65 +205,65 @@ Report 80026 "Payment Voucher"
             begin
                 CompanyInfo.CalcFields(Picture);
                 //GenJnlManagement.GetAccounts(BalAccName);
-                "vendor name":='';
-                if Vendor.Get("Gen. Journal Line"."Account No.") then "vendor name":=Vendor.Name;
-                if Cust.Get("Gen. Journal Line"."Account No.") then "vendor name":=Cust.Name;
-                if GLAcc.Get("Gen. Journal Line"."Account No.") then "vendor name":=GLAcc.Name;
-                if BankAcc.Get("Gen. Journal Line"."Account No.") then "vendor name":=BankAcc.Name;
+                "vendor name" := '';
+                if Vendor.Get("Gen. Journal Line"."Account No.") then "vendor name" := Vendor.Name;
+                if Cust.Get("Gen. Journal Line"."Account No.") then "vendor name" := Cust.Name;
+                if GLAcc.Get("Gen. Journal Line"."Account No.") then "vendor name" := GLAcc.Name;
+                if BankAcc.Get("Gen. Journal Line"."Account No.") then "vendor name" := BankAcc.Name;
 
                 if (GenJnlLine."Account Type" <> LastGenJnlLine."Account Type") or
                    (GenJnlLine."Account No." <> LastGenJnlLine."Account No.")
                 then begin
-                  AccName := '';
-                  if GenJnlLine."Account No." <> '' then
-                    case GenJnlLine."Account Type" of
-                      GenJnlLine."account type"::"G/L Account":
-                        if GLAcc.Get(GenJnlLine."Account No.") then
-                          AccName := GLAcc.Name;
-                      GenJnlLine."account type"::Customer:
-                        if Cust.Get(GenJnlLine."Account No.") then
-                          AccName := Cust.Name;
-                      GenJnlLine."account type"::Vendor:
-                        if Vend.Get(GenJnlLine."Account No.") then
-                          AccName := Vend.Name;
-                      GenJnlLine."account type"::"Bank Account":
-                        if BankAcc.Get(GenJnlLine."Account No.") then
-                          AccName := BankAcc.Name;
-                      GenJnlLine."account type"::"Fixed Asset":
-                        if FA.Get(GenJnlLine."Account No.") then
-                          AccName := FA.Description;
-                      GenJnlLine."account type"::"IC Partner":
-                        if IC.Get(GenJnlLine."Account No.") then
-                          AccName := IC.Name;
+                    AccName := '';
+                    if GenJnlLine."Account No." <> '' then
+                        case GenJnlLine."Account Type" of
+                            GenJnlLine."account type"::"G/L Account":
+                                if GLAcc.Get(GenJnlLine."Account No.") then
+                                    AccName := GLAcc.Name;
+                            GenJnlLine."account type"::Customer:
+                                if Cust.Get(GenJnlLine."Account No.") then
+                                    AccName := Cust.Name;
+                            GenJnlLine."account type"::Vendor:
+                                if Vend.Get(GenJnlLine."Account No.") then
+                                    AccName := Vend.Name;
+                            GenJnlLine."account type"::"Bank Account":
+                                if BankAcc.Get(GenJnlLine."Account No.") then
+                                    AccName := BankAcc.Name;
+                            GenJnlLine."account type"::"Fixed Asset":
+                                if FA.Get(GenJnlLine."Account No.") then
+                                    AccName := FA.Description;
+                            GenJnlLine."account type"::"IC Partner":
+                                if IC.Get(GenJnlLine."Account No.") then
+                                    AccName := IC.Name;
 
-                    end;
+                        end;
                 end;
 
                 if (GenJnlLine."Bal. Account Type" <> LastGenJnlLine."Bal. Account Type") or
                    (GenJnlLine."Bal. Account No." <> LastGenJnlLine."Bal. Account No.") then begin
-                  BalAccName := '';
-                  if GenJnlLine."Bal. Account No." <> '' then
-                    case GenJnlLine."Bal. Account Type" of
-                      GenJnlLine."bal. account type"::"G/L Account":
-                        if GLAcc.Get(GenJnlLine."Bal. Account No.") then
-                          BalAccName := GLAcc.Name;
-                      GenJnlLine."bal. account type"::Customer:
-                        if Cust.Get(GenJnlLine."Bal. Account No.") then
-                          BalAccName := Cust.Name;
-                      GenJnlLine."bal. account type"::Vendor:
-                        if Vend.Get(GenJnlLine."Bal. Account No.") then
-                          BalAccName := Vend.Name;
-                      GenJnlLine."bal. account type"::"Bank Account":
-                        if BankAcc.Get(GenJnlLine."Bal. Account No.") then
-                          BalAccName := BankAcc.Name;
-                      GenJnlLine."bal. account type"::"Fixed Asset":
-                        if FA.Get(GenJnlLine."Bal. Account No.") then
-                          BalAccName := FA.Description;
-                      GenJnlLine."bal. account type"::"IC Partner":
-                        if IC.Get(GenJnlLine."Bal. Account No.") then
-                          BalAccName := IC.Name;
+                    BalAccName := '';
+                    if GenJnlLine."Bal. Account No." <> '' then
+                        case GenJnlLine."Bal. Account Type" of
+                            GenJnlLine."bal. account type"::"G/L Account":
+                                if GLAcc.Get(GenJnlLine."Bal. Account No.") then
+                                    BalAccName := GLAcc.Name;
+                            GenJnlLine."bal. account type"::Customer:
+                                if Cust.Get(GenJnlLine."Bal. Account No.") then
+                                    BalAccName := Cust.Name;
+                            GenJnlLine."bal. account type"::Vendor:
+                                if Vend.Get(GenJnlLine."Bal. Account No.") then
+                                    BalAccName := Vend.Name;
+                            GenJnlLine."bal. account type"::"Bank Account":
+                                if BankAcc.Get(GenJnlLine."Bal. Account No.") then
+                                    BalAccName := BankAcc.Name;
+                            GenJnlLine."bal. account type"::"Fixed Asset":
+                                if FA.Get(GenJnlLine."Bal. Account No.") then
+                                    BalAccName := FA.Description;
+                            GenJnlLine."bal. account type"::"IC Partner":
+                                if IC.Get(GenJnlLine."Bal. Account No.") then
+                                    BalAccName := IC.Name;
 
-                    end;
+                        end;
                 end;
 
                 LastGenJnlLine := GenJnlLine;
@@ -271,24 +271,24 @@ Report 80026 "Payment Voucher"
                 //2013 r2
                 GenJnlLine2.CopyFilters("Gen. Journal Line");
                 if GenJnlLine2.FindFirst then
-                repeat
-                TotAmt:=GenJnlLine2.Amount+TotAmt;
+                    repeat
+                        TotAmt := GenJnlLine2.Amount + TotAmt;
 
-                until GenJnlLine2.Next=0;
+                    until GenJnlLine2.Next = 0;
 
-                  // CheckforMillion.InitTextVariable;
-                  // CheckforMillion.FormatNoText(AmtInWords,Abs(TotAmt),'');
+                // CheckforMillion.InitTextVariable;
+                // CheckforMillion.FormatNoText(AmtInWords,Abs(TotAmt),'');
                 //END;
 
                 GLSetup.Get;
-                CurrCode:=GLSetup."LCY Code";
+                CurrCode := GLSetup."LCY Code";
 
-                if "Currency Code" ='' then
-                  AmtInWords[1]:= CurrCode +' '  +AmtInWords[1]
+                if "Currency Code" = '' then
+                    AmtInWords[1] := CurrCode + ' ' + AmtInWords[1]
                 else
-                  AmtInWords[1]:="Currency Code"+' ' +AmtInWords[1];
+                    AmtInWords[1] := "Currency Code" + ' ' + AmtInWords[1];
 
-                P_Date:=GenJnlLine."Document Date";
+                P_Date := GenJnlLine."Document Date";
                 //FinUser:=GenJnlLine."Owner ID";
             end;
 
@@ -318,11 +318,11 @@ Report 80026 "Payment Voucher"
 
     trigger OnPreReport()
     begin
-        if WhichReport=Whichreport::"Payment Voucher" then
-          ReportTitle:='Payment Voucher'
-        else if WhichReport=Whichreport::"Payment Remittance" then
-          ReportTitle:='Payment Remittance';
-        TotAmt:=0;
+        if WhichReport = Whichreport::"Payment Voucher" then
+            ReportTitle := 'Payment Voucher'
+        else if WhichReport = Whichreport::"Payment Remittance" then
+            ReportTitle := 'Payment Remittance';
+        TotAmt := 0;
     end;
 
     var
@@ -344,7 +344,7 @@ Report 80026 "Payment Voucher"
         BalAvailable: Decimal;
         GLEntry: Record "G/L Account";
         BudgetedAmt: Decimal;
-        AmtInWords: array [2] of Text[160];
+        AmtInWords: array[2] of Text[160];
         //CheckforMillion: Report DividendSlip;
         GLSetup: Record "General Ledger Setup";
         CurrCode: Code[10];

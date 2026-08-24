@@ -81,7 +81,7 @@ Report 80036 "Payment Memo"
                 column(LastDateTimeModified_ApprovalEntry; "Approval Entry"."Last Date-Time Modified")
                 {
                 }
-                 column(SequenceNo_ApprovalEntry; "Sequence No.") { }
+                column(SequenceNo_ApprovalEntry; "Sequence No.") { }
                 trigger OnPreDataItem();
                 begin
 

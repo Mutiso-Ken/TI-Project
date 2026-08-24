@@ -59,6 +59,11 @@ Page 80083 "Budget Information"
                 {
                     ApplicationArea = Basic;
                 }
+                field("Budget G/L Account"; Rec."Budget G/L Account")
+                {
+                    ApplicationArea = Basic;
+                    ToolTip = 'Specifies the G/L Account this budget line will post to when converted to a Purchase Order.';
+                }
             }
         }
     }

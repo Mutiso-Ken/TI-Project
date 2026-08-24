@@ -370,7 +370,7 @@ Page 20390 "Admin Role Center"
                 RunObject = Page "Customer List";
                 ToolTip = 'View or edit detailed information for the customers that you trade with. From each customer card, you can open related information, such as sales statistics and ongoing orders, and you can define special prices and line discounts that you grant if certain conditions are met.';
             }
-            action(Vendors)
+            action(VendorsPage)
             {
                 ApplicationArea = Basic, Suite;
                 Caption = 'Vendors';
@@ -631,6 +631,509 @@ Page 20390 "Admin Role Center"
                     Visible = False;
                 }
             }
+            group("Grant Management")
+            {
+
+                Caption = 'Grant Management';
+                ToolTip = 'Manage grants, donors, implementing partners, and the pre-award pipeline.';
+
+                group("Funds Sourcing")
+                {
+                    Caption = 'Funds Sourcing';
+                    Visible = false;
+                    action("Concept Notes")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Concept Notes';
+                        RunObject = page "Concept Notes";
+                    }
+                    action("Proposals")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Proposals';
+                        RunObject = page "Proposals List";
+                    }
+                }
+                group("Pre-Award Phase")
+                {
+                    Caption = 'Pre-Award Phase';
+                    Visible = false;
+                    action("Partners Pending Approval")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Partners Pending Approval';
+                        RunObject = page "Contact List";
+                    }
+                    action("Partners")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Partners';
+                        RunObject = page "Partners List";
+                    }
+                    action("Requests for Application")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Requests for Application';
+                        RunObject = page "Sub Award List";
+                    }
+                    action("Received Bids")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Received Bids';
+                        RunObject = page "RFA Partner List";
+                    }
+                    action("Evaluation of Applications")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Evaluation of Applications';
+                        RunObject = page "Evaluation";
+                        RunPageView = where(Stage = filter(<> "Peer Review"));
+                        // Matches RCK's own filter verbatim — RCK's "Evaluation of Applications" and
+                        // "Technical Review" actions below overlap on Stage = Technical Review in the
+                        // source project too; not fixed here so the arrangement stays faithful to RCK.
+                    }
+                    action("Peer Review")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Peer Review';
+                        RunObject = page "Evaluation";
+                        RunPageView = where(Stage = filter("Peer Review"));
+                    }
+                    action("Technical Review")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Technical Review';
+                        RunObject = page "Evaluation";
+                        RunPageView = where(Stage = filter("Technical Review"));
+                    }
+                }
+                group("Sub-Award Implementation")
+                {
+                    Caption = 'Sub-Award Implementation';
+                    Visible = false;
+                    action("Advance Requests")
+                    {
+                        // TODO(grants-merge): this duplicates TI's existing imprest workflow — see
+                        // Tab51081.GrantsRequestHeader.al header comment before activating for real use.
+                        ApplicationArea = All;
+                        Caption = 'Advance Requests';
+                        RunObject = page "Grants Open Requests";
+                    }
+                    action("Released Advance Requests")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Released Advance Requests';
+                        RunObject = page "Grants Released Requests";
+                    }
+                }
+                action("Donors")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Donors';
+                    RunObject = page "Dimension Values";
+                    RunPageView = where("Dimension Code" = filter('DONOR'));
+                }
+                action("Grants - Active")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Grants - Active';
+                    RunObject = page "Grants - Active";
+                }
+                action("Grants - Blocked")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Grants - Blocked';
+                    RunObject = page "Grants - Blocked";
+                }
+                action("SpeedKey Setup")
+                {
+                    ApplicationArea = All;
+                    Caption = 'SpeedKey Setup';
+                    RunObject = page "SpeedKey Setup";
+                }
+                group("Grant Reports")
+                {
+                    Caption = 'Reports';
+                    action("Grant Details")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Grant Details';
+                        RunObject = report "Grant Details";
+                    }
+                    action("Grant ExpenditureII")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Transaction Listing';
+                        RunObject = report "Grant ExpenditureII";
+                    }
+                    action("Detailed Grant Expenditure")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Detailed Transaction Listing';
+                        RunObject = report "Detailed Grant Expenditure";
+                    }
+                    action("Grant Budget Report")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Detailed Grant Budget Lines';
+                        RunObject = report "Grant Budget Report";
+                    }
+                    action("Consol. Budg.-Exp. Per Grant")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Consolidated Budget/Expenditure Per Grant';
+                        RunObject = report "Consol. Budg.-Exp. Per Grant";
+                    }
+                    action("Consolidated Grants Report")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Consolidated Budget/Expenditure';
+                        RunObject = report "Consolidated Grants Report";
+                    }
+                    action("Grant Budget-Expenditure Rpt")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Detailed Grant Budget-Expenditure';
+                        RunObject = report "Grant Budget-Expenditure Rpt";
+                    }
+                    action("Grant Expenditures-Budget Rpt")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Detailed Grant Expenditure-Budget';
+                        RunObject = report "Grant Expenditures-Budget Rpt";
+                    }
+                }
+            }
+            group(Procurement)
+            {
+
+                Caption = 'Procurement';
+                ToolTip = 'Procurement requests (tenders, RFQs, direct procurement, RFP) and vendor registration review.';
+
+                group("Procurement Setup")
+                {
+
+                    Caption = 'Procurement Setup';
+                    action("ProcurementSetupCard")
+                    {
+
+                        ApplicationArea = All;
+                        Caption = 'Setup';
+                        Image = Setup;
+                        RunObject = page "Procurement Setup";
+                    }
+                    action("Procurement Years")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Procurement Years';
+                        Image = Calendar;
+                        RunObject = page "Procurement Years";
+                    }
+                    action("Procurement Categories")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Procurement Categories';
+                        Image = Calendar;
+                        RunObject = page "Procurement Categories";
+                    }
+                    action("Prequalified Suppliers")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Prequalified Suppliers';
+                        Image = Vendor;
+                        RunObject = page "Prequalified Suppliers";
+                    }
+                    action("Supplier Categories")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Supplier Categories';
+                        RunObject = page "Supplier Category";
+                    }
+                }
+                group("Prospective Vendors")
+                {
+                    Caption = 'Prospective Vendors';
+                    action("Vendor Registration - Pending Review")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Vendor Registration - Pending Review';
+                        RunObject = page "Vendor Registration Review";
+                        RunPageView = where(Status = filter(New | "In Review"));
+                    }
+                    action("Vendor Registration - Approved")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Vendor Registration - Approved';
+                        RunObject = page "Vendor Registration Review";
+                        RunPageView = where(Status = filter(Approved));
+                    }
+                    action("Vendor Registration - Rejected")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Vendor Registration - Rejected';
+                        RunObject = page "Vendor Registration Review";
+                        RunPageView = where(Status = filter(Rejected));
+                    }
+                    action("Vendors")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Vendors';
+                        RunObject = page "Vendor List";
+                    }
+                }
+                group("Procurement Plan")
+                {
+                    Caption = 'Procurement Plan';
+                    action("Open Procurement List")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Open Procurement List';
+                        Image = List;
+                        RunObject = page "Open Procurement Plan List";
+                    }
+                    action("Pending Procurement List")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Pending Procurement List';
+                        Image = List;
+                        RunObject = page "Pending Procurement Plan List";
+                    }
+                    action("Approved Procurement List")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Approved Procurement List';
+                        Image = List;
+                        RunObject = page "Approved Procurement Plan List";
+                    }
+                    action("Procurement Plans")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Procurement Plans';
+                        Image = List;
+                        RunObject = page "Procurement Plan";
+                    }
+                }
+                group("Purchase Requisitions")
+                {
+
+                    Caption = 'Purchase Requisitions';
+                    Image = Purchasing;
+                    ToolTip = 'Raise, track, and approve purchase requisitions ahead of procurement.';
+                    action(Requisitions)
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'New Purchase Requisition';
+                        RunObject = Page "Task Order";
+                    }
+                    action("Pending Purchase Requisition")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Pending Purchase Requisition';
+                        RunObject = Page "Pending Purchase Requisition";
+                    }
+                    action("Approved Purchase Requisition")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Approved Purchase Requisition';
+                        RunObject = Page "Posted Purchase Requisitions";
+                    }
+                    action("Completed Purchase Requisition")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Completed Purchase Requisition';
+                        RunObject = Page "Completed  Purchase Req.";
+                    }
+                    action("Procurement Process Initiated")
+                    {
+
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Procurement Process Initiated';
+                        RunObject = Page "Proc.Process Request Initiated";
+                    }
+                    action("Rejected Purchase Requisition")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Rejected Purchase Requisition';
+                        RunObject = Page "Rej. Purch. Requisition List";
+                        Visible = false;
+                    }
+                    group("PurchReqReports")
+                    {
+
+                        Caption = 'Reports';
+                        action("Purchase Requisition Report")
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Purchase Requisition';
+                            RunObject = report "Purchase Requisition";
+                        }
+                        action("Purchase Requisition Due")
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Purchase Requisition Due';
+                            RunObject = report "Purchase Requisition Due";
+                        }
+                        action("Item Purchasing Trends")
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Item Purchasing Trends';
+                            RunObject = report "Item Purchasing Trends";
+                        }
+                    }
+                }
+
+                group(RFQ)
+                {
+                    Caption = 'RFQ';
+                    action("RFQs")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'RFQs';
+                        RunObject = page "Procurement Request List";
+                        RunPageView = where("Procurement Method" = filter(RFQ));
+                    }
+                    action("Quotation List")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Quotation List';
+                        Image = List;
+                        RunObject = page "Quotation List";
+                    }
+                    action("Sent Quotation List")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Advertised Quotation List';
+                        Image = AlternativeAddress;
+                        RunObject = page "Sent Quotation List";
+                    }
+                    action("Quotation Evaluation List")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Quotation Evaluation List';
+                        Image = BankAccountLedger;
+                        RunObject = page "Quotation Evaluation List";
+                    }
+                    action("Quotations Awarded")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Quotations Awarded';
+                        Image = Certificate;
+                        RunObject = page "Quotations Awarded";
+                    }
+                }
+                group("DirectProcurementGrp")
+                {
+
+                    Caption = 'Direct Procurement';
+                    action("Direct Procurement")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Direct Procurement';
+                        RunObject = page "Procurement Request List";
+                        RunPageView = where("Procurement Method" = filter("Direct Procurement"));
+                    }
+                    action("Direct Procurement List")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Direct Procurement List';
+                        Image = DisableBreakpoint;
+                        RunObject = page "Direct Procurement List";
+                    }
+                    action("Awrded Direct Procurement List")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Awarded Direct Procurement List';
+                        Image = Certificate;
+                        RunObject = page "Awrded Direct Procurement List";
+                    }
+                    action("Direct Procurement List-Orders")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Direct Procurement- Created Orders';
+                        Image = BankAccountLedger;
+                        RunObject = page "Direct Procurement List-Orders";
+                    }
+                }
+                group("TendersGrp")
+                {
+
+                    Caption = 'Tenders';
+                    action("Tenders")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Tenders';
+                        RunObject = page "Procurement Request List";
+                        RunPageView = where("Procurement Method" = filter(Tender));
+                    }
+                    action("Tender List")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Tender List';
+                        Image = DisableBreakpoint;
+                        RunObject = page "Tender List";
+                    }
+                }
+                action("Procurement Requests - All")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Procurement Requests - All';
+                    RunObject = page "Procurement Request List";
+                }
+                action("Procurement Requests - Pending Approval")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Procurement Requests - Pending Approval';
+                    RunObject = page "Procurement Request List";
+                    RunPageView = where(Status = filter("Pending Approval"));
+                }
+                group(Misisons)
+                {
+                    action("ProcApproved Mission Proposals")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Approved Mission Proposals';
+                        RunObject = Page "Approved Mission Proposals";
+                    }
+                    action("ProcCompleted Mission Proposals")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Completed Mission Proposals';
+                        RunObject = Page "Completed Mission Proposals";
+                    }
+                }
+
+                group(PurchaseOrders)
+                {
+
+                    Caption = 'Purchase Orders';
+                    action(PurchOrder)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Purchase Orders - Open';
+                        RunObject = Page "Purchase Order List Open";
+                    }
+                    action(PurchOrderPendingApproval)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Purchase Orders - Pending Approval';
+                        RunObject = Page "Purchase Order Pending Approva";
+                    }
+                    action(PurchOrderApproved)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Purchase Orders - Approved';
+                        RunObject = Page "Purchase Order Approved";
+                    }
+                    action(PurchOrderAll)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Purchase Orders - All';
+                        RunObject = Page "Purchase Order List";
+                    }
+                }
+            }
+
+
             group(Sales)
             {
                 Caption = 'Sales';
@@ -928,36 +1431,6 @@ Page 20390 "Admin Role Center"
                     RunObject = Page "Posted Surrender";
                 }
             }
-            group("Purchase Requisitions")
-            {
-                Caption = 'Purchase Requisitions';
-                Image = Purchasing;
-                ToolTip = 'Make quotes, orders, and credit memos to customers. Manage customers and view transaction history.';
-                action(Requisitions)
-                {
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'New Purchase Requisition';
-                    RunObject = Page "Task Order";
-                }
-                action("Pending Purchase Requisition")
-                {
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'Pending Purchase Requisition';
-                    RunObject = Page "Pending Purchase Requisition";
-                }
-                action("Approved Purchase Requisition")
-                {
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'Approved Purchase Requisition';
-                    RunObject = Page "Posted Purchase Requisitions";
-                }
-                action("Completed Purchase Requisition")
-                {
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'Completed Purchase Requisition';
-                    RunObject = Page "Completed  Purchase Req.";
-                }
-            }
             group("Payment MemosII")
             {
                 Caption = 'Payment Memos';
@@ -1181,7 +1654,7 @@ Page 20390 "Admin Role Center"
             {
                 Caption = 'IT Management';
                 ToolTip = 'Action on IT management issues';
-                //    Image= 
+                //    Image=
                 action("Staff Support Tickets")
                 {
                     ApplicationArea = Basic, Suite;

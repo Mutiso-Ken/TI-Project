@@ -1827,7 +1827,7 @@ page 80407 "Purchase Invoice_"
         // CurrPage.IncomingDocAttachFactBox.Page.SetCurrentRecordID(Rec.RecordId);
 
         // OnAfterOnAfterGetRecord(Rec);
-       //  rec."Document Type" := rec."Document Type"::Invoice;
+        //  rec."Document Type" := rec."Document Type"::Invoice;
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -1851,13 +1851,13 @@ page 80407 "Purchase Invoice_"
         //Rec."Responsibility Center" := UserMgt.GetPurchasesFilter();
         // rec."Document Type" := rec."Document Type"::Invoice;
 
-       
+
     end;
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     begin
         // CurrPage.Update(false);
-       // rec."Document Type" := rec."Document Type"::Invoice;
+        // rec."Document Type" := rec."Document Type"::Invoice;
     end;
 
     trigger OnOpenPage()

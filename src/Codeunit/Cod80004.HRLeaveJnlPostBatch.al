@@ -10,6 +10,7 @@ Codeunit 80004 "HR Leave Jnl.-Post Batch"
         Code;
         Rec := InsuranceJnlLine;
     end;
+
     var
         Text000: label 'cannot exceed %1 characters';
         Text001: label 'Journal Batch Name    #1##########\\';

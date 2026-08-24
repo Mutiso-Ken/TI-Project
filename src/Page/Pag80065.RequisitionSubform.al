@@ -121,6 +121,12 @@ Page 80065 "Requisition Subform"
                 {
                     ApplicationArea = Basic;
                     ToolTip = 'Specifies the number of units of the item that will be specified on the line.';
+
+                    trigger OnValidate()
+                    begin
+                        Rec."Total Amount" := Rec.Quantity * Rec."Direct Unit Cost";
+                        Rec.Modify();
+                    end;
                 }
                 field("Direct Unit Cost"; Rec."Direct Unit Cost")
                 {
@@ -130,6 +136,7 @@ Page 80065 "Requisition Subform"
                     trigger OnValidate()
                     begin
                         Rec.Amount := Rec."Direct Unit Cost" * Rec.Quantity;
+                        Rec."Total Amount" := Rec.Quantity * Rec."Direct Unit Cost";
                         Rec.Modify();
                     end;
                 }
@@ -138,6 +145,12 @@ Page 80065 "Requisition Subform"
                     ApplicationArea = Basic;
                     Editable = false;
                     ToolTip = 'Specifies the number of units of the item that will be specified on the line.';
+                }
+                field("Total Amount"; Rec."Total Amount")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                    ToolTip = 'Specifies the quantity multiplied by the unit cost, used to validate the line before the procurement process is created.';
                 }
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
@@ -205,6 +218,23 @@ Page 80065 "Requisition Subform"
                     begin
                         RedistributeTotalsOnAfterValidate;
                     end;
+                }
+                field("Car Repair/Maintenance"; Rec."Car Repair/Maintenance")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Vehicle Reg. No"; Rec."Vehicle Reg. No")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Procurement Plan"; Rec."Procurement Plan")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Procurement Method"; Rec."Procurement Method")
+                {
+                    ApplicationArea = Basic;
+                    ToolTip = 'Specifies how this line is expected to be procured (Tender, RFQ, Direct Procurement, or RFP) once the procurement process is created.';
                 }
                 field("Allow Invoice Disc."; Rec."Allow Invoice Disc.")
                 {

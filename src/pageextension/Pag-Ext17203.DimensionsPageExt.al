@@ -39,7 +39,7 @@ pageextension 17203 DimensionsPageExt extends "Dimension Values"
                 RunPageLink = "Dimension Code" = filter('BUDGET LINES'),
                                   "Fund Code" = field(Code);
             }
-             action("BudgetCategory")
+            action("BudgetCategory")
             {
                 ApplicationArea = Dimensions;
                 Caption = 'Budget Category';

@@ -176,6 +176,6 @@ Report 50036 "TimeSheet Report Summary"
         ProjectTotal: Decimal;
         MonthHours: Decimal;
         EmployeeNo: Text;
-       
+
 }
 

@@ -16,6 +16,10 @@ pageextension 172185 "PayablesSetup" extends "Purchases & Payables Setup"
             field("Payment Memo Nos."; Rec."Payment Memo Nos.") { ApplicationArea = all; }
             field("Requisition Nos."; rec."Requisition Nos.") { ApplicationArea = all; }
 
+            field("Budget Balance 25%"; Rec."Budget Balance 25%") { ApplicationArea = all; }
+            field("Budget Balance 10%"; Rec."Budget Balance 10%") { ApplicationArea = all; }
+            field("Procurement Email"; Rec."Procurement Email") { ApplicationArea = all; }
+            field("Procurement Portal"; Rec."Procurement Portal") { ApplicationArea = all; }
 
         }
 

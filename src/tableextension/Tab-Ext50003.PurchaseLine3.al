@@ -246,6 +246,302 @@ tableextension 50003 "Purchase Line3" extends "Purchase Line"
         {
             DataClassification = ToBeClassified;
         }
+
+        field(80001; "Donor No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = Customer."No.";
+
+            trigger OnValidate();
+            var
+                Customer: Record Customer;
+            begin
+                IF Customer.GET("Donor No.") THEN BEGIN
+                    "Donor Name" := Customer.Name;
+                END;
+            end;
+        }
+        field(80002; "Grant No."; Code[20])
+        {
+            Caption = 'Grant No.';
+            DataClassification = ToBeClassified;
+            TableRelation = "Grant Header"."No." WHERE(Blocked = const(false));
+        }
+        field(80003; "Objective Code"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Objective),
+                                                      "Grant No" = FIELD("Grant No."));
+        }
+        field(80004; "Output Code"; Code[20])
+        {
+            Caption = 'Output Code';
+            DataClassification = ToBeClassified;
+            TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Output),
+                                                      "Grant No" = FIELD("Grant No."));
+        }
+        field(80005; "Outcome Code"; Code[20])
+        {
+            Caption = 'Outcome Code';
+            DataClassification = ToBeClassified;
+            TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Outcome),
+                                                      "Grant No" = FIELD("Grant No."));
+        }
+        field(80006; "Activity Code"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Activity),
+                                                      "Grant No" = FIELD("Grant No."));
+        }
+        field(80007; "Donor Name"; Text[100])
+        {
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(80008; "Partner Code"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+
+            trigger OnLookup();
+            var
+                GrantDetailLines: Record "Grant Detail Lines";
+            begin
+                GrantDetailLines.RESET;
+                GrantDetailLines.SETRANGE("Grant Code", "Grant No.");
+                GrantDetailLines.SETRANGE(Code, "Activity Code");
+                IF PAGE.RUNMODAL(0, GrantDetailLines) = ACTION::LookupOK THEN BEGIN
+                    "Partner Code" := GrantDetailLines."External Partner Code";
+                END;
+            end;
+        }
+        field(80009; "Grants Narration"; Text[1000])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(800010; "Grants Procurement Plan"; code[500])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(800011; "Grant Budget Amount"; Decimal)
+        {
+        }
+
+        field(90100; "Amount (LCY)"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90101; Surrender; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90102; "Budget Code"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90103; "Available Amount"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90104; "Budgeted Amount"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90105; "Commited Amount"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90106; "Total Expenditure"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90107; Unbudgeted; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90108; "From Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90109; "To Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90110; "Imprest Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90111; "From Imprest"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+
+        field(90113; "Tax Code"; Code[30])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90114; "Tax Percentage"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90115; "Net Allowance Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90116; "Tax Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90117; "Line Employee No"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90118; "Line Employee Name"; Text[100])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90119; "PD Transaction Code"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90120; Taxable; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90121; "Taxable Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90122; "Payroll Scale"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90123; "Tax Relief"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+
+        field(90125; "Daily Rate"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90126; "Relief Days"; Integer)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90127; "Daily Tax Relief"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90128; "CBS Processed"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90129; "Line CBS Member Id"; Integer)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90130; "Board Member"; Option)
+        {
+            DataClassification = ToBeClassified;
+            OptionCaption = '" ,Contract,Permanent,Board"';
+            OptionMembers = " ",Contract,Permanent,Board;
+        }
+        field(90131; "Allow Edit"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90132; "Balance Less Entry"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90133; "Budget Depletion"; Option)
+        {
+            Editable = false;
+            OptionCaption = '" ,75,90,100"';
+            OptionMembers = " ","75","90","100";
+        }
+        field(90134; "Balance Before Entry"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90135; "Budget G/L Account"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "G/L Account"."No.";
+        }
+        field(90136; Additional; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90137; "M-pesa Withdrawal"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90138; "M-pesa Transaction"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90139; "Line Posted"; Boolean)
+        {
+            CalcFormula = Lookup("Purchase Header".Posted WHERE("No." = FIELD("Document No.")));
+            FieldClass = FlowField;
+        }
+        field(90140; "Line Status"; Option)
+        {
+            CalcFormula = Lookup("Purchase Header".Status WHERE("No." = FIELD("Document No.")));
+            FieldClass = FlowField;
+            OptionCaption = 'New,Pending Approval,Approved,Rejected';
+            OptionMembers = New,"Pending Approval",Approved,Rejected;
+        }
+        field(90141; "Line Budget Amount"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90142; "Line Posting Date"; Date)
+        {
+            CalcFormula = Lookup("Purchase Header"."Posting Date" WHERE("No." = FIELD("Document No.")));
+            FieldClass = FlowField;
+        }
+
+        field(90143; "Car Repair/Maintenance"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90144; "Vehicle Reg. No"; Code[100])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90145; "Procurement Plan"; Code[250])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "The Procurement Plan"."No.";
+
+            trigger OnValidate()
+            var
+                procurementplan: Record "The Procurement Plan";
+            begin
+                procurementplan.Reset();
+                procurementplan.SetRange("No.", Rec."Procurement Plan");
+                if procurementplan.FindFirst() then begin
+                    Rec."Shortcut Dimension 2 Code" := procurementplan."Pillar Code";
+                    Rec."Shortcut Dimension 1 Code" := procurementplan."Sub-office code";
+                    Rec."Partner Code" := procurementplan."Partner Code";
+                    Rec."Grant No." := procurementplan."Grant Code";
+                    Rec."Activity Code" := procurementplan."Activity Code";
+                end;
+            end;
+        }
+        field(90146; "Total Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90147; "Procurement Method"; Option)
+        {
+            DataClassification = ToBeClassified;
+            InitValue = "Direct Procurement";
+            OptionCaption = '" ,Tender,RFQ,Direct Procurement,RFP"';
+            OptionMembers = " ",Tender,RFQ,"Direct Procurement",RFP;
+        }
     }
     var
         StandardText: Record "Standard Text";

@@ -9,7 +9,7 @@ pageextension 172178 GeneralledgerEntries extends "General Ledger Entries"
     layout
     {
 
-        
+
         modify("Source No.")
         {
             Visible = true;
@@ -32,9 +32,9 @@ pageextension 172178 GeneralledgerEntries extends "General Ledger Entries"
         }
         addbefore("Bal. Account Type")
         {
-            field("SourceNo.";Rec."Source No.") { }
+            field("SourceNo."; Rec."Source No.") { }
         }
-    
-}
+
+    }
 }
 

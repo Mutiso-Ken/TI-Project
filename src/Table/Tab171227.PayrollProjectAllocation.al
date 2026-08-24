@@ -23,14 +23,14 @@ Table 171227 "Payroll Project Allocation"
                 if HREmployees.FindSet() then begin
                     Name := HREmployees.Firstname + ' ' + HREmployees.Lastname;
                     rec."Employee Name" := Name;
-                
+
                 end;
             end;
         }
         field(3; "Employee Name"; Text[100])
         {
             DataClassification = ToBeClassified;
-            Editable=false;
+            Editable = false;
         }
         field(4; "Project Code"; Code[100])
         {

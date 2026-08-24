@@ -3,7 +3,7 @@ Page 80101 "Payment Memo Card"
 {
     Caption = 'Payment Memo Card';
     DeleteAllowed = true;
-    
+
 
     PageType = Card;
     PromotedActionCategories = 'New,Process,Reports,Approval,Budgetary Control,Category6_caption,Category7_caption,Category8_caption,Category9_caption,Category10_caption';
@@ -246,8 +246,8 @@ Page 80101 "Payment Memo Card"
                         Rec.SetRange("No.", Rec."No.");
                         if rec.FindSet() then
                             Report.Run(80036, true, true, Rec);
-                
-                        
+
+
                     end;
                 }
             }

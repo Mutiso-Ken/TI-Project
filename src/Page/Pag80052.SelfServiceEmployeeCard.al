@@ -323,7 +323,7 @@ Page 80052 "Self Service Employee Card"
                     ApplicationArea = Basic;
                 }
             }
-           group("Bank Details")
+            group("Bank Details")
             {
                 field("Bank Code"; Rec."Bank Code")
                 {

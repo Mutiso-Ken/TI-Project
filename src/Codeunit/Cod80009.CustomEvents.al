@@ -71,6 +71,28 @@ codeunit 80009 CustomEvents
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnBeforeCheckPurchaseApprovalPossible', '', true, true)]
+    local procedure ValidateTaskOrderLinesBeforeApproval(var PurchaseHeader: Record "Purchase Header"; var Result: Boolean; var IsHandled: Boolean)
+    var
+        PurchaseLine: Record "Purchase Line";
+    begin
+        if not PurchaseHeader.PR then
+            exit;
+
+        PurchaseLine.Reset();
+        PurchaseLine.SetRange("Document Type", PurchaseHeader."Document Type");
+        PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
+        if PurchaseLine.FindSet() then
+            repeat
+                PurchaseLine.TestField("Shortcut Dimension 1 Code");
+                PurchaseLine.TestField("Shortcut Dimension 2 Code");
+                PurchaseLine.TestField("No.");
+                if PurchaseLine."Car Repair/Maintenance" then
+                    PurchaseLine.TestField("Vehicle Reg. No");
+                PurchaseLine.TestField(Quantity);
+            until PurchaseLine.Next() = 0;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeCheckPurchLines', '', true, true)]
     local procedure CheckPurchLines(var PurchaseHeader: Record "Purchase Header"; var PurchLine: Record "Purchase Line"; var IsHandled: Boolean)
     begin
@@ -83,6 +105,7 @@ codeunit 80009 CustomEvents
     var
         RecRef: RecordRef;
         PurchHeader: Record "Purchase Header";
+        ProcurementRequest: Record "Procurement Request";
     begin
         if RecRef.Get(ApprovalEntry."Record ID to Approve") then begin
             if RecRef.Number = Database::"Purchase Header" then begin
@@ -99,6 +122,11 @@ codeunit 80009 CustomEvents
                     Details := 'Surrender Approval Requested By ' + PurchHeader."Employee Name"
                 else
                     Details := 'Approval Requested';
+                ApprovalEntry."Approval Details" := Details;
+                ApprovalEntry.Modify();
+            end else if RecRef.Number = Database::"Procurement Request" then begin
+                RecRef.SetTable(ProcurementRequest);
+                Details := 'Procurement Request (' + Format(ProcurementRequest."Procurement Method") + ') Approval Requested By ' + ProcurementRequest."Created By";
                 ApprovalEntry."Approval Details" := Details;
                 ApprovalEntry.Modify();
             end else begin

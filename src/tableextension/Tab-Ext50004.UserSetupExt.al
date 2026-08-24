@@ -254,6 +254,10 @@ tableextension 50004 "UsersetupExt" extends "User Setup"
         {
             DataClassification = ToBeClassified;
         }
+        field(54281; "Lead Logistics Officer"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
 
         field(54282; test; Text[30])
         {
@@ -277,6 +281,10 @@ tableextension 50004 "UsersetupExt" extends "User Setup"
             DataClassification = ToBeClassified;
         }
         field(54287; "Indexing User"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(54289; "Procurement Committee Member"; Boolean)
         {
             DataClassification = ToBeClassified;
         }
@@ -381,7 +389,17 @@ tableextension 50004 "UsersetupExt" extends "User Setup"
             DataClassification = ToBeClassified;
             // TableRelation = Customer."No." where("Account Type" = const("Travel Advance"));
         }
-
+        field(70026; "Full Name"; Text[100])
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("HR Employees"."First Name" where("No." = field("Employee no")));
+        }
+        field(70004; "Head of Department"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
+                                                          Blocked = filter(false));
+        }
     }
 
 

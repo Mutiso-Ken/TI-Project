@@ -1521,6 +1521,10 @@ Table 80021 "HR Employees"
             DataClassification = ToBeClassified;
             TableRelation = "User Setup";
         }
+        field(53961; "Procurement Comm. Member"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
         field(51516003; "Payments Batch"; Code[60])
         {
             DataClassification = ToBeClassified;

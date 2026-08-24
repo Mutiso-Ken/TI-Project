@@ -1,6 +1,4 @@
-namespace TISolution.TISolution;
-
-page 57 "Vendor Quoted Amount Per Item"
+page 67037 "Vendor Quoted Amount Per Item"
 {
     // version Procurement Iansoft
 

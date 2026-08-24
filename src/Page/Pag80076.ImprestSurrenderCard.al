@@ -138,6 +138,59 @@ Page 80076 "Imprest Surrender Card"
                     Editable = false;
                 }
 
+                field("Surrender Amount"; Rec."Surrender Amount")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("Surrender No"; Rec."Surrender No")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Surrender Booked"; Rec."Surrender Booked")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("Expected Date of Surrender"; Rec."Expected Date of Surrender")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Receipt No"; Rec."Receipt No")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Receipt Amount"; Rec."Receipt Amount")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("Actual Imprest Amount"; Rec."Actual Imprest Amount")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field(Posted; Rec.Posted)
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("Posted By"; Rec."Posted By")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("Posted On"; Rec."Posted On")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("Rejection Comments"; Rec."Rejection Comments")
+                {
+                    ApplicationArea = Basic;
+                    Visible = false;
+                }
+
             }
             part(ImprestLines; "Surrender Subform")
             {

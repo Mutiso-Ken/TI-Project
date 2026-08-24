@@ -291,53 +291,53 @@ table 28 "Procurement Request Lines"
         {
             Caption = 'Grant No.';
             DataClassification = ToBeClassified;
-            // TableRelation = "Grant Header"."No.";
+            TableRelation = "Grant Header"."No.";
         }
         field(50002; "Objective Code"; Code[20])
         {
             DataClassification = ToBeClassified;
-            // TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Objective),
-            //                                           "Grant No" = FIELD("Grant No."));
+            TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Objective),
+                                                      "Grant No" = FIELD("Grant No."));
         }
         field(50003; "Output Code"; Code[20])
         {
             Caption = 'Output Code';
             DataClassification = ToBeClassified;
-            // TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Output),
-            //                                           "Grant No" = FIELD("Grant No."));
+            TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Output),
+                                                      "Grant No" = FIELD("Grant No."));
         }
         field(50004; "Outcome Code"; Code[20])
         {
             Caption = 'Outcome Code';
             DataClassification = ToBeClassified;
-            // TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Outcome),
-            //                                           "Grant No" = FIELD("Grant No."));
+            TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Outcome),
+                                                      "Grant No" = FIELD("Grant No."));
         }
         field(50005; "Activity Code"; Code[20])
         {
             DataClassification = ToBeClassified;
-            // TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Activity),
-            //                                           "Grant No" = FIELD("Grant No."));
+            TableRelation = "Grant Lines".Code WHERE("Line Type" = CONST(Activity),
+                                                      "Grant No" = FIELD("Grant No."));
         }
         field(50008; "Partner Code"; Code[20])
         {
             DataClassification = ToBeClassified;
 
-            // trigger OnLookup();
-            // var
-            //     GrantDetailLines: Record "Grant Detail Lines";
-            // begin
-            //     GrantDetailLines.RESET;
-            //     GrantDetailLines.SETRANGE("Grant Code", "Grant No.");
-            //     IF Type = Type::"G/L Account" THEN
-            //         GrantDetailLines.SETRANGE("G/L Account No", No);
-            //     GrantDetailLines.SETRANGE(Code, "Activity Code");
-            //     IF GrantDetailLines.FINDSET THEN BEGIN
-            //         IF PAGE.RUNMODAL(0, GrantDetailLines) = ACTION::LookupOK THEN BEGIN
-            //             VALIDATE("Partner Code", GrantDetailLines."External Partner Code");
-            //         END;
-            //     END;
-            // end;
+            trigger OnLookup();
+            var
+                GrantDetailLines: Record "Grant Detail Lines";
+            begin
+                GrantDetailLines.RESET;
+                GrantDetailLines.SETRANGE("Grant Code", "Grant No.");
+                IF Type = Type::"G/L Account" THEN
+                    GrantDetailLines.SETRANGE("G/L Account No", No);
+                GrantDetailLines.SETRANGE(Code, "Activity Code");
+                IF GrantDetailLines.FINDSET THEN BEGIN
+                    IF PAGE.RUNMODAL(0, GrantDetailLines) = ACTION::LookupOK THEN BEGIN
+                        VALIDATE("Partner Code", GrantDetailLines."External Partner Code");
+                    END;
+                END;
+            end;
         }
         field(70000; "Procurement Method"; Option)
         {
@@ -496,22 +496,22 @@ table 28 "Procurement Request Lines"
         field(70020; "Procurement Plan"; Code[250])
         {
             DataClassification = ToBeClassified;
-            // TableRelation = "The Procurement Plan"."No.";
+            TableRelation = "The Procurement Plan"."No.";
 
-            // trigger OnValidate()
-            // var
-            //     procurementplan: Record "The Procurement Plan";
-            // begin
-            //     procurementplan.RESET;
-            //     procurementplan.SETRANGE("No.", Rec."Procurement Plan");
-            //     if procurementplan.FINDFIRST then begin
-            //         "Global Dimension 2 Code" := procurementplan."Pillar Code";
-            //         "Global Dimension 1 Code" := procurementplan."Sub-office code";
-            //         "Shortcut Dimension 3 Code" := procurementplan."Partner Code";
-            //         "ShortcutDimCode[4]" := procurementplan."Grant Code";
-            //         "ShortcutDimCode[5]" := procurementplan."Activity Code";
-            //     end;
-            // end;
+            trigger OnValidate()
+            var
+                procurementplan: Record "The Procurement Plan";
+            begin
+                procurementplan.RESET;
+                procurementplan.SETRANGE("No.", Rec."Procurement Plan");
+                if procurementplan.FINDFIRST then begin
+                    "Global Dimension 2 Code" := procurementplan."Pillar Code";
+                    "Global Dimension 1 Code" := procurementplan."Sub-office code";
+                    "Shortcut Dimension 3 Code" := procurementplan."Partner Code";
+                    "ShortcutDimCode[4]" := procurementplan."Grant Code";
+                    "ShortcutDimCode[5]" := procurementplan."Activity Code";
+                end;
+            end;
         }
     }
 

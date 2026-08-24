@@ -115,6 +115,12 @@ Codeunit 80008 "Custom Approvals Codeunit"
         OnCancelTimesheetRequestTxt: label 'An Approval of Time Sheet is canceled';
         RunWorkflowOnCancelTimesheetForApprovalCode: label 'RUNWORKFLOWONCANCETimeSheetFORAPPROVAL';
 
+        //Procurement Request (Tender/RFQ/RFP/Direct Procurement)
+        OnSendProcurementReqApprovalRequestTxt: label 'Approval of a Procurement Request is requested';
+        RunWorkflowOnSendProcurementReqForApprovalCode: label 'RUNWORKFLOWONSENDPROCUREMENTREQFORAPPROVAL';
+        OnCancelProcurementReqApprovalRequestTxt: label 'Approval of a Procurement Request is canceled';
+        RunWorkflowOnCancelProcurementReqForApprovalCode: label 'RUNWORKFLOWONCANCELPROCUREMENTREQFORAPPROVAL';
+
 
     procedure CheckApprovalsWorkflowEnabled(var Variant: Variant): Boolean
     var
@@ -136,6 +142,10 @@ Codeunit 80008 "Custom Approvals Codeunit"
             //Training Application
             Database::"Training Requests":
                 exit(CheckApprovalsWorkflowEnabledCode(Variant, RunWorkflowOnSendTrainAppForApprovalCode));
+
+            //Procurement Request
+            Database::"Procurement Request":
+                exit(CheckApprovalsWorkflowEnabledCode(Variant, RunWorkflowOnSendProcurementReqForApprovalCode));
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end;
@@ -187,6 +197,12 @@ Codeunit 80008 "Custom Approvals Codeunit"
         RunWorkflowOnSendTrainAppForApprovalCode, Database::"Training Requests", OnSendTrainAppApprovalRequestTxt, 0, false);
         WorkFlowEventHandling.AddEventToLibrary(
         RunWorkflowOnCancelTrainAppForApprovalCode, Database::"Training Requests", OnCancelTrainAppApprovalRequestTxt, 0, false);
+
+        //Procurement Request
+        WorkFlowEventHandling.AddEventToLibrary(
+        RunWorkflowOnSendProcurementReqForApprovalCode, Database::"Procurement Request", OnSendProcurementReqApprovalRequestTxt, 0, false);
+        WorkFlowEventHandling.AddEventToLibrary(
+        RunWorkflowOnCancelProcurementReqForApprovalCode, Database::"Procurement Request", OnCancelProcurementReqApprovalRequestTxt, 0, false);
     end;
 
     local procedure RunWorkflowOnSendApprovalRequestCode(): Code[128]
@@ -212,6 +228,10 @@ Codeunit 80008 "Custom Approvals Codeunit"
             //Training Application
             Database::"Training Requests":
                 WorkflowManagement.HandleEvent(RunWorkflowOnSendTrainAppForApprovalCode, Variant);
+
+            //Procurement Request
+            Database::"Procurement Request":
+                WorkflowManagement.HandleEvent(RunWorkflowOnSendProcurementReqForApprovalCode, Variant);
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end;
@@ -236,6 +256,10 @@ Codeunit 80008 "Custom Approvals Codeunit"
             //Training Application
             Database::"Training Requests":
                 WorkflowManagement.HandleEvent(RunWorkflowOnCancelTrainAppForApprovalCode, Variant);
+
+            //Procurement Request
+            Database::"Procurement Request":
+                WorkflowManagement.HandleEvent(RunWorkflowOnCancelProcurementReqForApprovalCode, Variant);
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end;
@@ -249,6 +273,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
         itemjnlline: Record "Item Journal Line";
         TrainingRequests: Record "Training Requests";
         TimeLines: Record TimesheetLines;
+        ProcurementRequest: Record "Procurement Request";
     begin
         case RecRef.Number of
 
@@ -280,6 +305,15 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     Handled := true;
                 end;
 
+            //Procurement Request
+            Database::"Procurement Request":
+                begin
+                    RecRef.SetTable(ProcurementRequest);
+                    ProcurementRequest.Validate(Status, ProcurementRequest.Status::New);
+                    ProcurementRequest.Modify;
+                    Handled := true;
+                end;
+
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end
@@ -296,6 +330,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
         TrainingRequests: Record "Training Requests";
         Factory: Codeunit GeneralFunctionsFactory;
         TimeLines: Record TimesheetLines;
+        ProcurementRequest: Record "Procurement Request";
     begin
         case RecRef.Number of
             //Training Application
@@ -326,6 +361,15 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     Handled := true;
                 end;
 
+            //Procurement Request
+            Database::"Procurement Request":
+                begin
+                    RecRef.SetTable(ProcurementRequest);
+                    ProcurementRequest.Validate(Status, ProcurementRequest.Status::Approved);
+                    ProcurementRequest.Modify;
+                    Handled := true;
+                end;
+
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end
@@ -343,6 +387,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
         itemjournalline: Record "Item Journal Line";
         TrainingRequests: Record "Training Requests";
         TimeLines: record TimesheetLines;
+        ProcurementRequest: Record "Procurement Request";
     begin
         case RecRef.Number of
             //Training Application
@@ -375,6 +420,16 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     IsHandled := true;
                 end;
 
+            //Procurement Request
+            Database::"Procurement Request":
+                begin
+                    RecRef.SetTable(ProcurementRequest);
+                    ProcurementRequest.Validate(Status, ProcurementRequest.Status::"Pending Approval");
+                    ProcurementRequest.Modify;
+                    Variant := ProcurementRequest;
+                    IsHandled := true;
+                end;
+
 
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
@@ -404,6 +459,8 @@ Codeunit 80008 "Custom Approvals Codeunit"
 
 
         PurchasRequisition: Page "Task Order Card";
+        ProcurementRequest: Record "Procurement Request";
+        ProcurementRequestCard: Page "Procurement Request Card";
     begin
         // Prevent standard BC logic
         IsHandled := true;
@@ -451,6 +508,14 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     exit;
                 end;
 
+            Database::"Procurement Request":
+                begin
+                    RecRef.SetTable(ProcurementRequest);
+                    ProcurementRequestCard.SetRecord(ProcurementRequest);
+                    ProcurementRequestCard.Run();
+                    exit;
+                end;
+
             else
                 PageManagement.PageRun(RecRef);
         end;
@@ -476,6 +541,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
     procedure PopulateEntries(RecRef: RecordRef; WorkflowStepInstance: Record "Workflow Step Instance"; var ApprovalEntryArgument: Record "Approval Entry")
     var
         Hrleave: Record "HR Leave Application";
+        ProcurementRequest: Record "Procurement Request";
 
 
     begin
@@ -485,6 +551,11 @@ Codeunit 80008 "Custom Approvals Codeunit"
                 begin
                     RecRef.SetTable(Hrleave);
                     ApprovalEntryArgument."Document No." := Hrleave."Application Code";
+                end;
+            DATABASE::"Procurement Request":
+                begin
+                    RecRef.SetTable(ProcurementRequest);
+                    ApprovalEntryArgument."Document No." := ProcurementRequest."No.";
                 end;
 
         end;
@@ -514,6 +585,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
         ApprovalComment: Record "Approval Comment Line";
         comments: Text;
         commentnumber: Integer;
+        ProcurementRequest: Record "Procurement Request";
     begin
 
 
@@ -598,6 +670,23 @@ Codeunit 80008 "Custom Approvals Codeunit"
                         Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HRemployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
                     end;
                 end;
+            Database::"Procurement Request":
+                begin
+                    ApproverEmployee.Reset();
+                    ApproverEmployee.SetRange(ApproverEmployee."User ID", ApprovalEntry."Approver ID");
+                    if ApproverEmployee.FindSet() then
+                        ApproverName := ApproverEmployee."First Name" + ' ' + ApproverEmployee."Middle Name" + ' ' + ApproverEmployee."Last Name";
+                    RecRef.SetTable(ProcurementRequest);
+                    ProcurementRequest.Validate(Status, ProcurementRequest.Status::Rejected);
+                    ProcurementRequest.Modify(true);
+                    HRemployees.Reset();
+                    HRemployees.SetRange("User ID", ProcurementRequest."Created By");
+                    if HRemployees.FindFirst() then begin
+                        EmailBody := 'Your approval request for Procurement Request ' + ProcurementRequest."No." + ' has been rejected by ' + ApproverName + ' comments:' + comments;
+                        EmailSubject := 'REJECTED DOCUMENT ' + ProcurementRequest."No.";
+                        Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HRemployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
+                    end;
+                end;
         end;
     end;
 
@@ -617,6 +706,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
 
         EmailBody: Text;
         EmailSubject: Text;
+        ProcurementRequest: Record "Procurement Request";
     begin
         OpenApproval.Reset();
         OpenApproval.SetRange("Table ID", ApprovalEntry."Table ID");
@@ -671,6 +761,18 @@ Codeunit 80008 "Custom Approvals Codeunit"
                         EmailBody := 'Your training request ' + Training."Application Code" + ' has been fully approved.';
                         Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HREmployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
 
+                    end;
+                end;
+
+            Database::"Procurement Request":
+                begin
+                    RecRef.SetTable(ProcurementRequest);
+                    HREmployees.Reset();
+                    HREmployees.SetRange("User ID", ProcurementRequest."Created By");
+                    if HREmployees.FindFirst() then begin
+                        EmailSubject := 'APPROVED PROCUREMENT REQUEST ' + ProcurementRequest."No.";
+                        EmailBody := 'Your procurement request ' + ProcurementRequest."No." + ' (' + ProcurementRequest.Title + ') has been fully approved.';
+                        Notifications.fnSendemail(HREmployees."First Name" + '' + HREmployees."Last Name", EmailSubject, EmailBody, HREmployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
                     end;
                 end;
         end;

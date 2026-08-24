@@ -10,7 +10,7 @@ Report 80025 LPO
         {
             DataItemTableView = sorting("No.", "Document Type") where("Document Type" = filter(Order));
             RequestFilterFields = "No.", "Document Type";
-            
+
             column(ReportForNavId_4458; 4458)
             {
             }

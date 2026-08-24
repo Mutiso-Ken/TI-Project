@@ -4,7 +4,7 @@ Page 20363 "Performance Plan"
     PageType = ListPart;
     SourceTable = "Performance Plan";
     layout
-    
+
     {
         area(content)
         {

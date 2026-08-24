@@ -13,10 +13,10 @@ pageextension 172190 "Purchase Order Subform" extends "Purchase Order Subform"
         }
         addafter("No.")
         {
-            field("Description 3";Rec."Description 3")
+            field("Description 3"; Rec."Description 3")
             {
                 ApplicationArea = all;
-                Caption='Descrption';
+                Caption = 'Descrption';
             }
         }
     }

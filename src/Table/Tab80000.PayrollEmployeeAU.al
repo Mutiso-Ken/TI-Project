@@ -30,7 +30,7 @@ Table 80000 "Payroll Employee_AU"
                     "Pays PAYE" := true;
                     "Pays NSSF" := true;
                     HREmployees.CalcFields(Picture);
-                    Photo:=HREmployees.Picture;
+                    Photo := HREmployees.Picture;
                     "Bank Code" := HREmployees."Bank Code";
                     Validate("Bank Code");
                     Validate("Branch Code", HREmployees."Branch Code");
@@ -448,7 +448,7 @@ Table 80000 "Payroll Employee_AU"
             DataClassification = ToBeClassified;
             TableRelation = "G/L Account"."No.";
         }
-         field(100; "Works on the Weekends"; Boolean)
+        field(100; "Works on the Weekends"; Boolean)
         {
         }
     }

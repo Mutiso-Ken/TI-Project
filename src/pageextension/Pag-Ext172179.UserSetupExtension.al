@@ -6,6 +6,10 @@ pageextension 172179 "UserSetupExtension" extends "User Setup"
         // Add changes to page layout here
         addlast(Control1)
         {
+            field("Head of Department"; Rec."Head of Department")
+            {
+                ApplicationArea = All;
+            }
 
             // field("Branch Code"; Rec."Branch Code") { ApplicationArea = all; }
             // field("Responsibility Center"; Rec."Responsibility Center") { ApplicationArea = all; }

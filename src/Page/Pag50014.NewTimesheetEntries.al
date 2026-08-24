@@ -49,7 +49,7 @@ Page 50014 "New Timesheet Entries"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-               // RunObject = Report "BD Customer Report";
+                // RunObject = Report "BD Customer Report";
             }
             action("TimeSheet Report")
             {

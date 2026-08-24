@@ -28,7 +28,7 @@ Page 80072 "Imprest Request Card"
                     ApplicationArea = Basic;
                     Caption = 'Date';
                 }
-                field(Description;Rec.Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = Basic;
                     Caption = 'Description';
@@ -100,6 +100,86 @@ Page 80072 "Imprest Request Card"
                 field(Surrendered; Rec.Surrendered)
                 {
                     ApplicationArea = Basic;
+                }
+
+                field("Request For"; Rec."Request For")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Requesting Employee"; Rec."Requesting Employee")
+                {
+                    ApplicationArea = Basic;
+                    Visible = false;
+                }
+                field("Requesting Employee Name"; Rec."Requesting Employee Name")
+                {
+                    ApplicationArea = Basic;
+                    Visible = false;
+                }
+                field(Purpose; Rec.Purpose)
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Purpose Code"; Rec."Purpose Code")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Account Type"; Rec."Account Type")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Imprest Type"; Rec."Imprest Type")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Bank Balance"; Rec."Bank Balance")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Amount(LCY)"; Rec."Amount(LCY)")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Petty Cash Amount"; Rec."Petty Cash Amount")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Claim Amount"; Rec."Claim Amount")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Budget Code"; Rec."Budget Code")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Date Approved"; Rec."Date Approved")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field(Posted; Rec.Posted)
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("Posted By"; Rec."Posted By")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("Posted On"; Rec."Posted On")
+                {
+                    ApplicationArea = Basic;
+                    Editable = false;
+                }
+                field("M-PESA Withdrawal Fee"; Rec."M-PESA Withdrawal Fee")
+                {
+                    ApplicationArea = Basic;
+                }
+                field("Rejection Comments"; Rec."Rejection Comments")
+                {
+                    ApplicationArea = Basic;
+                    Visible = false;
                 }
             }
             group("Foreign Trade")

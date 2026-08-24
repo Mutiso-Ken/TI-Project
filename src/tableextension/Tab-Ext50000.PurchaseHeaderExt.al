@@ -265,6 +265,12 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(90039; "Procurement Method"; Option)
+        {
+            DataClassification = ToBeClassified;
+            OptionCaption = '" ,Tender,RFQ,Direct Procurement,RFP"';
+            OptionMembers = " ",Tender,RFQ,"Direct Procurement",RFP;
+        }
         field(90038; "Mission Total"; Decimal)
         {
             AutoFormatExpression = "Currency Code";
@@ -434,6 +440,251 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
         {
             DataClassification = ToBeClassified;
         }
+
+        field(90100; "Request For"; Option)
+        {
+            DataClassification = ToBeClassified;
+            OptionCaption = 'Self,Other';
+            OptionMembers = Self,Other;
+        }
+        field(90101; Purpose; Text[250])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90102; "Bank Balance"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90103; "Employee Balance"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90104; "Petty Cash Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90105; "Claim Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90106; "Created On"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90107; Posted; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90108; "Posted By"; Code[70])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90109; "Posted On"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90110; "Surrender Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90111; "Surrender Booked"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90112; "Surrender No"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90113; "Expected Date of Surrender"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90114; "EFT No"; Code[40])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90115; "Budget Code"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90116; "Requesting Employee"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90117; "Requesting Employee Name"; Text[100])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90118; "Transfered To Payroll"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90119; "Date of Transfer"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90120; "Purpose Code"; Code[100])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90121; "To Recover From Payroll"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90122; "Receipt No"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90123; "Receipt Amount"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90124; "Actual Imprest Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90125; "Date Approved"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90126; "Payroll Period"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90127; "Gross Allowance"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90128; "Net Allowance(LCY)"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90129; "Total Tax"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90130; "Account Type"; Option)
+        {
+            DataClassification = ToBeClassified;
+            OptionCaption = 'G/L Account,Customer,Vendor,Bank Account,Fixed Asset,IC Partner,Employee';
+            OptionMembers = "G/L Account",Customer,Vendor,"Bank Account","Fixed Asset","IC Partner",Employee;
+        }
+        field(90131; "CBS Member Id"; Integer)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90132; "Loan Type"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90133; "Repayment Period"; DateFormula)
+        {
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(90134; Instalments; Decimal)
+        {
+            Editable = false;
+        }
+        field(90135; "Basic Pay"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90136; "1/3 of Basic"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90137; "Take Home"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90138; "Amount Requested"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90139; "Months Paid"; DateFormula)
+        {
+            Editable = false;
+        }
+        field(90140; "Current Net Pay"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90141; "Imprest Type"; Option)
+        {
+            DataClassification = ToBeClassified;
+            OptionCaption = '" ,Local,International"';
+            OptionMembers = " ","Local",International;
+        }
+        field(90142; "Amount(LCY)"; Decimal)
+        {
+            Editable = false;
+        }
+        field(90143; "M-PESA Withdrawal Fee"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90144; "Charge as a Single Transaction"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90145; "Picked for EFT"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90146; "Taxable Amout"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90147; "Rejection Comments"; Text[250])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90148; Supervisor; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90149; "Approval Status Min"; Enum "Approval Status")
+        {
+            Caption = 'Approval Status';
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = min("Approval Entry".Status where("Document No." = field("No.")));
+        }
+
+        field(90150; "Created By"; Code[75])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90151; Title; Text[250])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90152; "Time Posted"; Time)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90153; "Supplier Category"; Code[100])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "Supplier Category"."Category Code";
+        }
+        field(90154; "Requesting Person"; Option)
+        {
+            DataClassification = ToBeClassified;
+            OptionCaption = 'Employee,Delegate';
+            OptionMembers = Employee,Delegate;
+        }
+        field(90155; "Process Initiated"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(90156; "Project Code"; Code[10])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "Grant Header"."No." where(Blocked = const(false));
+        }
+
     }
 
 

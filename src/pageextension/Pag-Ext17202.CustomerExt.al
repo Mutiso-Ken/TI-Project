@@ -13,11 +13,11 @@ pageextension 17202 CustomerExt extends "Customer List"
         addafter("Balance Due (LCY)")
         {
 
-            field("Net Change";Rec."Net Change")
+            field("Net Change"; Rec."Net Change")
             {
                 ApplicationArea = all;
             }
-             field("Net Change (LCY)";Rec."Net Change (LCY)")
+            field("Net Change (LCY)"; Rec."Net Change (LCY)")
             {
                 ApplicationArea = all;
             }

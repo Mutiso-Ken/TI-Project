@@ -17,7 +17,7 @@ Page 80410 "Fund Budget"
             {
                 IndentationColumn = NameIndent;
                 IndentationControls = Name;
-                field("Fund Code";Rec."Fund Code")
+                field("Fund Code"; Rec."Fund Code")
                 {
                     ApplicationArea = Basic;
                 }

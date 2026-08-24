@@ -357,18 +357,36 @@ table 20 "Procurement Request"
         ERROR('You cannot delete a created document');
     end;
 
-    // trigger OnInsert();
-    // var
-    //     NoSeriesMgt: Codeunit "No. Series";
-    //     ProcurementSetup: Record "Procurement Setup";
-    // begin
-    //     if "No." = '' then begin
-    //         ProcurementSetup.Get();
-    //         ProcurementSetup.TestField("Direct Procurement Nos");
-    //         "No." := NoSeriesMgt.GetNextNo(ProcurementSetup."Direct Procurement Nos", 0D, true);
-
-    //     end;
-    // end;
+    trigger OnInsert()
+    var
+        NoSeriesMgt: Codeunit "No. Series";
+        ProcurementSetup: Record "Procurement Setup";
+    begin
+        if "No." = '' then begin
+            ProcurementSetup.Get();
+            case "Procurement Method" of
+                "Procurement Method"::Tender:
+                    begin
+                        ProcurementSetup.TestField("Tender Nos");
+                        "No." := NoSeriesMgt.GetNextNo(ProcurementSetup."Tender Nos", 0D, true);
+                    end;
+                "Procurement Method"::RFQ:
+                    begin
+                        ProcurementSetup.TestField("Quotation Nos");
+                        "No." := NoSeriesMgt.GetNextNo(ProcurementSetup."Quotation Nos", 0D, true);
+                    end;
+                "Procurement Method"::RFP:
+                    begin
+                        ProcurementSetup.TestField("RFP Nos");
+                        "No." := NoSeriesMgt.GetNextNo(ProcurementSetup."RFP Nos", 0D, true);
+                    end;
+                else begin
+                    ProcurementSetup.TestField("Direct Procurement Nos");
+                    "No." := NoSeriesMgt.GetNextNo(ProcurementSetup."Direct Procurement Nos", 0D, true);
+                end;
+            end;
+        end;
+    end;
 
     var
         Vendor: Record "Vendor";

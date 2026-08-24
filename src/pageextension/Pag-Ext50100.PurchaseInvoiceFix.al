@@ -5,7 +5,7 @@ pageextension 50100 "Purchase Invoice Fix" extends "Purchase Invoice"
         // Add changes to page layout here
         addbefore("Vendor Invoice No.")
         {
-            field("Document Type";Rec."Document Type")
+            field("Document Type"; Rec."Document Type")
             {
                 Editable = true;
                 Visible = true;
@@ -13,7 +13,7 @@ pageextension 50100 "Purchase Invoice Fix" extends "Purchase Invoice"
             }
         }
     }
-    
+
     actions
     {
         // Add changes to page actions here

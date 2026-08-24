@@ -8,7 +8,7 @@ page 58 Tickets
     SourceTable = "HelpDesk Tickets";
     UsageCategory = Administration;
     CardPageId = "Ticket Details";
-    
+
     layout
     {
         area(Content)
