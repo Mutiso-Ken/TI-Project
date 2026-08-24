@@ -171,8 +171,13 @@ Report 80017 "Payroll Journal Transfer"
             end;
 
             trigger OnPreDataItem()
+            var
+                EmpCheck: Record "Payroll Employee_AU";
             begin
                 //"Payroll Employee_AU".SETRANGE("Payroll Employee_AU".Status,"Payroll Employee_AU".Status::Active);
+                EmpCheck.CopyFilters("Payroll Employee_AU");
+                ValidateAllocations(EmpCheck);
+
                 LineNumber := 10000;
 
                 //Create batch*****************************************************************************
@@ -296,7 +301,46 @@ Report 80017 "Payroll Journal Transfer"
         GeneraljnlLine2: Record "Gen. Journal Line";
         Amt: Decimal;
         GLAccount: Record "G/L Account";
+        DimMgt: Codeunit DimensionManagement;
 
+
+    // For every employee with a payroll transaction in the selected period, checks that their
+    // "Payroll Project Allocation" (171227) rows for that period add up to exactly 100%. Program
+    // and Budget Line are only ever posted through those allocation rows, so an employee with no
+    // rows, or rows that don't total 100%, would otherwise be silently skipped or short-posted.
+    // Aborts the whole transfer (before anything is created or cleared) and lists every offender
+    // in one message, rather than letting the run partially complete.
+    local procedure ValidateAllocations(var EmpCheck: Record "Payroll Employee_AU")
+    var
+        TransCheck: Record "Payroll Monthly Trans_AU";
+        AllocCheck: Record "Payroll Project Allocation";
+        TotalAllocation: Decimal;
+        ErrorList: Text;
+    begin
+        if EmpCheck.FindSet then
+            repeat
+                TransCheck.Reset;
+                TransCheck.SetRange("No.", EmpCheck."No.");
+                TransCheck.SetRange("Payroll Period", SelectedPeriod);
+                if TransCheck.FindFirst then begin
+                    AllocCheck.Reset;
+                    AllocCheck.SetRange("Employee No", EmpCheck."No.");
+                    AllocCheck.SetRange(Period, SelectedPeriod);
+                    TotalAllocation := 0;
+                    if AllocCheck.FindSet then
+                        repeat
+                            TotalAllocation := TotalAllocation + AllocCheck.Allocation;
+                        until AllocCheck.Next = 0;
+
+                    if Abs(TotalAllocation - 100) > 0.01 then
+                        ErrorList := ErrorList +
+                            StrSubstNo('%1 - %2 %3 %4 (allocated %5%)\', EmpCheck."No.", EmpCheck.Firstname, EmpCheck.Lastname, EmpCheck.Surname, TotalAllocation);
+                end;
+            until EmpCheck.Next = 0;
+
+        if ErrorList <> '' then
+            Error('The following employees do not total 100% Payroll Project Allocation (Program + Budget Line) for this period. Fix them on the Payroll Project Allocation list before transferring:\%1', ErrorList);
+    end;
 
     procedure CreateJnlEntry(AccountType: enum "Gen. Journal Account Type"; AccountNo: Code[20];
                                               GlobalDime1: Code[20];
@@ -340,8 +384,21 @@ Report 80017 "Payroll Journal Transfer"
 
                 if CreditAmount <> 0 then
                     GeneraljnlLine.Amount := -1 * ROUND((CreditAmount * (PayrollProjectAllocation.Allocation / 100)), 0.01, '=');
+
+                // Department (unused previously - GlobalDime1 was accepted but never applied).
+                GeneraljnlLine."Shortcut Dimension 1 Code" := GlobalDime1;
+                GeneraljnlLine.Validate(GeneraljnlLine."Shortcut Dimension 1 Code");
+
+                // Program, from the matching Payroll Project Allocation (171227) line.
                 GeneraljnlLine."Shortcut Dimension 2 Code" := PayrollProjectAllocation."Project Code";
                 GeneraljnlLine.Validate(GeneraljnlLine."Shortcut Dimension 2 Code");
+
+                // Budget Line, from the same Payroll Project Allocation (171227) line - through the
+                // same "Dimension Set ID" the Dimensions button on the journal line already uses.
+                if PayrollProjectAllocation."Budget Line Code" <> '' then
+                    GeneraljnlLine."Dimension Set ID" :=
+                        DimMgt.SetDimensionValue(GeneraljnlLine."Dimension Set ID", 'BUDGET LINES', PayrollProjectAllocation."Budget Line Code", false, false);
+
                 GeneraljnlLine.Validate(Amount);
                 GeneraljnlLine.Correction := false;
 

@@ -36,7 +36,7 @@ Table 171227 "Payroll Project Allocation"
         {
             DataClassification = ToBeClassified;
             Caption = 'Program Code';
-            TableRelation = "Dimension Value".Code where("Dimension Code" = const('PROGRAM'));
+            TableRelation = "Dimension Value".Code where("Dimension Code" = const('PROGRAM'), Blocked = const(false));
         }
         field(5; Allocation; Decimal)
         {
@@ -45,7 +45,7 @@ Table 171227 "Payroll Project Allocation"
         field(6; "Budget Line Code"; Code[100])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Dimension Value".Code where("Dimension Code" = const('BUDGET LINES'));
+            TableRelation = "Dimension Value".Code where("Dimension Code" = const('BUDGET LINES'), Blocked = const(false));
         }
     }
 
