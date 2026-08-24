@@ -108,6 +108,28 @@ Page 80406 "Timesheet Card"
                 PromotedIsBig = true;
                 PromotedOnly = true;
             }
+            action("TimeSheet Report Generic")
+            {
+                ApplicationArea = Basic, Suite;
+                Image = Timesheet;
+                Promoted = true;
+                PromotedCategory = Process;
+                RunObject = report "TimeSheet Report Generic";
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                ToolTip = 'Print the generic TI-Kenya timesheet (Date, Hours, % Daily Equivalent, Description, Hours on other projects, Fund).';
+            }
+            action("TimeSheet Report EU Contract")
+            {
+                ApplicationArea = Basic, Suite;
+                Image = Timesheet;
+                Promoted = true;
+                PromotedCategory = Process;
+                RunObject = report "TimeSheet Report EU Contract";
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                ToolTip = 'Print the EU/NDICI-contract-style timesheet (day-by-day grid with Contract No., Contract Title, Position, Per Diems, Place of Performance).';
+            }
         }
     }
     var
