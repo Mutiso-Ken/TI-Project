@@ -235,16 +235,21 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
                 trigger OnAction()
                 var
                     AppEntry: Record "Approval Entry";
-
                 begin
-                    AppEntry.reset;
-                    AppEntry.setrange("Document No.", Rec."No.");
-                    AppEntry.setrange("Table ID", 38);
-                    AppEntry.Setrange(Status, AppEntry.Status::Open);
-                    if not AppEntry.find('-') then begin
-                        Rec.Status := Rec.Status::Released;
-                        Rec.Modify();
-                    end;
+                    AppEntry.Reset();
+                    AppEntry.SetRange("Document No.", Rec."No.");
+                    AppEntry.SetRange("Table ID", 38);
+                    if not AppEntry.FindSet() then
+                        Error('There are no approval entries for this document. Send it for approval first.');
+
+                    // Not "no Open entries" - that also lets a Rejected/Canceled entry through.
+                    // Every entry must actually be Approved before this can release (and so post).
+                    AppEntry.SetFilter(Status, '<>%1', AppEntry.Status::Approved);
+                    if not AppEntry.IsEmpty() then
+                        Error('This document cannot be released: not every approval entry is Approved (some are still open, rejected, or canceled).');
+
+                    Rec.Status := Rec.Status::Released;
+                    Rec.Modify();
                 end;
             }
         }
