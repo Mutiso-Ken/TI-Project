@@ -68,6 +68,12 @@ page 67056 "Direct Procurement Card"
                 Caption = 'Attachments';
                 SubPageLink = "Document Number" = field("No.");
             }
+            part(ApprovalEntriesFactbox; "Approval Entries With Sign")
+            {
+                ApplicationArea = All;
+                Caption = 'Approval Entries';
+                SubPageLink = "Document No." = field("No."), "Table ID" = const(Database::"Procurement Request");
+            }
         }
     }
 

@@ -991,6 +991,7 @@ Page 20390 "Admin Role Center"
                         Caption = 'RFQs';
                         RunObject = page "Procurement Request List";
                         RunPageView = where("Procurement Method" = filter(RFQ));
+                        Visible = false;
                     }
                     action("Quotation List")
                     {

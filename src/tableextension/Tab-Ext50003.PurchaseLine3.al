@@ -125,6 +125,18 @@ tableextension 50003 "Purchase Line3" extends "Purchase Line"
         {
             DataClassification = ToBeClassified;
             TableRelation = "Standard Text" where(Type = const("GL Category"));
+
+            trigger OnValidate()
+            var
+                StandardText: Record "Standard Text";
+            begin
+                if "Mission Expense Category" = '' then
+                    exit;
+
+                if StandardText.Get("Mission Expense Category") then
+                    if StandardText."GL Account" <> '' then
+                        Validate("Budget G/L Account", StandardText."GL Account");
+            end;
         }
         field(99000778; keyResultAreas; Text[100])
         {
