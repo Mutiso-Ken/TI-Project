@@ -62,32 +62,18 @@ Page 80411 "Budget category"
                         exit(false);
                     end;
                 }
-                // field("G/L Account"; "G/L Account")
-                // {
-                //     ApplicationArea = Basic;
-                // }
-                // field("Budget Amount"; "Budget Amount")
-                // {
-                //     ApplicationArea = Basic;
-                // }
-                // field("Actual Spent"; "Actual Spent")
-                // {
-                //     ApplicationArea = Basic;
-                //     Editable = false;
-                // }
-                // field(Variance; "Budget Amount" - "Actual Spent")
-                // {
-                //     ApplicationArea = Basic;
-                //     Editable = false;
-                // }
-                // field("Date filter"; "Date filter")
-                // {
-                //     ApplicationArea = Basic;
-                // }
-                // field("%Utilisation"; BudgetPercent)
-                // {
-                //     ApplicationArea = Basic;
-                // }
+                field("G/L Account"; Rec."G/L Account")
+                {
+                    ApplicationArea = Basic;
+                }
+                field(ActualSpentAmt; ActualSpentAmt)
+                {
+                    ApplicationArea = Basic;
+                    Caption = 'Actual Spent';
+                    Editable = false;
+                    ToolTip = 'Specifies the total posted G/L amount tagged with this dimension value''s Budget Line dimension, across all G/L accounts in this table''s G/L Account field (or all accounts, if it is blank).';
+                }
+      
             }
         }
         area(factboxes)
@@ -155,32 +141,13 @@ Page 80411 "Budget category"
         NameIndent := 0;
         FormatLine;
 
-        // if "Budget Amount" <> 0 then begin
-        //     //IF ("Budget Amount"-"Actual Spent")<>0 THEN BEGIN
-        //     BudgetPercent := ("Actual Spent" / "Budget Amount") * 100
-        // end else begin
+        ActualSpentAmt := GetActualSpent(Rec.Code, Rec."G/L Account");
+
+        // %Utilisation needs "Budget Amount", which is not wired up yet - see the note above.
+        // if "Budget Amount" <> 0 then
+        //     BudgetPercent := (ActualSpentAmt / "Budget Amount") * 100
+        // else
         //     BudgetPercent := 0;
-        //     //END;
-        // end;
-
-        /*IF "Dimension Value Type"="Dimension Value Type"::"End-Total" THEN BEGIN
-          DimensionValue.RESET;
-          DimensionValue.SETFILTER(Code,Totaling);
-          IF DimensionValue.FINDSET THEN BEGIN
-            DimensionValue.CALCSUMS("Budget Amount","Actual Spent");
-            "Budget Amount":=DimensionValue."Budget Amount";
-            //"Actual Spent":=DimensionValue."Actual Spent";
-            END;
-        // //  END;*/
-        // //  BudgetAmounts.RESET;
-        // //  BudgetAmounts.SETRANGE("Budget Line Code",Code);
-        // //  BudgetAmounts.SETFILTER(Date,'..%1',CALCDATE('1Y',TODAY));
-        // //  IF BudgetAmounts.FIND('-') THEN BEGIN
-        // //    "Year budget Amount":=BudgetAmounts."Budget Amount";
-        // //      MODIFY;
-        // //
-        // //  END;
-
     end;
 
     trigger OnOpenPage()
@@ -204,12 +171,40 @@ Page 80411 "Budget category"
         BudgetPercent: Decimal;
         "BudgetPercent(OtherCurrency)": Decimal;
         DimensionValue: Record "Dimension Value";
-    //BudgetAmounts: Record UnknownRecord172058;
+        ActualSpentAmt: Decimal;
 
     local procedure FormatLine()
     begin
         // Emphasize := "Dimension Value Type" <> "dimension value type"::Standard;
         // NameIndent := Indentation;
+    end;
+
+    // Sums posted G/L Entries tagged with this dimension value (via the entry's Dimension Set ID,
+    // not a hardcoded Global Dimension number - which G/L Entry field/number "BUDGET LINES" ends
+    // up in depends on live Dimension setup, so this works regardless of that).
+    local procedure GetActualSpent(BudgetLineCode: Code[20]; GLAccountNo: Code[20]): Decimal
+    var
+        GLEntry: Record "G/L Entry";
+        DimSetEntry: Record "Dimension Set Entry";
+        Total: Decimal;
+    begin
+        if BudgetLineCode = '' then
+            exit(0);
+
+        DimSetEntry.Reset();
+        DimSetEntry.SetRange("Dimension Code", 'BUDGET LINES');
+        DimSetEntry.SetRange("Dimension Value Code", BudgetLineCode);
+        if DimSetEntry.FindSet() then
+            repeat
+                GLEntry.Reset();
+                GLEntry.SetRange("Dimension Set ID", DimSetEntry."Dimension Set ID");
+                if GLAccountNo <> '' then
+                    GLEntry.SetRange("G/L Account No.", GLAccountNo);
+                GLEntry.CalcSums(Amount);
+                Total += GLEntry.Amount;
+            until DimSetEntry.Next() = 0;
+
+        exit(Total);
     end;
 }
 

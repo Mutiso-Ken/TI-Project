@@ -83,6 +83,11 @@ tableextension 50049 "Dimension Value Ext" extends "Dimension Value"
         field(70029; "Unique Activity"; Code[20])
         {
         }
+        field(70030; "G/L Account"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "G/L Account";
+        }
 
     }
     fieldgroups
