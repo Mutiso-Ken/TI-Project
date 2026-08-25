@@ -427,6 +427,10 @@ Page 80067 "Mission Proposal Card"
                         if not BudgetLine.FindSet() then
                             Error('This mission proposal has no budget lines with an amount to convert.');
                         repeat
+                            // Backfill from Standard Text via Mission Expense Category for lines
+                            // that predate that lookup (or otherwise never got a G/L account set).
+                            if BudgetLine."Budget G/L Account" = '' then
+                                SetBudgetLineGLAccountFromCategory(BudgetLine);
                             BudgetLine.TestField("Budget G/L Account");
                         until BudgetLine.Next() = 0;
 
@@ -584,6 +588,21 @@ Page 80067 "Mission Proposal Card"
     local procedure ApproveCalcInvDisc()
     begin
         //CurrPage.PurchLines.PAGE.ApproveCalcInvDisc;
+    end;
+
+    local procedure SetBudgetLineGLAccountFromCategory(var BudgetLine: Record "Purchase Line")
+    var
+        StandardText: Record "Standard Text";
+    begin
+        if BudgetLine."Mission Expense Category" = '' then
+            exit;
+        if not StandardText.Get(BudgetLine."Mission Expense Category") then
+            exit;
+        if StandardText."GL Account" = '' then
+            exit;
+
+        BudgetLine.Validate("Budget G/L Account", StandardText."GL Account");
+        BudgetLine.Modify(true);
     end;
 
     local procedure BuyfromVendorNoOnAfterValidate()

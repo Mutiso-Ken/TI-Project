@@ -64,6 +64,7 @@ Page 80072 "Imprest Request Card"
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = Basic;
+                    
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {

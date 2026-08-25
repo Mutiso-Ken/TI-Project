@@ -195,12 +195,18 @@ Page 80061 "Task Order Card"
                         AppEntry: Record "Approval Entry";
                         ReleasePurchDoc: Codeunit "Release Purchase Document";
                     begin
-                        AppEntry.reset;
-                        AppEntry.setrange("Document No.", Rec."No.");
-                        AppEntry.setrange("Table ID", Database::"Purchase Header");
-                        AppEntry.Setrange(Status, AppEntry.Status::Open);
-                        if not AppEntry.find('-') then
-                            ReleasePurchDoc.PerformManualRelease(Rec);
+                        AppEntry.Reset();
+                        AppEntry.SetRange("Document No.", Rec."No.");
+                        AppEntry.SetRange("Table ID", Database::"Purchase Header");
+                        if not AppEntry.FindSet() then
+                            Error('This document cannot be released: it has not been sent for approval.');
+
+                        // Not "no Open entries" - that also lets a Rejected/Canceled entry through.
+                        AppEntry.SetFilter(Status, '<>%1', AppEntry.Status::Approved);
+                        if not AppEntry.IsEmpty() then
+                            Error('This document cannot be released: not every approval entry is Approved (some are still open, rejected, or canceled).');
+
+                        ReleasePurchDoc.PerformManualRelease(Rec);
                     end;
                 }
                 action(Approve)
@@ -338,18 +344,29 @@ Page 80061 "Task Order Card"
                     PromotedCategory = Process;
                     PromotedIsBig = true;
                     ToolTip = 'Send this approved requisition''s lines into Procurement (Tender/RFQ/Direct Procurement/RFP), grouped per line by their Procurement Method.';
+                    Visible = IsFullyApproved;
 
                     trigger OnAction();
                     begin
                         Rec.TESTFIELD(Status, Rec.Status::Released);
                         Rec.TESTFIELD("Process Initiated", FALSE);
+
+                        // Default an unselected Procurement Method to RFQ rather than blocking on it.
+                        if Rec."Procurement Method" = Rec."Procurement Method"::" " then begin
+                            Rec."Procurement Method" := Rec."Procurement Method"::RFQ;
+                            Rec.Modify(true);
+                        end;
+
                         PurchLineRFQ.RESET;
                         PurchLineRFQ.SETRANGE("Document Type", Rec."Document Type");
                         PurchLineRFQ.SETRANGE("Document No.", Rec."No.");
                         IF PurchLineRFQ.FINDSET THEN
                             REPEAT
-                                PurchLineRFQ.TESTFIELD("Total Amount");
-                                PurchLineRFQ.TestField("Procurement Method");
+                                PurchLineRFQ.TESTFIELD(Amount);
+                                if PurchLineRFQ."Procurement Method" = PurchLineRFQ."Procurement Method"::" " then begin
+                                    PurchLineRFQ."Procurement Method" := PurchLineRFQ."Procurement Method"::RFQ;
+                                    PurchLineRFQ.Modify(true);
+                                end;
                             UNTIL PurchLineRFQ.NEXT = 0;
 
                         IF NOT CONFIRM('Are you sure you want to start procurement process?') THEN
@@ -429,6 +446,7 @@ Page 80061 "Task Order Card"
     var
         OpenApprovalEntriesExistCurrUser: Boolean;
         OpenApprovalEntriesExist: Boolean;
+        IsFullyApproved: Boolean;
         ProcStoreManagement: Codeunit "Proc & Store Management";
         ProcurementNo: Code[50];
         PurchLineRFQ: Record "Purchase Line";
@@ -444,6 +462,17 @@ Page 80061 "Task Order Card"
     begin
         OpenApprovalEntriesExistCurrUser := ApprovalsMgmt.HasOpenApprovalEntriesForCurrentUser(Rec.RECORDID);
         OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(Rec.RECORDID);
+
+        // "Wholly approved" = has approval entries, and every one of them is Approved (not just
+        // "none still Open" - a Rejected or Canceled entry must not count as clear either).
+        ApprovalEntry.Reset();
+        ApprovalEntry.SetRange("Document No.", Rec."No.");
+        ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
+        IsFullyApproved := ApprovalEntry.FindSet();
+        if IsFullyApproved then begin
+            ApprovalEntry.SetFilter(Status, '<>%1', ApprovalEntry.Status::Approved);
+            IsFullyApproved := ApprovalEntry.IsEmpty();
+        end;
     end;
 
     local procedure OpenProcurementRequestCard(ProcurementNo: Code[50])

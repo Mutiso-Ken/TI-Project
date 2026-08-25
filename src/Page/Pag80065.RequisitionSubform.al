@@ -5,7 +5,6 @@ Page 80065 "Requisition Subform"
     Caption = 'Lines';
     DelayedInsert = true;
     LinksAllowed = false;
-    MultipleNewLines = true;
     PageType = ListPart;
     SourceTable = "Purchase Line";
     SourceTableView = where("Document Type" = filter(Quote));
@@ -20,6 +19,7 @@ Page 80065 "Requisition Subform"
                 {
                     ApplicationArea = Basic;
                 }
+               
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = Advanced;
@@ -94,7 +94,7 @@ Page 80065 "Requisition Subform"
                 }
                 field(Description; Rec.Description)
                 {
-                    ApplicationArea = Advanced;
+                    ApplicationArea = Basic;
                     ToolTip = 'Specifies a description of the entry, depending on what you chose in the Type field.';
 
                     trigger OnValidate()

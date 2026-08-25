@@ -143,6 +143,18 @@ report 53071 "Purchase Requisition Document"
             column(ProjectCode_PurchaseHeader; "Purchase Header"."Project Code")
             {
             }
+            column(ProcurementMethod_PurchaseHeader; Format("Purchase Header"."Procurement Method"))
+            {
+            }
+            column(LocationCode_PurchaseHeader; "Purchase Header"."Location Code")
+            {
+            }
+            column(ExecutionTimeText; ExecutionTimeText)
+            {
+            }
+            column(RunByUserID; UserId)
+            {
+            }
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
@@ -251,8 +263,14 @@ report 53071 "Purchase Requisition Document"
         }
     }
 
+    trigger OnPreReport()
+    begin
+        ExecutionTimeText := Format(CurrentDateTime, 0, '<Day,2> <Month Text> <Year4> <Hours24>:<Minutes,2>');
+    end;
+
     var
         CompanyInformation: Record "Company Information";
+        ExecutionTimeText: Text;
         ApprovalEntry: Record "Approval Entry";
         SenderID: Code[80];
         DateTimeSend: Text;
