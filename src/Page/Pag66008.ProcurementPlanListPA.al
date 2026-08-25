@@ -2,7 +2,7 @@
 page 66008 "Procurement Plan List PA"
 {
     // version Procurement Iansoft
-    // NOTE: RCK's CardPageID ("Procurement Plan Card") was not ported; omitted so
+    // NOTE: the legacy system's CardPageID ("Procurement Plan Card") was not ported; omitted so
     // this page falls back to the system default card instead of a missing object.
 
     DeleteAllowed = false;

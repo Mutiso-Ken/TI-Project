@@ -156,6 +156,32 @@ codeunit 4 ProcurementEntry
             RequestJson.Get('status_code', JsonToken);
             exit(UpdateVendorStatus(VendorID, JsonToken.AsValue().AsInteger()));
         end;
+        //Negotiated Bid Update
+        if (SubmissionType = 'vendor_bid_negotiation_update') then begin
+            RequestJson.Get('RFQLine', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            RequestJson.Get('vendor_id', JsonToken);
+            exit(UpdateVendorNegotiatedBid(ElementInformation, JsonToken.AsValue().AsCode()));
+        end;
+        //Vendor Delivery Note Submission
+        if (SubmissionType = 'vendor_delivery_note_submit') then begin
+            RequestJson.Get('DeliveryNote', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            RequestJson.Get('vendor_id', JsonToken);
+            exit(InsertVendorDeliveryNote(ElementInformation, JsonToken.AsValue().AsCode()));
+        end;
+        //Vendor Invoice Submission
+        if (SubmissionType = 'vendor_invoice_submit') then begin
+            RequestJson.Get('Invoice', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            RequestJson.Get('vendor_id', JsonToken);
+            exit(InsertVendorInvoice(ElementInformation, JsonToken.AsValue().AsCode()));
+        end;
+        //Vendor Registration Payment
+        if (SubmissionType = 'vendor_registration_payment') then begin
+            RequestJson.Get('vendor_id', JsonToken);
+            exit(UpdateVendorRegistrationPayment(RequestJson, JsonToken.AsValue().AsCode()));
+        end;
     end;
 
     local procedure AddResponseHead(OutputJson: JsonObject; status: Boolean): JsonObject
@@ -202,6 +228,12 @@ codeunit 4 ProcurementEntry
                 FilterID := JsonToken.AsValue().AsText();
             exit(GetRFQDetails(FilterID, VendorID));
         end;
+        if ((RequestType = 'awarded_orders_list')) then
+            exit(GetVendorAwardedOrders(VendorID));
+        if ((RequestType = 'delivery_notes_list')) then
+            exit(GetVendorDeliveryNotes(VendorID));
+        if ((RequestType = 'invoices_list')) then
+            exit(GetVendorInvoices(VendorID));
     end;
 
     local procedure InsertVendorDetails(RequestJson: JsonObject): Text
@@ -1650,6 +1682,387 @@ codeunit 4 ProcurementEntry
                 end;
             end;
         end;
+        exit(Format(AddResponseHead(Outputjson, false)));
+    end;
+
+    local procedure UpdateVendorNegotiatedBid(Requestjson: JsonObject; vendorNumber: code[50]): Text
+    begin
+        Clear(Outputjson);
+        Requestjson.Get('QuoteNo', JsonToken);
+        "Procurement List".Reset();
+        "Procurement List".SetRange("No.", JsonToken.AsValue().AsCode());
+        if "Procurement List".Find('-') then begin
+            RFQVendorBids.Reset();
+            if Requestjson.Get('LineNo', JsonToken) then
+                RFQVendorBids.SetRange("Line No", JsonToken.AsValue().AsInteger());
+            RFQVendorBids.SetRange("Quote No", "Procurement List"."No.");
+            RFQVendorBids.SetRange("Vendor No", vendorNumber);
+            if RFQVendorBids.Find('-') then begin
+                // if not RFQVendorBids."Negotiation Requested" then begin
+                //     Outputjson.Add('response_message', 'Negotiation has not been opened for this item.');
+                //     exit(Format(AddResponseHead(Outputjson, false)));
+                // end;
+
+                // if Requestjson.Get('NegotiatedUnitPrice', JsonToken) then
+                //     RFQVendorBids."Negotiated Unit Price" := JsonToken.AsValue().AsDecimal();
+                // if Requestjson.Get('NegotiatedVATAmount', JsonToken) then
+                //     RFQVendorBids."Negotiated VAT %" := JsonToken.AsValue().AsDecimal();
+                // if Requestjson.Get('NegotiatedTotalAmount', JsonToken) then
+                //     RFQVendorBids."Negotiated Amount" := JsonToken.AsValue().AsDecimal();
+                // RFQVendorBids."Negotiated Submitted" := true;
+                // RFQVendorBids."Negotiation Date" := CurrentDateTime;
+                // if RFQVendorBids.Modify() then
+                //     exit(Format(AddResponseHead(Outputjson, true)));
+            end else begin
+                Outputjson.Add('response_message', 'No existing bid found for this item.');
+                exit(Format(AddResponseHead(Outputjson, false)));
+            end;
+        end;
+        exit(Format(AddResponseHead(Outputjson, false)));
+    end;
+
+    local procedure InsertVendorDeliveryNote(RequestJson: JsonObject; VendorID: Code[50]): Text
+    var
+        VendorDeliveryNoteTable: Record "Vendor Delivery Note";
+        VendorDeliveryNoteLineTable: Record "Vendor Delivery Note Line";
+        ProcurementRequestRec: Record "Procurement Request";
+        QuotationBiddersRec: Record "Quotation Bidders";
+        LinesToken: JsonToken;
+        LinesArray: JsonArray;
+        LineToken: JsonToken;
+        LineObject: JsonObject;
+        ProcurementNo: Code[30];
+        IsAwarded: Boolean;
+        i: Integer;
+        lineno: Integer;
+    begin
+        Clear(Outputjson);
+        if not (RequestJson.Get('ProcurementNo', JsonToken) and not JsonToken.AsValue().IsNull()) then
+            exit(Format(AddResponseHead(Outputjson, false)));
+        ProcurementNo := JsonToken.AsValue().AsCode();
+
+        ProcurementRequestRec.Reset();
+        if not ProcurementRequestRec.Get(ProcurementNo) then
+            exit(Format(AddResponseHead(Outputjson, false)));
+        if ProcurementRequestRec."Generated Order No" = '' then
+            exit(Format(AddResponseHead(Outputjson, false)));
+
+        IsAwarded := (ProcurementRequestRec."Vendor No" = VendorID);
+        if not IsAwarded then begin
+            QuotationBiddersRec.Reset();
+            QuotationBiddersRec.SetRange("Reference No", ProcurementNo);
+            QuotationBiddersRec.SetRange("Vendor No.", VendorID);
+            QuotationBiddersRec.SetRange("Award Vendor", true);
+            IsAwarded := QuotationBiddersRec.FindFirst();
+        end;
+        if not IsAwarded then
+            exit(Format(AddResponseHead(Outputjson, false)));
+
+        VendorDeliveryNoteTable.Init();
+        VendorDeliveryNoteTable."Procurement No" := ProcurementNo;
+        VendorDeliveryNoteTable."Purchase Order No." := ProcurementRequestRec."Generated Order No";
+        VendorDeliveryNoteTable."Vendor No" := VendorID;
+        VendorDeliveryNoteTable.Validate("Vendor No");
+        if RequestJson.Get('DeliveryNoteDate', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorDeliveryNoteTable."Delivery Note Date" := System.DT2Date(JsonToken.AsValue().AsDateTime());
+        if RequestJson.Get('DocumentName', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorDeliveryNoteTable."Document Name" := JsonToken.AsValue().AsText();
+        if RequestJson.Get('DocumentPath', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorDeliveryNoteTable."Document Path" := JsonToken.AsValue().AsText();
+        VendorDeliveryNoteTable.Insert(true);
+
+        if RequestJson.Get('Lines', LinesToken) then begin
+            LinesArray := LinesToken.AsArray();
+            for i := 0 to LinesArray.Count() - 1 do begin
+                LinesArray.Get(i, LineToken);
+                LineObject := LineToken.AsObject();
+                VendorDeliveryNoteLineTable.Reset();
+                if VendorDeliveryNoteLineTable.FindLast() then
+                    lineno := VendorDeliveryNoteLineTable."Line No." + 10
+                else
+                    lineno := 10;
+                VendorDeliveryNoteLineTable.Init();
+                VendorDeliveryNoteLineTable."Line No." := lineno;
+                VendorDeliveryNoteLineTable."Delivery Note No." := VendorDeliveryNoteTable."No.";
+                if LineObject.Get('Description', JsonToken) and not JsonToken.AsValue().IsNull() then
+                    VendorDeliveryNoteLineTable.Description := CopyStr(JsonToken.AsValue().AsText(), 1, 250);
+                if LineObject.Get('QuantityDelivered', JsonToken) and not JsonToken.AsValue().IsNull() then
+                    VendorDeliveryNoteLineTable."Quantity Delivered" := JsonToken.AsValue().AsDecimal();
+                if LineObject.Get('UnitOfMeasure', JsonToken) and not JsonToken.AsValue().IsNull() then
+                    VendorDeliveryNoteLineTable."Unit of Measure" := JsonToken.AsValue().AsCode();
+                VendorDeliveryNoteLineTable.Insert(true);
+            end;
+        end;
+
+        Outputjson.Add('No', VendorDeliveryNoteTable."No.");
+        exit(Format(AddResponseHead(Outputjson, true)));
+    end;
+
+    local procedure InsertVendorInvoice(RequestJson: JsonObject; VendorID: Code[50]): Text
+    var
+        VendorInvoiceTable: Record "Vendor Invoice";
+        VendorInvoiceLineTable: Record "Vendor Invoice Line";
+        ProcurementRequestRec: Record "Procurement Request";
+        QuotationBiddersRec: Record "Quotation Bidders";
+        LinesToken: JsonToken;
+        LinesArray: JsonArray;
+        LineToken: JsonToken;
+        LineObject: JsonObject;
+        ProcurementNo: Code[30];
+        IsAwarded: Boolean;
+        i: Integer;
+        lineno: Integer;
+    begin
+        Clear(Outputjson);
+        if not (RequestJson.Get('ProcurementNo', JsonToken) and not JsonToken.AsValue().IsNull()) then
+            exit(Format(AddResponseHead(Outputjson, false)));
+        ProcurementNo := JsonToken.AsValue().AsCode();
+
+        ProcurementRequestRec.Reset();
+        if not ProcurementRequestRec.Get(ProcurementNo) then
+            exit(Format(AddResponseHead(Outputjson, false)));
+        if ProcurementRequestRec."Generated Order No" = '' then
+            exit(Format(AddResponseHead(Outputjson, false)));
+
+        IsAwarded := (ProcurementRequestRec."Vendor No" = VendorID);
+        if not IsAwarded then begin
+            QuotationBiddersRec.Reset();
+            QuotationBiddersRec.SetRange("Reference No", ProcurementNo);
+            QuotationBiddersRec.SetRange("Vendor No.", VendorID);
+            QuotationBiddersRec.SetRange("Award Vendor", true);
+            IsAwarded := QuotationBiddersRec.FindFirst();
+        end;
+        if not IsAwarded then
+            exit(Format(AddResponseHead(Outputjson, false)));
+
+        VendorInvoiceTable.Init();
+        VendorInvoiceTable."Procurement No" := ProcurementNo;
+        VendorInvoiceTable."Purchase Order No." := ProcurementRequestRec."Generated Order No";
+        VendorInvoiceTable."Vendor No" := VendorID;
+        VendorInvoiceTable.Validate("Vendor No");
+        if RequestJson.Get('DeliveryNoteNo', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorInvoiceTable."Delivery Note No." := JsonToken.AsValue().AsCode();
+        if RequestJson.Get('VendorInvoiceNo', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorInvoiceTable."Vendor Invoice No." := JsonToken.AsValue().AsText();
+        if RequestJson.Get('InvoiceDate', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorInvoiceTable."Invoice Date" := System.DT2Date(JsonToken.AsValue().AsDateTime());
+        if RequestJson.Get('InvoiceAmount', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorInvoiceTable."Invoice Amount" := JsonToken.AsValue().AsDecimal();
+        if RequestJson.Get('VATAmount', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorInvoiceTable."VAT Amount" := JsonToken.AsValue().AsDecimal();
+        if RequestJson.Get('TotalAmount', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorInvoiceTable."Total Amount" := JsonToken.AsValue().AsDecimal();
+        if RequestJson.Get('DocumentName', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorInvoiceTable."Document Name" := JsonToken.AsValue().AsText();
+        if RequestJson.Get('DocumentPath', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorInvoiceTable."Document Path" := JsonToken.AsValue().AsText();
+        VendorInvoiceTable.Insert(true);
+
+        if RequestJson.Get('Lines', LinesToken) then begin
+            LinesArray := LinesToken.AsArray();
+            for i := 0 to LinesArray.Count() - 1 do begin
+                LinesArray.Get(i, LineToken);
+                LineObject := LineToken.AsObject();
+                VendorInvoiceLineTable.Reset();
+                if VendorInvoiceLineTable.FindLast() then
+                    lineno := VendorInvoiceLineTable."Line No." + 10
+                else
+                    lineno := 10;
+                VendorInvoiceLineTable.Init();
+                VendorInvoiceLineTable."Line No." := lineno;
+                VendorInvoiceLineTable."Invoice No." := VendorInvoiceTable."No.";
+                if LineObject.Get('Description', JsonToken) and not JsonToken.AsValue().IsNull() then
+                    VendorInvoiceLineTable.Description := CopyStr(JsonToken.AsValue().AsText(), 1, 250);
+                if LineObject.Get('Quantity', JsonToken) and not JsonToken.AsValue().IsNull() then
+                    VendorInvoiceLineTable.Quantity := JsonToken.AsValue().AsDecimal();
+                if LineObject.Get('UnitPrice', JsonToken) and not JsonToken.AsValue().IsNull() then
+                    VendorInvoiceLineTable."Unit Price" := JsonToken.AsValue().AsDecimal();
+                if LineObject.Get('Amount', JsonToken) and not JsonToken.AsValue().IsNull() then
+                    VendorInvoiceLineTable.Amount := JsonToken.AsValue().AsDecimal();
+                VendorInvoiceLineTable.Insert(true);
+            end;
+        end;
+
+        Outputjson.Add('No', VendorInvoiceTable."No.");
+        exit(Format(AddResponseHead(Outputjson, true)));
+    end;
+
+    local procedure GetVendorAwardedOrders(VendorID: Code[50]): Text
+    var
+        ProcurementRequestRec: Record "Procurement Request";
+        QuotationBiddersRec: Record "Quotation Bidders";
+        jsonobject: JsonObject;
+        jsonarray: JsonArray;
+        Added: Dictionary of [Code[30], Boolean];
+    begin
+        Clear(Outputjson);
+        Clear(jsonarray);
+
+        ProcurementRequestRec.Reset();
+        ProcurementRequestRec.SetRange("Vendor No", VendorID);
+        ProcurementRequestRec.SetRange("Procurement Method", ProcurementRequestRec."Procurement Method"::"Direct Procurement");
+        ProcurementRequestRec.SetRange("Direct Procurement Status", ProcurementRequestRec."Direct Procurement Status"::"Order Created");
+        if ProcurementRequestRec.FindSet() then
+            repeat
+                Clear(jsonobject);
+                jsonobject.Add('No', ProcurementRequestRec."No.");
+                jsonobject.Add('Title', ProcurementRequestRec.Title);
+                jsonobject.Add('GeneratedOrderNo', ProcurementRequestRec."Generated Order No");
+                jsonobject.Add('ProcurementMethod', Format(ProcurementRequestRec."Procurement Method"));
+                jsonobject.Add('DateAwarded', ProcurementRequestRec."Date Awarded");
+                jsonarray.Add(jsonobject);
+                Added.Add(ProcurementRequestRec."No.", true);
+            until ProcurementRequestRec.Next() = 0;
+
+        QuotationBiddersRec.Reset();
+        QuotationBiddersRec.SetRange("Vendor No.", VendorID);
+        QuotationBiddersRec.SetRange("Award Vendor", true);
+        if QuotationBiddersRec.FindSet() then
+            repeat
+                if not Added.ContainsKey(QuotationBiddersRec."Reference No") then begin
+                    ProcurementRequestRec.Reset();
+                    if ProcurementRequestRec.Get(QuotationBiddersRec."Reference No") then
+                        if ProcurementRequestRec."Quotation Status" = ProcurementRequestRec."Quotation Status"::"Order Created" then begin
+                            Clear(jsonobject);
+                            jsonobject.Add('No', ProcurementRequestRec."No.");
+                            jsonobject.Add('Title', ProcurementRequestRec.Title);
+                            jsonobject.Add('GeneratedOrderNo', ProcurementRequestRec."Generated Order No");
+                            jsonobject.Add('ProcurementMethod', Format(ProcurementRequestRec."Procurement Method"));
+                            jsonobject.Add('DateAwarded', ProcurementRequestRec."Date Awarded");
+                            jsonarray.Add(jsonobject);
+                            Added.Add(ProcurementRequestRec."No.", true);
+                        end;
+                end;
+            until QuotationBiddersRec.Next() = 0;
+
+        Outputjson.Add('AwardedOrders', jsonarray);
+        exit(Format(AddResponseHead(Outputjson, true)));
+    end;
+
+    local procedure GetVendorDeliveryNotes(VendorID: Code[50]): Text
+    var
+        VendorDeliveryNoteTable: Record "Vendor Delivery Note";
+        VendorDeliveryNoteLineTable: Record "Vendor Delivery Note Line";
+        jsonobject: JsonObject;
+        jsonarray: JsonArray;
+        linesarray: JsonArray;
+        linesobject: JsonObject;
+    begin
+        Clear(Outputjson);
+        Clear(jsonarray);
+        VendorDeliveryNoteTable.Reset();
+        VendorDeliveryNoteTable.SetRange("Vendor No", VendorID);
+        if VendorDeliveryNoteTable.FindSet() then
+            repeat
+                Clear(jsonobject);
+                jsonobject.Add('No', VendorDeliveryNoteTable."No.");
+                jsonobject.Add('ProcurementNo', VendorDeliveryNoteTable."Procurement No");
+                jsonobject.Add('PurchaseOrderNo', VendorDeliveryNoteTable."Purchase Order No.");
+                jsonobject.Add('DeliveryNoteDate', VendorDeliveryNoteTable."Delivery Note Date");
+                jsonobject.Add('DateSubmitted', VendorDeliveryNoteTable."Date Submitted");
+                jsonobject.Add('Status', Format(VendorDeliveryNoteTable.Status));
+                jsonobject.Add('Remarks', VendorDeliveryNoteTable.Remarks);
+                jsonobject.Add('ApprovedDate', VendorDeliveryNoteTable."Approved Date");
+                jsonobject.Add('DocumentName', VendorDeliveryNoteTable."Document Name");
+                jsonobject.Add('DocumentPath', VendorDeliveryNoteTable."Document Path");
+
+                Clear(linesarray);
+                VendorDeliveryNoteLineTable.Reset();
+                VendorDeliveryNoteLineTable.SetRange("Delivery Note No.", VendorDeliveryNoteTable."No.");
+                if VendorDeliveryNoteLineTable.FindSet() then
+                    repeat
+                        Clear(linesobject);
+                        linesobject.Add('Description', VendorDeliveryNoteLineTable.Description);
+                        linesobject.Add('QuantityDelivered', VendorDeliveryNoteLineTable."Quantity Delivered");
+                        linesobject.Add('UnitOfMeasure', VendorDeliveryNoteLineTable."Unit of Measure");
+                        linesobject.Add('QuantityConfirmed', VendorDeliveryNoteLineTable."Quantity Confirmed");
+                        linesobject.Add('QuantityVariance', VendorDeliveryNoteLineTable."Quantity Variance");
+                        linesobject.Add('Condition', Format(VendorDeliveryNoteLineTable.Condition));
+                        linesobject.Add('ConfirmationRemarks', VendorDeliveryNoteLineTable.Remarks);
+                        linesarray.Add(linesobject);
+                    until VendorDeliveryNoteLineTable.Next() = 0;
+                jsonobject.Add('Lines', linesarray);
+
+                jsonarray.Add(jsonobject);
+            until VendorDeliveryNoteTable.Next() = 0;
+
+        Outputjson.Add('DeliveryNotes', jsonarray);
+        exit(Format(AddResponseHead(Outputjson, true)));
+    end;
+
+    local procedure GetVendorInvoices(VendorID: Code[50]): Text
+    var
+        VendorInvoiceTable: Record "Vendor Invoice";
+        VendorInvoiceLineTable: Record "Vendor Invoice Line";
+        jsonobject: JsonObject;
+        jsonarray: JsonArray;
+        linesarray: JsonArray;
+        linesobject: JsonObject;
+    begin
+        Clear(Outputjson);
+        Clear(jsonarray);
+        VendorInvoiceTable.Reset();
+        VendorInvoiceTable.SetRange("Vendor No", VendorID);
+        if VendorInvoiceTable.FindSet() then
+            repeat
+                Clear(jsonobject);
+                jsonobject.Add('No', VendorInvoiceTable."No.");
+                jsonobject.Add('ProcurementNo', VendorInvoiceTable."Procurement No");
+                jsonobject.Add('PurchaseOrderNo', VendorInvoiceTable."Purchase Order No.");
+                jsonobject.Add('DeliveryNoteNo', VendorInvoiceTable."Delivery Note No.");
+                jsonobject.Add('VendorInvoiceNo', VendorInvoiceTable."Vendor Invoice No.");
+                jsonobject.Add('InvoiceDate', VendorInvoiceTable."Invoice Date");
+                jsonobject.Add('DateSubmitted', VendorInvoiceTable."Date Submitted");
+                jsonobject.Add('InvoiceAmount', VendorInvoiceTable."Invoice Amount");
+                jsonobject.Add('VATAmount', VendorInvoiceTable."VAT Amount");
+                jsonobject.Add('TotalAmount', VendorInvoiceTable."Total Amount");
+                jsonobject.Add('Status', Format(VendorInvoiceTable.Status));
+                jsonobject.Add('Remarks', VendorInvoiceTable.Remarks);
+                jsonobject.Add('DocumentName', VendorInvoiceTable."Document Name");
+                jsonobject.Add('DocumentPath', VendorInvoiceTable."Document Path");
+
+                Clear(linesarray);
+                VendorInvoiceLineTable.Reset();
+                VendorInvoiceLineTable.SetRange("Invoice No.", VendorInvoiceTable."No.");
+                if VendorInvoiceLineTable.FindSet() then
+                    repeat
+                        Clear(linesobject);
+                        linesobject.Add('Description', VendorInvoiceLineTable.Description);
+                        linesobject.Add('Quantity', VendorInvoiceLineTable.Quantity);
+                        linesobject.Add('UnitPrice', VendorInvoiceLineTable."Unit Price");
+                        linesobject.Add('Amount', VendorInvoiceLineTable.Amount);
+                        linesarray.Add(linesobject);
+                    until VendorInvoiceLineTable.Next() = 0;
+                jsonobject.Add('Lines', linesarray);
+
+                jsonarray.Add(jsonobject);
+            until VendorInvoiceTable.Next() = 0;
+
+        Outputjson.Add('Invoices', jsonarray);
+        exit(Format(AddResponseHead(Outputjson, true)));
+    end;
+
+    local procedure UpdateVendorRegistrationPayment(RequestJson: JsonObject; VendorID: Code[50]): Text
+    begin
+        Clear(Outputjson);
+        VendorRegistrationDetailsTable.Reset();
+        if not VendorRegistrationDetailsTable.Get(VendorID) then
+            exit(Format(AddResponseHead(Outputjson, false)));
+
+        if RequestJson.Get('PaymentAmount', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorRegistrationDetailsTable."Payment Amount" := JsonToken.AsValue().AsDecimal();
+        if RequestJson.Get('PaymentPhoneNumber', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorRegistrationDetailsTable."Payment Phone Number" := JsonToken.AsValue().AsText();
+        if RequestJson.Get('MpesaReceiptNumber', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorRegistrationDetailsTable."Mpesa Receipt Number" := JsonToken.AsValue().AsText();
+        if RequestJson.Get('PaymentDate', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorRegistrationDetailsTable."Payment Date" := System.DT2Date(JsonToken.AsValue().AsDateTime());
+        if RequestJson.Get('CategoryCount', JsonToken) and not JsonToken.AsValue().IsNull() then
+            VendorRegistrationDetailsTable."Category Count" := JsonToken.AsValue().AsInteger();
+        VendorRegistrationDetailsTable."Payment Status" := VendorRegistrationDetailsTable."Payment Status"::Paid;
+
+        if VendorRegistrationDetailsTable.Modify() then
+            exit(Format(AddResponseHead(Outputjson, true)));
         exit(Format(AddResponseHead(Outputjson, false)));
     end;
 

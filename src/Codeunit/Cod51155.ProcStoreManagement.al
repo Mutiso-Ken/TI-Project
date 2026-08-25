@@ -559,10 +559,10 @@ codeunit 51155 "Proc & Store Management"
         FileManagement: Codeunit "File Management";
         FileName: Text[255];
         CCRecepient: Text[255];
-        Text001: Label 'C:\RCKQuotes\Quotes.pdf';
+        Text001: Label 'C:\TIKenyaQuotes\Quotes.pdf';
     begin
         Subject := 'Invitation For Quote';
-        Body := 'Hello <br> You have been invited for a quotation at RCK' +
+        Body := 'Hello <br> You have been invited for a quotation at TI Kenya' +
                ' Please log in to the portal and submit your bids <br>' +
                 ' This is a system generated Mail, Please dont reply to it <Br>Regards';
         IanSoftFactory.IanSendEmailWithoutAttachement(SenderName, SenderAddress, EmailAddress, Subject, Body);
@@ -577,7 +577,7 @@ codeunit 51155 "Proc & Store Management"
         Subject: Text;
     begin
         Subject := 'Invitation For Tender';
-        Body := 'Hello <br> You have been invited for tendering at RCK' +
+        Body := 'Hello <br> You have been invited for tendering at TI Kenya' +
                ' Please log in to the portal and submit your bids <br>' +
                 ' This is a system generated Mail, Please dont reply to it <Br>Regards';
         IanSoftFactory.IanSendEmailWithoutAttachement(SenderName, SenderAddress, EmailAddress, Subject, Body);

@@ -126,6 +126,24 @@ Page 80061 "Task Order Card"
                             ApprovalsMgmt.OnSendPurchaseDocForApproval(Rec);
                     end;
                 }
+                action(ApprovalsEntries)
+                {
+                    ApplicationArea = Basic;
+                    Caption = 'Approvals';
+                    Image = Approvals;
+                    Promoted = true;
+                    PromotedCategory = Category4;
+                    ToolTip = 'View the pending or open approval entries for this document.';
+                    // Visible = OpenApprovalEntriesExist;
+
+                    trigger OnAction()
+                    var
+                        ApprovalEntries: Page "Approval Entries";
+                    begin
+                        ApprovalEntries.SetRecordFilters(Database::"Purchase Header", Rec."Document Type", Rec."No.");
+                        ApprovalEntries.Run;
+                    end;
+                }
                 action("Cancel Approval Request")
                 {
                     ApplicationArea = Basic;

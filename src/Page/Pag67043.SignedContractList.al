@@ -2,7 +2,7 @@
 page 67043 "Signed Contract List"
 {
     // version Procurement Iansoft
-    // NOTE: RCK's CardPageID ("Contract Card") was not ported; omitted so this page
+    // NOTE: the legacy system's CardPageID ("Contract Card") was not ported; omitted so this page
     // falls back to the system default card instead of a missing object.
 
     DeleteAllowed = false;

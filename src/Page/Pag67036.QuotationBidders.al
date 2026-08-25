@@ -240,7 +240,7 @@ page 67036 "Quotation Bidders"
         FileManagement: Codeunit "File Management";
         FileName: Text[255];
         CCRecepient: Text[255];
-        Text001: Label 'C:/RCKSupplierQuotes/Quotes.pdf';
+        Text001: Label 'C:/TIKenyaSupplierQuotes/Quotes.pdf';
         Vendor: Record "Vendor";
 
     local procedure IanControlPageAppearance();
@@ -313,9 +313,9 @@ page 67036 "Quotation Bidders"
         PurchSetup.TestField("Procurement Email");
         CCRecepient := PurchSetup."Procurement Email";
         Body := 'Dear ' + FORMAT(QuotationBiddersII."Vendor Name") + ',' +
-          '<br> You have been invited for a quotation at RCK.' +
+          '<br> You have been invited for a quotation at TI Kenya.' +
           ' Please fill in the attached form and submit your quote <br>' +
-          '<Br>Regards,' + '<br>Procurement,' + '<br>RCK Kenya.';
+          '<Br>Regards,' + '<br>Procurement,' + '<br>TI Kenya.';
         Clear(SendToList);
         if Recepient <> '' then begin
             SendToList.Add(Recepient);

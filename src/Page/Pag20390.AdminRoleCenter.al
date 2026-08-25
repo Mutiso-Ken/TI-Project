@@ -688,9 +688,9 @@ Page 20390 "Admin Role Center"
                         Caption = 'Evaluation of Applications';
                         RunObject = page "Evaluation";
                         RunPageView = where(Stage = filter(<> "Peer Review"));
-                        // Matches RCK's own filter verbatim — RCK's "Evaluation of Applications" and
+                        // Matches the legacy system's own filter verbatim — its "Evaluation of Applications" and
                         // "Technical Review" actions below overlap on Stage = Technical Review in the
-                        // source project too; not fixed here so the arrangement stays faithful to RCK.
+                        // source project too; not fixed here so the arrangement stays faithful to the original.
                     }
                     action("Peer Review")
                     {

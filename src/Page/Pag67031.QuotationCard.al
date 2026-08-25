@@ -705,7 +705,7 @@ page 67031 "Quotation Card"
         SMTPMail: Codeunit "Email Message";
         SendEmail: codeunit email;
         SendToList: List of [Text];
-        Text001: Label 'C:/RCKSupplierQuotes/Quotes.pdf';
+        Text001: Label 'C:/TIKenyaSupplierQuotes/Quotes.pdf';
     begin
 
         Fpath := '';
@@ -731,7 +731,7 @@ page 67031 "Quotation Card"
           '<br>Kindly log in to the vendor portal at your earliest convenience to review and take action on the pending items.' +
           ' Please fill in the quote details in the procurement portal and the form attached below and submit. <br>' +
           '<br> link: ' + PurchSetup."Procurement Portal" +
-          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>RCK Kenya.';
+          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>TI Kenya.';
         Clear(SendToList);
         if Recepient <> '' then begin
             SendToList.Add(Recepient);

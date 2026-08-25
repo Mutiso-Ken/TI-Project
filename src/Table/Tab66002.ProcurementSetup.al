@@ -60,6 +60,16 @@ table 66002 "Procurement Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
         }
+        field(14; "Delivery Note Nos"; Code[30])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "No. Series".Code;
+        }
+        field(15; "Invoice Nos"; Code[30])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "No. Series".Code;
+        }
         field(20; "Tender Threshold"; Decimal)
         {
             DataClassification = ToBeClassified;

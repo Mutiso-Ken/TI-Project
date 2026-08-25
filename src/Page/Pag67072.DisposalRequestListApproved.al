@@ -2,7 +2,7 @@
 page 67072 "Disposal Request List Approved"
 {
     // version Procurement Iansoft
-    // NOTE: RCK's CardPageID ("Disposal Request Card") was not ported; omitted so
+    // NOTE: the legacy system's CardPageID ("Disposal Request Card") was not ported; omitted so
     // this page falls back to the system default card instead of a missing object.
 
     DeleteAllowed = false;

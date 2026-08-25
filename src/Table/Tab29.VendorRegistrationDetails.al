@@ -148,35 +148,35 @@ table 29 "Vendor Registration Details"
         }
         field(36; "Cat_A1_Office_Stationery"; Boolean)
         {
-            Caption = 'COSMO/01/2026-2028 Supply of Office Stationery';
+            Caption = 'Category 01 - Supply of Office Stationery';
         }
         field(37; "Cat_A2_PrintedStationery"; Boolean)
         {
-            Caption = 'COSMO/02/2026-2028 Supply of Printed Stationery';
+            Caption = 'Category 02 - Supply of Printed Stationery';
         }
         field(38; "Cat_A3_MineralWater"; Boolean)
         {
-            Caption = 'COSMO/03/2026-2028 Supply of Mineral Water';
+            Caption = 'Category 03 - Supply of Mineral Water';
         }
         field(39; "Cat_A4_ComputerAccessories"; Boolean)
         {
-            Caption = 'COSMO/04/2026-2028 Supply of Computers/Accessories';
+            Caption = 'Category 04 - Supply of Computers/Accessories';
         }
         field(40; "Cat_A5_BrandedTShirts"; Boolean)
         {
-            Caption = 'COSMO/05/2026-2028 Supply of Branded T-shirt, Shirts Blouses,and Jumpers';
+            Caption = 'Category 05 - Supply of Branded T-shirt, Shirts Blouses,and Jumpers';
         }
         field(41; "Cat_A6_FurnitureFittings"; Boolean)
         {
-            Caption = 'COSMO/06/2026-2028 Supply of Furniture & Fittings';
+            Caption = 'Category 06 - Supply of Furniture & Fittings';
         }
         field(42; "Cat_A7_MetallicCabinets"; Boolean)
         {
-            Caption = 'COSMO/07/2026-2028 Supply of Metallic Cabinets';
+            Caption = 'Category 07 - Supply of Metallic Cabinets';
         }
         field(43; "Cat_A8_MoneyCountingMachines"; Boolean)
         {
-            Caption = 'COSMO/08/2026-2028 Supply of Money Counting Machines';
+            Caption = 'Category 08 - Supply of Money Counting Machines';
         }
         field(44; "Doc Certificate Registration"; Boolean)
         {
@@ -276,15 +276,15 @@ table 29 "Vendor Registration Details"
         }
         field(68; "Doc RCK Payment Receipt"; Boolean)
         {
-            Caption = 'Doc RCK Payment Receipt';
+            Caption = 'Doc Payment Receipt';
         }
         field(69; "RCK Payment Receipt Path"; Text[2048])
         {
-            Caption = 'RCK Payment Receipt Path';
+            Caption = 'Payment Receipt Path';
         }
         field(70; "RCK Payment Receipt Name"; Text[255])
         {
-            Caption = 'RCK Payment Receipt Name';
+            Caption = 'Payment Receipt Name';
         }
         field(71; "Doc Organizational Chart"; Boolean)
         {
@@ -427,79 +427,79 @@ table 29 "Vendor Registration Details"
         }
         field(105; "Cat_A9_Photocopier"; Boolean)
         {
-            Caption = 'COSMO/09/2026-2028 Supply of Photocopier';
+            Caption = 'Category 09 - Supply of Photocopier';
         }
         field(106; "Cat_A10_SupplyofPrinters"; Boolean)
         {
-            Caption = 'COSMO/10/2026-2028 Supply of Printers';
+            Caption = 'Category 10 - Supply of Printers';
         }
         field(107; "Cat_A11_FirewallNetwork"; Boolean)
         {
-            Caption = 'COSMO/11/2026-2028 Supply of Installation of Firewall & Network Switches';
+            Caption = 'Category 11 - Supply of Installation of Firewall & Network Switches';
         }
         field(108; "Cat_A12_CallCenter"; Boolean)
         {
-            Caption = 'COSMO/12/2026-2028 Supply and Installation of a Call Centre';
+            Caption = 'Category 12 - Supply and Installation of a Call Centre';
         }
         field(109; "Cat_B13_OfficeCleaning"; Boolean)
         {
-            Caption = 'COSMO/13/2026-2028 Provision of Office cleaning services';
+            Caption = 'Category 13 - Provision of Office cleaning services';
         }
         field(110; "Cat_B14_TimeLockServicing"; Boolean)
         {
-            Caption = 'COSMO/14/2026-2028 Time Lock Servicing';
+            Caption = 'Category 14 - Time Lock Servicing';
         }
         field(111; "Cat_B15_FireExtinguishers"; Boolean)
         {
-            Caption = 'COSMO/15/2026-2028 Fire Extinguishers Maintenance Services';
+            Caption = 'Category 15 - Fire Extinguishers Maintenance Services';
         }
         field(112; "Cat_B16_PhotocopierMachine"; Boolean)
         {
-            Caption = 'COSMO/16/2026-2028 Servicing of Photocopier Machine';
+            Caption = 'Category 16 - Servicing of Photocopier Machine';
         }
         field(113; "Cat_B17_MotorVehicleBikes"; Boolean)
         {
-            Caption = 'COSMO/17/2026-2028 Servicing of Motor Vehicle and Motor Bikes';
+            Caption = 'Category 17 - Servicing of Motor Vehicle and Motor Bikes';
         }
         field(114; "Cat_B18_Printers"; Boolean)
         {
-            Caption = 'COSMO/18/2026-2028 Servicing of Printers';
+            Caption = 'Category 18 - Servicing of Printers';
         }
         field(115; "Cat_B19_Generators"; Boolean)
         {
-            Caption = 'COSMO/19/2026-2028 Servicing of Generators';
+            Caption = 'Category 19 - Servicing of Generators';
         }
         field(116; "Cat_B20_MoneyCountingMachines"; Boolean)
         {
-            Caption = 'COSMO/20/2026-2028 Servicing of Money Counting Machines';
+            Caption = 'Category 20 - Servicing of Money Counting Machines';
         }
         field(117; "Cat_B21_SanitaryDisposal"; Boolean)
         {
-            Caption = 'COSMO/21/2026-2028 Provision of Sanitary disposal & Fumigation services';
+            Caption = 'Category 21 - Provision of Sanitary disposal & Fumigation services';
         }
         field(118; "Cat_B22_SecurityGuarding"; Boolean)
         {
-            Caption = 'COSMO/22/2026-2028 Provision of Security and Guarding Services';
+            Caption = 'Category 22 - Provision of Security and Guarding Services';
         }
         field(119; "Cat_B23_TeamBuilding"; Boolean)
         {
-            Caption = 'COSMO/23/2026-2028 Provision of Team building services';
+            Caption = 'Category 23 - Provision of Team building services';
         }
         field(120; "Cat_B24_StructuredCabling"; Boolean)
         {
-            Caption = 'COSMO/24/2026-2028 Provision of Structured Cabling System and Networking Works';
+            Caption = 'Category 24 - Provision of Structured Cabling System and Networking Works';
         }
         field(121; "Cat_B25_OfficePartitioning"; Boolean)
         {
-            Caption = 'COSMO/25/2026-2028 Provision of Office partitioning';
+            Caption = 'Category 25 - Provision of Office partitioning';
         }
         field(122; "Cat_B26_OutsideCatering"; Boolean)
         {
-            Caption = 'COSMO/26/2026-2028 Provision of Outside Catering service,advanced public address system,tents,seats, and decoration services';
+            Caption = 'Category 26 - Provision of Outside Catering service,advanced public address system,tents,seats, and decoration services';
         }
         field(123; "Cat_B27_Electrical"; Boolean)
         {
-            Caption = 'COSMO/27/2026-2028 Provision of Electrical services';
+            Caption = 'Category 27 - Provision of Electrical services';
         }
 
 
@@ -507,71 +507,96 @@ table 29 "Vendor Registration Details"
 
         field(124; "Cat_B28_PlumbingDrainage"; Boolean)
         {
-            Caption = 'COSMO/28/2026-2028 Provision of Plumbing and drainage works/services';
+            Caption = 'Category 28 - Provision of Plumbing and drainage works/services';
         }
         field(125; "Cat_B29_GeneralRepairs"; Boolean)
         {
-            Caption = 'COSMO/29/2026-2028 Provision of General repairs and maintenance';
+            Caption = 'Category 29 - Provision of General repairs and maintenance';
         }
         field(126; "Cat_B30_CarTracking"; Boolean)
         {
-            Caption = 'COSMO/30/2026-2028 Provision of Car tracking services';
+            Caption = 'Category 30 - Provision of Car tracking services';
         }
         field(127; "Cat_B31_BulkSMS"; Boolean)
         {
-            Caption = 'COSMO/31/2026-2028 Provision of Bulk SMS services';
+            Caption = 'Category 31 - Provision of Bulk SMS services';
         }
         field(128; "Cat_B32_AssetTagging"; Boolean)
         {
-            Caption = 'COSMO/32/2026-2028 Provision of Asset tagging bar codes and tagging services';
+            Caption = 'Category 32 - Provision of Asset tagging bar codes and tagging services';
         }
         field(129; "Cat_B33_DesignArtwork"; Boolean)
         {
-            Caption = 'COSMO/33/2026-2028 Professional Design of Artwork, Branding and supply of promotional material';
+            Caption = 'Category 33 - Professional Design of Artwork, Branding and supply of promotional material';
         }
         field(130; "Cat_B34_InsuranceCovers"; Boolean)
         {
-            Caption = 'COSMO/34/2026-2028 Provision of Insurance covers';
+            Caption = 'Category 34 - Provision of Insurance covers';
         }
         field(131; "Cat_C35_SystemAudit"; Boolean)
         {
-            Caption = 'COSMO/35/2026-2028 ICT System Audit';
+            Caption = 'Category 35 - ICT System Audit';
         }
         field(132; "Cat_C36_ExternalAuditors"; Boolean)
         {
-            Caption = 'COSMO/36/2026-2028 External Auditors services';
+            Caption = 'Category 36 - External Auditors services';
         }
         field(133; "Cat_C37_DebtCollectors"; Boolean)
         {
-            Caption = 'COSMO/37/2026-2028 Provision of Debt collectors';
+            Caption = 'Category 37 - Provision of Debt collectors';
         }
         field(134; "Cat_C38_Valuers"; Boolean)
         {
-            Caption = 'COSMO/38/2026-2028 Provision of Valuers';
+            Caption = 'Category 38 - Provision of Valuers';
         }
         field(135; "Cat_C39_Auctioneers"; Boolean)
         {
-            Caption = 'COSMO/39/2026-2028 Provision of Auctioneers';
+            Caption = 'Category 39 - Provision of Auctioneers';
         }
         field(136; "Cat_C40_CashTransit"; Boolean)
         {
-            Caption = 'COSMO/40/2026-2028 Cash in Transit Services';
+            Caption = 'Category 40 - Cash in Transit Services';
         }
         field(137; "Cat_C41_LegalServices"; Boolean)
         {
-            Caption = 'COSMO/41/2026-2028 Legal Services';
+            Caption = 'Category 41 - Legal Services';
         }
         field(138; "Cat_C42_Consultancy"; Boolean)
         {
-            Caption = 'COSMO/42/2026-2028 Professional Consultancy';
+            Caption = 'Category 42 - Professional Consultancy';
         }
         field(139; "Cat_C43_QuantitySurveyors"; Boolean)
         {
-            Caption = 'COSMO/43/2026-2028 Provision of Quantity surveyors';
+            Caption = 'Category 43 - Provision of Quantity surveyors';
         }
         field(140; "Cat_C44_CCTVMaintenance"; Boolean)
         {
-            Caption = 'COSMO/44/2026-2028 CCTV maintenance';
+            Caption = 'Category 44 - CCTV maintenance';
+        }
+        field(141; "Payment Amount"; Decimal)
+        {
+            Caption = 'Payment Amount';
+        }
+        field(142; "Payment Phone Number"; Text[20])
+        {
+            Caption = 'Payment Phone Number';
+        }
+        field(143; "Mpesa Receipt Number"; Text[50])
+        {
+            Caption = 'Mpesa Receipt Number';
+        }
+        field(144; "Payment Date"; Date)
+        {
+            Caption = 'Payment Date';
+        }
+        field(145; "Category Count"; Integer)
+        {
+            Caption = 'Category Count';
+        }
+        field(146; "Payment Status"; Option)
+        {
+            Caption = 'Payment Status';
+            OptionMembers = New,Paid;
         }
     }
     keys

@@ -1,7 +1,7 @@
 #pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006
 table 67021 "Contract Lines"
 {
-    // Adapted from RCK: the legacy "Requisition Header" table and "Proc & Store
+    // Adapted from the legacy system: the legacy "Requisition Header" table and "Proc & Store
     // Management" codeunit do not exist here (this app already replaced Requisition
     // Header/Lines with Purchase Header/Line, and Cod50004 was rewritten as
     // "Procurement Process Mgmt."). The "No." OnValidate trigger below computes the

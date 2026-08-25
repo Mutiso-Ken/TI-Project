@@ -2,7 +2,7 @@
 report 64008 "RCK Request for Quotation"
 {
     // version PROC
-    // Adapted from RCK: the legacy "Requisition Header"/"Requisition Lines" tables do
+    // Adapted from the legacy system: the legacy "Requisition Header"/"Requisition Lines" tables do
     // not exist here. The report only used "Requisition Header" to look up the tender
     // Title by the same key already used to find "Procurement Request" below, so the
     // lookup now reads Title from "Procurement Request" directly; "Requisition Lines"

@@ -106,7 +106,7 @@ table 66095 "Tender Suppliers"
         }
         field(22; "Vendor No."; Code[20])
         {
-            // NOTE: RCK's "Supplier Application" pre-registration table was not ported
+            // NOTE: the legacy system's "Supplier Application" pre-registration table was not ported
             // (it is a ~2300-line clone of the base Vendor table used only for a
             // disabled field here). Points at the real Vendor table instead.
             DataClassification = ToBeClassified;
@@ -115,7 +115,7 @@ table 66095 "Tender Suppliers"
         }
         field(23; "Supplier Application"; Code[50])
         {
-            // NOTE: RCK's "Supplier Application" table was not ported; see field 22.
+            // NOTE: the legacy system's "Supplier Application" table was not ported; see field 22.
             DataClassification = ToBeClassified;
             Enabled = false;
         }
