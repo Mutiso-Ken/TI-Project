@@ -1296,6 +1296,7 @@ Table 80021 "HR Employees"
         }
         field(53917; Signature; Blob)
         {
+            SubType = Bitmap;
         }
         field(53918; "Grant/Compliance Officer"; Boolean)
         {

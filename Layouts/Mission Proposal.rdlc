@@ -3430,7 +3430,10 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>6.82267in</Width>
+                  <Width>4.60267in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.22in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -3473,8 +3476,10 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <ColSpan>2</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -3512,12 +3517,14 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <ColSpan>2</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.23622in</Height>
+                  <Height>0.3in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -3530,7 +3537,21 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Approver: Caleb Kitum                                Date: </Value>
+                                  <Value>Approver: </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ApproverName1.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve">     Date: </Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3560,6 +3581,21 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Image Name="ApproverSignature1">
+                          <Source>Database</Source>
+                          <Value>=Fields!Signature1.Value</Value>
+                          <MIMEType>image/jpeg</MIMEType>
+                          <Sizing>FitProportional</Sizing>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </Image>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -3599,12 +3635,14 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <ColSpan>2</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.23622in</Height>
+                  <Height>0.3in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -3616,7 +3654,21 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>  Approver: Dorithy Okeyo                     Date: </Value>
+                                  <Value xml:space="preserve">  Approver: </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ApproverName2.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve">     Date: </Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3624,7 +3676,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>=Fields!date1.Value</Value>
+                                  <Value>=Fields!date2.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3646,6 +3698,21 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Image Name="ApproverSignature2">
+                          <Source>Database</Source>
+                          <Value>=Fields!Signature2.Value</Value>
+                          <MIMEType>image/jpeg</MIMEType>
+                          <Sizing>FitProportional</Sizing>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </Image>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -3685,12 +3752,14 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <ColSpan>2</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.23622in</Height>
+                  <Height>0.3in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -3702,7 +3771,21 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Approver: Gibson Mwaita                            Date: </Value>
+                                  <Value>Approver: </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ApproverName3.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve">     Date: </Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3710,7 +3793,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>=Fields!date1.Value</Value>
+                                  <Value>=Fields!date3.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -3734,12 +3817,28 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Image Name="ApproverSignature3">
+                          <Source>Database</Source>
+                          <Value>=Fields!Signature3.Value</Value>
+                          <MIMEType>image/jpeg</MIMEType>
+                          <Sizing>FitProportional</Sizing>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </Image>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
@@ -3757,7 +3856,7 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>9.3106in</Top>
             <Left>0.16043in</Left>
-            <Height>1.63086in</Height>
+            <Height>1.8222in</Height>
             <Width>6.82267in</Width>
             <ZIndex>28</ZIndex>
             <Style>
@@ -4384,6 +4483,24 @@ End Function
         </Field>
         <Field Name="date3">
           <DataField>date3</DataField>
+        </Field>
+        <Field Name="ApproverName1">
+          <DataField>ApproverName1</DataField>
+        </Field>
+        <Field Name="ApproverName2">
+          <DataField>ApproverName2</DataField>
+        </Field>
+        <Field Name="ApproverName3">
+          <DataField>ApproverName3</DataField>
+        </Field>
+        <Field Name="Signature1">
+          <DataField>Signature1</DataField>
+        </Field>
+        <Field Name="Signature2">
+          <DataField>Signature2</DataField>
+        </Field>
+        <Field Name="Signature3">
+          <DataField>Signature3</DataField>
         </Field>
         <Field Name="Description2_PurchaseLine">
           <DataField>Description2_PurchaseLine</DataField>

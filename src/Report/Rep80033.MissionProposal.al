@@ -70,6 +70,24 @@ Report 80033 "Mission Proposal"
             column(date3; date3)
             {
             }
+            column(ApproverName1; ApproverName1)
+            {
+            }
+            column(ApproverName2; ApproverName2)
+            {
+            }
+            column(ApproverName3; ApproverName3)
+            {
+            }
+            column(Signature1; Approver1Emp.Signature)
+            {
+            }
+            column(Signature2; Approver2Emp.Signature)
+            {
+            }
+            column(Signature3; Approver3Emp.Signature)
+            {
+            }
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -238,16 +256,6 @@ Report 80033 "Mission Proposal"
                 end;
 
             }
-            dataitem("Approval Entry"; "Approval Entry")
-            {
-                DataItemLink = "Document No." = field("No.");
-                DataItemTableView = where(Status = const(Approved));
-                trigger OnAfterGetRecord();
-                begin
-                    date1 := "Approval Entry"."Last Date-Time Modified"
-                end;
-
-            }
             trigger OnPreDataItem();
             begin
 
@@ -255,62 +263,11 @@ Report 80033 "Mission Proposal"
 
             trigger OnAfterGetRecord();
             begin
-
-
-                ApprovalEntry.Reset;
-                ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                ApprovalEntry.SetRange("Sequence No.", 1);
-                if ApprovalEntry.FindLast() then begin
-                    User1 := ApprovalEntry."Last Modified By User ID";
-                    date1 := ApprovalEntry."Last Date-Time Modified"
-                end;
-                // DimVal.Reset;
-                // DimVal.SetRange(Code, "Shortcut Dimension 1 Code");
-                // if DimVal.FindFirst then
-                //     Dim1Name := DimVal.Name;
-                // DimVal.Reset;
-                // DimVal.SetRange(Code, "Shortcut Dimension 2 Code");
-                // if DimVal.FindFirst then
-                //     Dim2Name := DimVal.Name;
-                // ApprovalEntry.Reset;
-                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                // ApprovalEntry.SetRange("Sequence No.", 1);
-                // if ApprovalEntry.FindFirst then begin
-                //     date1 := ApprovalEntry."Date-Time Sent for Approval";
-                // end;
-                // ApprovalEntry.Reset;
-                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                // ApprovalEntry.SetRange("Sequence No.", 1);
-                // if ApprovalEntry.FindFirst then begin
-                //     User1 := ApprovalEntry."Last Modified By User ID";
-                //     date1 := ApprovalEntry."Last Date-Time Modified";
-                // end;
-                // ApprovalEntry.Reset;
-                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                // ApprovalEntry.SetRange("Sequence No.", 2);
-                // if ApprovalEntry.FindFirst then begin
-                //     user2 := ApprovalEntry."Last Modified By User ID";
-                //     date2 := ApprovalEntry."Last Date-Time Modified";
-                // end;
-                // ApprovalEntry.Reset;
-                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                // ApprovalEntry.SetRange("Sequence No.", 3);
-                // if ApprovalEntry.FindFirst then begin
-                //     user3 := ApprovalEntry."Last Modified By User ID";
-                //     date3 := ApprovalEntry."Last Date-Time Modified";
-                // end;
-                // ApprovalEntry.Reset;
-                // ApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
-                // ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                // ApprovalEntry.SetRange("Sequence No.", 4);
-                // if ApprovalEntry.FindFirst then begin
-                //     user4 := ApprovalEntry."Last Modified By User ID";
-                //     date4 := ApprovalEntry."Last Date-Time Modified";
-                // end;
+                // Reviews & Approvals: one HR Employee (matched to the approver via User ID)
+                // per approval sequence, each with their own approval date and signature.
+                SetApprover("Purchase Header"."No.", 1, ApproverName1, date1, Approver1Emp);
+                SetApprover("Purchase Header"."No.", 2, ApproverName2, date2, Approver2Emp);
+                SetApprover("Purchase Header"."No.", 3, ApproverName3, date3, Approver3Emp);
             end;
 
         }
@@ -355,10 +312,38 @@ Report 80033 "Mission Proposal"
         user5: Code[100];
         date5: DateTime;
         Approvaldate: Date;
+        ApproverName1: Text[100];
+        ApproverName2: Text[100];
+        ApproverName3: Text[100];
+        Approver1Emp: Record "HR Employees";
+        Approver2Emp: Record "HR Employees";
+        Approver3Emp: Record "HR Employees";
 
     trigger OnInitReport();
     begin
 
+    end;
+
+    local procedure SetApprover(DocumentNo: Code[20]; SequenceNo: Integer; var ApproverName: Text[100]; var ApprovalDate: DateTime; var ApproverEmp: Record "HR Employees")
+    begin
+        ApproverName := '';
+        ApprovalDate := 0DT;
+        Clear(ApproverEmp);
+
+        ApprovalEntry.Reset();
+        ApprovalEntry.SetRange("Document No.", DocumentNo);
+        ApprovalEntry.SetRange("Sequence No.", SequenceNo);
+        ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+        if ApprovalEntry.FindFirst() then begin
+            ApprovalDate := ApprovalEntry."Last Date-Time Modified";
+
+            ApproverEmp.Reset();
+            ApproverEmp.SetRange("User ID", ApprovalEntry."Approver ID");
+            if ApproverEmp.FindFirst() then begin
+                ApproverEmp.CalcFields(Signature);
+                ApproverName := ApproverEmp.FullName;
+            end;
+        end;
     end;
 
 }
