@@ -1,5 +1,5 @@
 //************************************************************************
-pageextension 172177 "GenJournalPageExtension" extends "General Journal"
+pageextension 60177 "GenJournalPageExtension" extends "General Journal"
 {
     layout
     {

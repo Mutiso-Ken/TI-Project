@@ -430,18 +430,18 @@ codeunit 51155 "Proc & Store Management"
 
     procedure IanCreatePurchaseHeader(VendorNo: Code[50]; TenderNo: Code[100]; RequistionNo: Code[100]; RFQNo: Code[100]; RFPNo: Code[100]; ContractNo: Code[100]; "Require Inspection": Boolean): Code[70];
     var
-        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
-        NoSeriesManagement: Codeunit "No. Series";
         PurchaseHeader: Record "Purchase Header";
-        InvoiceNo: Code[50];
         ProcurementRequest: Record "Procurement Request";
     begin
         PurchaseHeader.INIT;
         PurchaseHeader.VALIDATE("Document Type", PurchaseHeader."Document Type"::Order);
         PurchaseHeader.VALIDATE("Buy-from Vendor No.", VendorNo);
-        PurchasesPayablesSetup.GET;
-        InvoiceNo := NoSeriesManagement.GetNextNo(PurchasesPayablesSetup."Order Nos.", 0D, TRUE);
-        PurchaseHeader.VALIDATE("No.", InvoiceNo);
+        // "No." is assigned by the OnBeforeInsertEvent subscriber in Cod80009.CustomEvents.al for
+        // Document Type = Order (it calls GetNextNo itself). Pulling a number here too meant
+        // GetNextNo ran twice, so the Header ended up with a DIFFERENT number than the one
+        // returned to the caller and stamped onto the generated Purchase Lines - "Document No.
+        // ... cannot be found in the related table (Purchase Header)". Let that subscriber assign
+        // it, then read back whatever it actually set after Insert.
         PurchaseHeader.VALIDATE("Document Date", TODAY);
         // None of "Tender No", "Contract No", "Requires Inspection", "Procurement Doc.
         // No.", "Quotation No" or "Order Type" exist on Purchase Header here - the
@@ -465,7 +465,7 @@ codeunit 51155 "Proc & Store Management"
         //     PurchaseHeader.MODIFY;
         // END;
 
-        EXIT(InvoiceNo);
+        EXIT(PurchaseHeader."No.");
     end;
 
     procedure IanCreatePurchaseLines(InvoiceNo: Code[50]; TypeParam: Option "G/L Account","Fixed Asset",Item; No: Code[50]; QuantityParam: Integer; UnitPrice: Decimal; LocationParam: Code[50]; GlobalDim1: Code[50]; GlobalDim2: Code[50]; GlobalDim3: Code[50]; GlobalDim4: Code[50]; GlobalDim5: Code[50]; ProPlan: Code[450]; BudgetAmount: Decimal; DescriptionParam: Text[250]; dimsetid: Integer; ProjectCode: Code[10]; DonorN: Code[20]; GrantN: Code[20]; ObjectiveN: Code[20]; Output: Code[20]; Outcome: Code[20]; ActivityN: Code[20]; PartnerN: Code[20]): Boolean;
@@ -1052,11 +1052,34 @@ codeunit 51155 "Proc & Store Management"
     var
         ProcurementRequestLines: Record "Procurement Request Lines";
     begin
-        ProcurementRequestLines.INIT;
-        ProcurementRequestLines.TRANSFERFIELDS(RequisitionLines);
-        ProcurementRequestLines."ShortcutDimCode[4]" := RequisitionLines."ShortcutDimCode[4]";
+        // TRANSFERFIELDS only copies fields whose NAME matches exactly on both tables - most of
+        // this table's line detail fields are named differently from Purchase Line's (No vs
+        // "No.", "Unit Price" vs "Direct Unit Cost", "Total Amount" vs Amount, no Name field at
+        // all on Purchase Line), so those never actually transferred. Type also has a completely
+        // different set of option values on each table, so even though the name matches, blindly
+        // copying it copies the wrong option. Mapping every field explicitly instead.
+        ProcurementRequestLines.Init();
         ProcurementRequestLines."Procurement No" := ProcurementNo;
-        ProcurementRequestLines.INSERT;
+        ProcurementRequestLines."Line No." := RequisitionLines."Line No.";
+
+        case RequisitionLines.Type of
+            RequisitionLines.Type::"G/L Account":
+                ProcurementRequestLines.Type := ProcurementRequestLines.Type::"G/L Account";
+            RequisitionLines.Type::"Fixed Asset":
+                ProcurementRequestLines.Type := ProcurementRequestLines.Type::"Fixed Asset";
+            RequisitionLines.Type::Item:
+                ProcurementRequestLines.Type := ProcurementRequestLines.Type::Item;
+        end;
+
+        ProcurementRequestLines.No := RequisitionLines."No.";
+        ProcurementRequestLines.Name := RequisitionLines.Description;
+        ProcurementRequestLines.Description := RequisitionLines."Description 3";
+        ProcurementRequestLines."Unit of Measure" := RequisitionLines."Unit of Measure";
+        ProcurementRequestLines.Quantity := RequisitionLines.Quantity;
+        ProcurementRequestLines."Unit Price" := RequisitionLines."Direct Unit Cost";
+        ProcurementRequestLines."Total Amount" := RequisitionLines.Amount;
+        ProcurementRequestLines."ShortcutDimCode[4]" := RequisitionLines."ShortcutDimCode[4]";
+        ProcurementRequestLines.Insert();
     end;
 
     procedure IanInitateProcurementplan(ProcurementPlanInitiation: Record "Procurement Plan Initiation");

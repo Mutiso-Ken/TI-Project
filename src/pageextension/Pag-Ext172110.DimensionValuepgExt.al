@@ -1,5 +1,5 @@
 //************************************************************************
-pageextension 172110 "DimensionValuepgExt" extends "Dimension Value List"
+pageextension 60110 "DimensionValuepgExt" extends "Dimension Value List"
 
 {
     layout

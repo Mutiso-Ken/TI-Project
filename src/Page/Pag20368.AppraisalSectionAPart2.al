@@ -1,6 +1,6 @@
 // namespace TISolution.TISolution;
 
-page 20368 "Appraisal Section A Part 2"
+Page 50368 "Appraisal Section A Part 2"
 {
     ApplicationArea = All;
     Caption = 'PART 2';

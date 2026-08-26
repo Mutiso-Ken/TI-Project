@@ -52,6 +52,27 @@ codeunit 80009 CustomEvents
 
     end;
 
+    // Budget Line ("Shortcut Dimension 3 Code") is filtered to the header's Fund ("Shortcut
+    // Dimension 1 Code") via that Dimension Value's "Fund Code" back-reference. Fund lives on the
+    // base "Purchase Header" table, so its OnValidate can't be extended directly from the
+    // tableextension - this reacts to the platform's implicit per-field validate event instead, and
+    // clears a Budget Line (and, transitively via its own OnValidate, a Budget Category) that no
+    // longer belongs to the newly-selected Fund.
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnAfterValidateEvent', 'Shortcut Dimension 1 Code', false, false)]
+    local procedure PurchaseHeaderOnAfterValidateShortcutDim1Code(var Rec: Record "Purchase Header")
+    var
+        DimensionValue: Record "Dimension Value";
+    begin
+        if Rec."Shortcut Dimension 3 Code" = '' then
+            exit;
+
+        DimensionValue.SetRange("Global Dimension No.", 3);
+        DimensionValue.SetRange(Code, Rec."Shortcut Dimension 3 Code");
+        DimensionValue.SetRange("Fund Code", Rec."Shortcut Dimension 1 Code");
+        if not DimensionValue.FindFirst() then
+            Rec.Validate("Shortcut Dimension 3 Code", '');
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnAfterGetNoSeriesCode', '', false, false)]
     local procedure GetNOseriesCode(var PurchHeader: Record "Purchase Header"; PurchSetup: Record "Purchases & Payables Setup"; var NoSeriesCode: Code[20])
     begin

@@ -209,7 +209,9 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
             Caption = 'Shortcut Dimension 3 Code';
             DataClassification = ToBeClassified;
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(3),
-                                                          Blocked = const(false));
+                                                          "Dimension Value Type" = const(Standard),
+                                                          Blocked = const(false),
+                                                          "Fund Code" = field("Shortcut Dimension 1 Code"));
 
             trigger OnValidate()
             begin
@@ -220,7 +222,16 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
                         Error('Budget Line is blocked');
                 end;
 
-                ValidateShortcutDimCode(1, "Shortcut Dimension 1 Code");
+                if "Shortcut Dimension 4 Code" <> '' then begin
+                    DimensionValue.Reset;
+                    DimensionValue.SetRange("Global Dimension No.", 4);
+                    DimensionValue.SetRange(Code, "Shortcut Dimension 4 Code");
+                    DimensionValue.SetRange("Budget Line", "Shortcut Dimension 3 Code");
+                    if not DimensionValue.FindFirst() then
+                        Validate("Shortcut Dimension 4 Code", '');
+                end;
+
+                ValidateShortcutDimCode(3, "Shortcut Dimension 3 Code");
             end;
         }
         field(9032; "Shortcut Dimension 4 Code"; Code[20])
@@ -229,11 +240,13 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
             Caption = 'Shortcut Dimension 4 Code';
             DataClassification = ToBeClassified;
             TableRelation = "Dimension Value".Code where("Global Dimension No." = const(4),
-                                                          Blocked = const(false));
+                                                          "Dimension Value Type" = const(Standard),
+                                                          Blocked = const(false),
+                                                          "Budget Line" = field("Shortcut Dimension 3 Code"));
 
             trigger OnValidate()
             begin
-                ValidateShortcutDimCode(2, "Shortcut Dimension 2 Code");
+                ValidateShortcutDimCode(4, "Shortcut Dimension 4 Code");
             end;
         }
         field(9033; "Shortcut Dimension 5 Code"; Code[20])
@@ -246,7 +259,7 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
 
             trigger OnValidate()
             begin
-                ValidateShortcutDimCode(2, "Shortcut Dimension 2 Code");
+                ValidateShortcutDimCode(5, "Shortcut Dimension 5 Code");
             end;
         }
         field(9034; Background; Text[2048])

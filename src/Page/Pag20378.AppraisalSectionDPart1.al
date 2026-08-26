@@ -1,6 +1,6 @@
 //APPRAISAL SECTION B PAGES
 
-page 20378 "Appraisal Section D Part 1"
+Page 50378 "Appraisal Section D Part 1"
 {
     ApplicationArea = All;
     Caption = 'Commitment to the Job';
@@ -36,7 +36,7 @@ page 20378 "Appraisal Section D Part 1"
     end;
 }
 
-page 20379 "Appraisal Section D Part 2"
+Page 50379 "Appraisal Section D Part 2"
 {
     ApplicationArea = All;
     Caption = 'Integrity';
@@ -72,7 +72,7 @@ page 20379 "Appraisal Section D Part 2"
     end;
 }
 
-page 20380 "Appraisal Section D Part 3"
+Page 50380 "Appraisal Section D Part 3"
 {
     ApplicationArea = All;
     Caption = 'Resource Management';
@@ -108,7 +108,7 @@ page 20380 "Appraisal Section D Part 3"
     end;
 }
 
-page 20381 "Appraisal Section D Part 4"
+Page 50381 "Appraisal Section D Part 4"
 {
     ApplicationArea = All;
     Caption = 'Punctuality';
@@ -144,7 +144,7 @@ page 20381 "Appraisal Section D Part 4"
     end;
 }
 
-page 20382 "Appraisal Section D Part 5"
+Page 50382 "Appraisal Section D Part 5"
 {
     ApplicationArea = All;
     Caption = 'Team Work';

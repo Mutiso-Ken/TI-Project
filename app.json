@@ -18,8 +18,8 @@
   "application": "26.0.0.0",
   "idRanges": [
     {
-      "from": 1,
-      "to": 172999
+    "from": 50000,
+      "to": 99999
     }
   ],
   "resourceExposurePolicy": {

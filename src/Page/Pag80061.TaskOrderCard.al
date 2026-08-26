@@ -463,16 +463,15 @@ Page 80061 "Task Order Card"
         OpenApprovalEntriesExistCurrUser := ApprovalsMgmt.HasOpenApprovalEntriesForCurrentUser(Rec.RECORDID);
         OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(Rec.RECORDID);
 
-        // "Wholly approved" = has approval entries, and every one of them is Approved (not just
-        // "none still Open" - a Rejected or Canceled entry must not count as clear either).
-        ApprovalEntry.Reset();
-        ApprovalEntry.SetRange("Document No.", Rec."No.");
-        ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
-        IsFullyApproved := ApprovalEntry.FindSet();
-        if IsFullyApproved then begin
-            ApprovalEntry.SetFilter(Status, '<>%1', ApprovalEntry.Status::Approved);
-            IsFullyApproved := ApprovalEntry.IsEmpty();
-        end;
+        IsFullyApproved := (Rec.Status = rec.Status::Released);
+        // ApprovalEntry.Reset();
+        // ApprovalEntry.SetRange("Document No.", Rec."No.");
+        // ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
+        // IsFullyApproved := ApprovalEntry.FindSet();
+        // if IsFullyApproved then begin
+        //     ApprovalEntry.SetFilter(Status, '<>%1', ApprovalEntry.Status::Approved);
+        //     IsFullyApproved := ApprovalEntry.IsEmpty();
+        // end;
     end;
 
     local procedure OpenProcurementRequestCard(ProcurementNo: Code[50])

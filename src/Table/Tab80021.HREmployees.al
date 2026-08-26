@@ -607,8 +607,14 @@ Table 80021 "HR Employees"
 
                 if "User ID" = '' then exit;
 
+                // Get() matches on the primary key ("No."), so it can never find a duplicate
+                // "User ID" - search by the field actually being validated instead, excluding
+                // this record itself so re-validating an unchanged value doesn't self-trigger.
                 HREmp.Reset;
-                if HREmp.Get("User ID") then begin
+                HREmp.SetRange("User ID", "User ID");
+                if "No." <> '' then
+                    HREmp.SetFilter("No.", '<>%1', "No.");
+                if HREmp.FindFirst then begin
                     EmpFullName := HREmp."First Name" + SPACER + HREmp."Middle Name" + SPACER + HREmp."Last Name";
                     Error('UserID [%1] has already been assigned to another Employee [%2]', "User ID", EmpFullName);
                 end;

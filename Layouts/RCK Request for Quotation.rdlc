@@ -392,9 +392,9 @@
                   <TextRun>
                     <Value>Dear Sir/Madam,
 
-The Refugee Consortium of Kenya hereby request you to submit price quotation(s) for the supply of the item(s) listed on the attached Bidding Form.
+Transparency International Kenya hereby request you to submit price quotation(s) for the supply of the item(s) listed on the attached Bidding Form.
 
-Please submit one original copy of the attached Bidding Form. Make sure to indicate your current stock levels and the expected delivery period on the same form. Upload your quotation through the RCK E‑Procurement Portal using the following link: https://eprocurement.rckkenya.org/
+Please submit one original copy of the attached Bidding Form. Make sure to indicate your current stock levels and the expected delivery period on the same form.
 
 The deadline for receipt of your quotation is </Value>
                     <Style>
@@ -426,15 +426,15 @@ The deadline for receipt of your quotation is </Value>
 
 Your quotation should be submitted as per the following instructions. 
 
-a)	Prices: The prices should be quoted for supply and delivery to Refugee Consortium of Kenya destination Point as given in the attached Bidding Form. 
-b)	Evaluations of Quotations: Offers determined to be substantially responsive to the technical specifications will be evaluated by comparison of their prices 
+a)	Prices: The prices should be quoted for supply and delivery to Transparency International Kenya destination Point as given in the attached Bidding Form.
+b)	Evaluations of Quotations: Offers determined to be substantially responsive to the technical specifications will be evaluated by comparison of their prices
 c)	The delivery lead time will also be a consideration in the contract award.
 d)	Award of Purchase Order: The contract award will be made to the bidder offering the best value for money (lowest acceptable evaluated price).
 e)	Validity of the Offer: Your quotation should be valid for a period of 30 days from the deadline for receipt of the quotation.
 
-All enquires and questions should be addressed to:  procurement@rckkenya.org  
+All enquires and questions should be addressed to the contact details provided above.
 
-The Refugee Consortium of Kenya shall reject a Bid if it determines that the Bidder recommended for award, has engaged in corrupt, fraudulent, collusive, or coercive practices in competing for, or in executing, the Contract. 
+Transparency International Kenya shall reject a Bid if it determines that the Bidder recommended for award, has engaged in corrupt, fraudulent, collusive, or coercive practices in competing for, or in executing, the Contract.
 
 </Value>
                     <Style>
@@ -1599,7 +1599,7 @@ The Refugee Consortium of Kenya shall reject a Bid if it determines that the Bid
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>RCK Haki House</Value>
+                                  <Value>TI Kenya Haki House</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2301,8 +2301,315 @@ The Refugee Consortium of Kenya shall reject a Bid if it determines that the Bid
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="ApproversHeading">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Approvers</Value>
+                    <Style>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>10pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>11.1in</Top>
+            <Left>0.09072in</Left>
+            <Height>0.24in</Height>
+            <Width>7.06496in</Width>
+            <ZIndex>6</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BottomBorder>
+                <Style>Solid</Style>
+              </BottomBorder>
+            </Style>
+          </Textbox>
+          <Tablix Name="ApproversTablix">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>4.5in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.56496in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.32in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Approver1Cell">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Approved By: </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ApproverName1.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve">     Date: </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ApproverDate1.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingTop>4pt</PaddingTop>
+                            <PaddingBottom>4pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Image Name="ApproverSignature1">
+                          <Source>Database</Source>
+                          <Value>=Fields!Signature1.Value</Value>
+                          <MIMEType>image/jpeg</MIMEType>
+                          <Sizing>FitProportional</Sizing>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                          </Style>
+                        </Image>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.32in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Approver2Cell">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Approved By: </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ApproverName2.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve">     Date: </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ApproverDate2.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingTop>4pt</PaddingTop>
+                            <PaddingBottom>4pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Image Name="ApproverSignature2">
+                          <Source>Database</Source>
+                          <Value>=Fields!Signature2.Value</Value>
+                          <MIMEType>image/jpeg</MIMEType>
+                          <Sizing>FitProportional</Sizing>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                          </Style>
+                        </Image>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.32in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Approver3Cell">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Approved By: </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ApproverName3.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve">     Date: </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ApproverDate3.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingTop>4pt</PaddingTop>
+                            <PaddingBottom>4pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Image Name="ApproverSignature3">
+                          <Source>Database</Source>
+                          <Value>=Fields!Signature3.Value</Value>
+                          <MIMEType>image/jpeg</MIMEType>
+                          <Sizing>FitProportional</Sizing>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                          </Style>
+                        </Image>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>DataSet_Result</DataSetName>
+            <Top>11.4in</Top>
+            <Left>0.09072in</Left>
+            <Height>0.96in</Height>
+            <Width>7.06496in</Width>
+            <ZIndex>7</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Tablix>
         </ReportItems>
-        <Height>27.8351cm</Height>
+        <Height>31.4cm</Height>
         <Style>
           <Border />
         </Style>
@@ -2487,6 +2794,33 @@ End Function
         </Field>
         <Field Name="RFQDeadlineDate">
           <DataField>RFQDeadlineDate</DataField>
+        </Field>
+        <Field Name="ApproverName1">
+          <DataField>ApproverName1</DataField>
+        </Field>
+        <Field Name="ApproverDate1">
+          <DataField>ApproverDate1</DataField>
+        </Field>
+        <Field Name="Signature1">
+          <DataField>Signature1</DataField>
+        </Field>
+        <Field Name="ApproverName2">
+          <DataField>ApproverName2</DataField>
+        </Field>
+        <Field Name="ApproverDate2">
+          <DataField>ApproverDate2</DataField>
+        </Field>
+        <Field Name="Signature2">
+          <DataField>Signature2</DataField>
+        </Field>
+        <Field Name="ApproverName3">
+          <DataField>ApproverName3</DataField>
+        </Field>
+        <Field Name="ApproverDate3">
+          <DataField>ApproverDate3</DataField>
+        </Field>
+        <Field Name="Signature3">
+          <DataField>Signature3</DataField>
         </Field>
         <Field Name="Procurement_Request_Lines1__Procurement_Request_Lines1__No">
           <DataField>Procurement_Request_Lines1__Procurement_Request_Lines1__No</DataField>

@@ -2,7 +2,7 @@ namespace TISolution.TISolution;
 
 using Microsoft.Purchases.Document;
 
-pageextension 172190 "Purchase Order Subform" extends "Purchase Order Subform"
+pageextension 60190 "Purchase Order Subform" extends "Purchase Order Subform"
 {
     layout
 

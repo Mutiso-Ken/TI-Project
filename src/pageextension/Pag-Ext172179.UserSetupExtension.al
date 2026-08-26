@@ -1,5 +1,5 @@
 //************************************************************************
-pageextension 172179 "UserSetupExtension" extends "User Setup"
+pageextension 60179 "UserSetupExtension" extends "User Setup"
 {
     layout
     {

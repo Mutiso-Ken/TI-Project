@@ -26,254 +26,284 @@ Report 80025 LPO
             column(OrderDate_PurchaseHeader; "Purchase Header"."Order Date")
             {
             }
-            dataitem("Purchase Line"; "Purchase Line")
+            column(ApproverName1; ApproverName1)
             {
+            }
+            column(ApproverName2; ApproverName2)
+            {
+            }
+            column(ApproverName3; ApproverName3)
+            {
+            }
+            column(Signature1; Approver1Emp.Signature)
+            {
+            }
+            column(Signature2; Approver2Emp.Signature)
+            {
+            }
+            column(Signature3; Approver3Emp.Signature)
+            {
+            }
+            column(ApprovalDate1; ApprovalDate1)
+            {
+            }
+            column(ApprovalDate2; ApprovalDate2)
+            {
+            }
+            column(ApprovalDate3; ApprovalDate3)
+            {
+            }
+
+            trigger OnAfterGetRecord()
+            begin
+                // Prepared By Finance Officer / Checked By Head of Finance / Authorised By
+                // Executive Director: one HR Employee (matched to the approver via User ID) per
+                // approval sequence, same lookup as Mission Proposal and the Approval Entries
+                // With Sign factbox.
+                SetApprover("Purchase Header"."No.", 1, ApproverName1, ApprovalDate1, Approver1Emp);
+                SetApprover("Purchase Header"."No.", 2, ApproverName2, ApprovalDate2, Approver2Emp);
+                SetApprover("Purchase Header"."No.", 3, ApproverName3, ApprovalDate3, Approver3Emp);
+            end;
+            dataitem("Purchase Line"; "Purchase Line")
+        {
                 DataItemLink = "Document No." = field("No.");
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
-                column(ReportForNavId_6547; 6547)
-                {
-                }
-                column(CompanyInfo_Picture; CompanyInfo.Picture)
-                {
-                }
-                column(CompanyInfo__Country_Region_Code_; CompanyInfo."Country/Region Code")
-                {
-                }
-                column(CompanyInfo_City; CompanyInfo.City)
-                {
-                }
-                column(CompanyInfo__Address_2_; CompanyInfo."Address 2")
-                {
-                }
-                column(CompanyInfo_Address; CompanyInfo.Address)
-                {
-                }
-                column(CompanyInfo_Name; CompanyInfo.Name)
-                {
-                }
-                column(CompanyInfo__Phone_No__; CompanyInfo."Phone No.")
-                {
-                }
-                column(CompanyInfo__Fax_No__; CompanyInfo."Fax No.")
-                {
-                }
-                column(CompanyInfo__E_Mail_; CompanyInfo."E-Mail")
-                {
-                }
-                column(CompanyInfo__Home_Page_; CompanyInfo."Home Page")
-                {
-                }
-                column(Purchase_Header___No__; "Purchase Header"."No.")
-                {
-                }
-                column(FORMAT__Purchase_Line___Order_Date__0_4_; Format("Purchase Line"."Order Date", 0, 4))
-                {
-                }
-                column(Purchase_Header___Buy_from_Vendor_Name_; "Purchase Header"."Buy-from Vendor Name")
-                {
-                }
-                column(VendorAddr; VendorAddr)
-                {
-                }
-                column(VendorCity; VendorCity)
-                {
-                }
-                column(VendorPostCod; VendorPostCod)
-                {
-                }
-                column(VendorTel; VendorTel)
-                {
-                }
-                column(Purchase_Line_Quantity; Quantity)
-                {
-                }
-                column(Description2_PurchaseLine; DescriptionText)
-                {
-                }
-                column(Description_PurchaseLine; DescriptionText)
-                {
-                }
-                column(Purchase_Line__Unit_Cost_; "Unit Cost")
-                {
-                }
-                column(Purchase_Line_Amount; Amount)
-                {
-                }
-                column(Purchase_Line_Amount_Control1000000133; Amount)
-                {
-                }
-                column(CurrReport_PAGENO; CurrReport.PageNo)
-                {
-                }
-                column(Purchase_Header___Created_By_; "Purchase Header"."User ID")
-                {
-                }
-                column(Purchase_Header___Date_Created_; "Purchase Header"."Document Date")
-                {
-                }
-                column(Tel_Caption; Tel_CaptionLbl)
-                {
-                }
-                column(Fax_Caption; Fax_CaptionLbl)
-                {
-                }
-                column(Email_Caption; Email_CaptionLbl)
-                {
-                }
-                column(Web_Caption; Web_CaptionLbl)
-                {
-                }
-                column(PURCHASE_ORDERCaption; PURCHASE_ORDERCaptionLbl)
-                {
-                }
-                column(Order_DateCaption; Order_DateCaptionLbl)
-                {
-                }
-                column(Order_No_Caption; Order_No_CaptionLbl)
-                {
-                }
-                column(SUPPLIER_Caption; SUPPLIER_CaptionLbl)
-                {
-                }
-                column(QuantityCaption; QuantityCaptionLbl)
-                {
-                }
-                column(Unit_CostCaption; Unit_CostCaptionLbl)
-                {
-                }
-                column(Total_Unit_CostCaption; Total_Unit_CostCaptionLbl)
-                {
-                }
-                column(DescriptionCaption; DescriptionCaptionLbl)
-                {
-                }
-                column(TotalCaption; TotalCaptionLbl)
-                {
-                }
-                column(CurrReport_PAGENOCaption; CurrReport_PAGENOCaptionLbl)
-                {
-                }
-                column(TERMS_AND_CONDITIONSCaption; TERMS_AND_CONDITIONSCaptionLbl)
-                {
-                }
-                column(V1__This_LPO_is_valid_for_30_daysCaption; V1__This_LPO_is_valid_for_30_daysCaptionLbl)
-                {
-                }
-                column(V3__TI_Kenya_reserves_the_right_to_return_all_the_goods_which_may_be_found_defective_during_consumptionCaption; V3__TI_Kenya_reserves_the_right_to_return_all_the_goods_which_may_be_found_defective_during_consumptionCaptionLbl)
-                {
-                }
-                column(V2__All_the_goods_services_supplied_MUST_be_as_per_order_and_MUST_meet_all_the_specified_conditionsCaption; V2__All_the_goods_services_supplied_MUST_be_as_per_order_and_MUST_meet_all_the_specified_conditionsCaptionLbl)
-                {
-                }
-                column(V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_Caption; V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_CaptionLbl)
-                {
-                }
-                column(V4__Goods_services_are_received_subject_to_verification_in_due_courseCaption; V4__Goods_services_are_received_subject_to_verification_in_due_courseCaptionLbl)
-                {
-                }
-                column(where_such_conditions_could_not_be_verified_or_established_during_receipt_of_the_goods_Caption; where_such_conditions_could_not_be_verified_or_established_during_receipt_of_the_goods_CaptionLbl)
-                {
-                }
-                column(V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaption; V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaptionLbl)
-                {
-                }
-                column(CorrruptionFreeorgLabel; CorrruptionFreeorgLabel) { }
-                column(EtimsCompliantLabel; EtimsCompliantLabel) { }
-                column(Date_Caption; Date_CaptionLbl)
-                {
-                }
-                column(Date_Caption_Control1000000025; Date_Caption_Control1000000025Lbl)
-                {
-                }
-                column(Date_Caption_Control1000000027; Date_Caption_Control1000000027Lbl)
-                {
-                }
-                column(Signature_Caption; Signature_CaptionLbl)
-                {
-                }
-                column(Signature_Caption_Control1000000030; Signature_Caption_Control1000000030Lbl)
-                {
-                }
-                column(Signature_Caption_Control1000000031; Signature_Caption_Control1000000031Lbl)
-                {
-                }
-                column(EmptyStringCaption; EmptyStringCaptionLbl)
-                {
-                }
-                column(EmptyStringCaption_Control1000000034; EmptyStringCaption_Control1000000034Lbl)
-                {
-                }
-                column(EmptyStringCaption_Control1000000035; EmptyStringCaption_Control1000000035Lbl)
-                {
-                }
-                column(EmptyStringCaption_Control1000000037; EmptyStringCaption_Control1000000037Lbl)
-                {
-                }
-                column(EmptyStringCaption_Control1000000038; EmptyStringCaption_Control1000000038Lbl)
-                {
-                }
-                column(EmptyStringCaption_Control1000000039; EmptyStringCaption_Control1000000039Lbl)
-                {
-                }
-                column(EmptyStringCaption_Control1000000040; EmptyStringCaption_Control1000000040Lbl)
-                {
-                }
-                column(V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption; V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaptionLbl)
-                {
-                }
-                column(Prepared_By_Finance_Officer__Caption; Prepared_By_Finance_Officer__CaptionLbl)
-                {
-                }
-                column(Checked_By_Head_of_Finance__Caption; Checked_By_Head_of_Finance__CaptionLbl)
-                {
-                }
-                column(Authorised_By_Executive_Director_Caption; Authorised_By_Executive_Director_CaptionLbl)
-                {
-                }
-                column(Purchase_Line_Document_Type; "Document Type")
-                {
-                }
-                column(Purchase_Line_Document_No_; "Document No.")
-                {
-                }
-                column(Purchase_Line_Line_No_; "Line No.")
-                {
-                }
-                column(FUND; "Purchase Line"."Shortcut Dimension 1 Code")
-                {
-                }
-
-                trigger OnAfterGetRecord()
-                begin
-
-                    DescriptionText := '';
-                    if "Purchase Line"."Description 4" = '' then begin
-                        DescriptionText := "Purchase Line"."Description 3"
-                    end else begin
-                        DescriptionText := "Purchase Line"."Description 4"
-                    end;
-                    if VendorInfo.Get("Purchase Header"."Buy-from Vendor No.") then
-                        VendorAddr := VendorInfo.Address;
-                    VendorCity := VendorInfo.City;
-                    VendorPostCod := VendorInfo."Post Code";
-                    VendorTel := VendorInfo."Phone No.";
-                end;
-
-                trigger OnPreDataItem()
-                begin
-                    LastFieldNo := FieldNo("Document Type");
-                end;
-            }
-            dataitem("Approval Entry"; "Approval Entry")
+            column(ReportForNavId_6547; 6547)
             {
-                DataItemLink = "Document No." = field("No.");
-                column(Document_No_; "Document No.") { }
-                column(Approval_Code; "Approval Code") { }
-
-
             }
+            column(CompanyInfo_Picture; CompanyInfo.Picture)
+            {
+            }
+            column(CompanyInfo__Country_Region_Code_; CompanyInfo."Country/Region Code")
+            {
+            }
+            column(CompanyInfo_City; CompanyInfo.City)
+            {
+            }
+            column(CompanyInfo__Address_2_; CompanyInfo."Address 2")
+            {
+            }
+            column(CompanyInfo_Address; CompanyInfo.Address)
+            {
+            }
+            column(CompanyInfo_Name; CompanyInfo.Name)
+            {
+            }
+            column(CompanyInfo__Phone_No__; CompanyInfo."Phone No.")
+            {
+            }
+            column(CompanyInfo__Fax_No__; CompanyInfo."Fax No.")
+            {
+            }
+            column(CompanyInfo__E_Mail_; CompanyInfo."E-Mail")
+            {
+            }
+            column(CompanyInfo__Home_Page_; CompanyInfo."Home Page")
+            {
+            }
+            column(Purchase_Header___No__; "Purchase Header"."No.")
+            {
+            }
+            column(FORMAT__Purchase_Line___Order_Date__0_4_; Format("Purchase Line"."Order Date", 0, 4))
+            {
+            }
+            column(Purchase_Header___Buy_from_Vendor_Name_; "Purchase Header"."Buy-from Vendor Name")
+            {
+            }
+            column(VendorAddr; VendorAddr)
+            {
+            }
+            column(VendorCity; VendorCity)
+            {
+            }
+            column(VendorPostCod; VendorPostCod)
+            {
+            }
+            column(VendorTel; VendorTel)
+            {
+            }
+            column(Purchase_Line_Quantity; Quantity)
+            {
+            }
+            column(Description2_PurchaseLine; DescriptionText)
+            {
+            }
+            column(Description_PurchaseLine; DescriptionText)
+            {
+            }
+            column(Purchase_Line__Unit_Cost_; "Unit Cost")
+            {
+            }
+            column(Purchase_Line_Amount; Amount)
+            {
+            }
+            column(Purchase_Line_Amount_Control1000000133; Amount)
+            {
+            }
+            column(CurrReport_PAGENO; CurrReport.PageNo)
+            {
+            }
+            column(Purchase_Header___Created_By_; "Purchase Header"."User ID")
+            {
+            }
+            column(Purchase_Header___Date_Created_; "Purchase Header"."Document Date")
+            {
+            }
+            column(Tel_Caption; Tel_CaptionLbl)
+            {
+            }
+            column(Fax_Caption; Fax_CaptionLbl)
+            {
+            }
+            column(Email_Caption; Email_CaptionLbl)
+            {
+            }
+            column(Web_Caption; Web_CaptionLbl)
+            {
+            }
+            column(PURCHASE_ORDERCaption; PURCHASE_ORDERCaptionLbl)
+            {
+            }
+            column(Order_DateCaption; Order_DateCaptionLbl)
+            {
+            }
+            column(Order_No_Caption; Order_No_CaptionLbl)
+            {
+            }
+            column(SUPPLIER_Caption; SUPPLIER_CaptionLbl)
+            {
+            }
+            column(QuantityCaption; QuantityCaptionLbl)
+            {
+            }
+            column(Unit_CostCaption; Unit_CostCaptionLbl)
+            {
+            }
+            column(Total_Unit_CostCaption; Total_Unit_CostCaptionLbl)
+            {
+            }
+            column(DescriptionCaption; DescriptionCaptionLbl)
+            {
+            }
+            column(TotalCaption; TotalCaptionLbl)
+            {
+            }
+            column(CurrReport_PAGENOCaption; CurrReport_PAGENOCaptionLbl)
+            {
+            }
+            column(TERMS_AND_CONDITIONSCaption; TERMS_AND_CONDITIONSCaptionLbl)
+            {
+            }
+            column(V1__This_LPO_is_valid_for_30_daysCaption; V1__This_LPO_is_valid_for_30_daysCaptionLbl)
+            {
+            }
+            column(V3__TI_Kenya_reserves_the_right_to_return_all_the_goods_which_may_be_found_defective_during_consumptionCaption; V3__TI_Kenya_reserves_the_right_to_return_all_the_goods_which_may_be_found_defective_during_consumptionCaptionLbl)
+            {
+            }
+            column(V2__All_the_goods_services_supplied_MUST_be_as_per_order_and_MUST_meet_all_the_specified_conditionsCaption; V2__All_the_goods_services_supplied_MUST_be_as_per_order_and_MUST_meet_all_the_specified_conditionsCaptionLbl)
+            {
+            }
+            column(V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_Caption; V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_CaptionLbl)
+            {
+            }
+            column(V4__Goods_services_are_received_subject_to_verification_in_due_courseCaption; V4__Goods_services_are_received_subject_to_verification_in_due_courseCaptionLbl)
+            {
+            }
+            column(where_such_conditions_could_not_be_verified_or_established_during_receipt_of_the_goods_Caption; where_such_conditions_could_not_be_verified_or_established_during_receipt_of_the_goods_CaptionLbl)
+            {
+            }
+            column(V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaption; V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaptionLbl)
+            {
+            }
+            column(CorrruptionFreeorgLabel; CorrruptionFreeorgLabel) { }
+            column(EtimsCompliantLabel; EtimsCompliantLabel) { }
+            column(Date_Caption; Date_CaptionLbl)
+            {
+            }
+            column(Date_Caption_Control1000000025; Date_Caption_Control1000000025Lbl)
+            {
+            }
+            column(Date_Caption_Control1000000027; Date_Caption_Control1000000027Lbl)
+            {
+            }
+            column(Signature_Caption; Signature_CaptionLbl)
+            {
+            }
+            column(Signature_Caption_Control1000000030; Signature_Caption_Control1000000030Lbl)
+            {
+            }
+            column(Signature_Caption_Control1000000031; Signature_Caption_Control1000000031Lbl)
+            {
+            }
+            column(EmptyStringCaption; EmptyStringCaptionLbl)
+            {
+            }
+            column(EmptyStringCaption_Control1000000034; EmptyStringCaption_Control1000000034Lbl)
+            {
+            }
+            column(EmptyStringCaption_Control1000000035; EmptyStringCaption_Control1000000035Lbl)
+            {
+            }
+            column(EmptyStringCaption_Control1000000037; EmptyStringCaption_Control1000000037Lbl)
+            {
+            }
+            column(EmptyStringCaption_Control1000000038; EmptyStringCaption_Control1000000038Lbl)
+            {
+            }
+            column(EmptyStringCaption_Control1000000039; EmptyStringCaption_Control1000000039Lbl)
+            {
+            }
+            column(EmptyStringCaption_Control1000000040; EmptyStringCaption_Control1000000040Lbl)
+            {
+            }
+            column(V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption; V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaptionLbl)
+            {
+            }
+            column(Prepared_By_Finance_Officer__Caption; Prepared_By_Finance_Officer__CaptionLbl)
+            {
+            }
+            column(Checked_By_Head_of_Finance__Caption; Checked_By_Head_of_Finance__CaptionLbl)
+            {
+            }
+            column(Authorised_By_Executive_Director_Caption; Authorised_By_Executive_Director_CaptionLbl)
+            {
+            }
+            column(Purchase_Line_Document_Type; "Document Type")
+            {
+            }
+            column(Purchase_Line_Document_No_; "Document No.")
+            {
+            }
+            column(Purchase_Line_Line_No_; "Line No.")
+            {
+            }
+            column(FUND; "Purchase Line"."Shortcut Dimension 1 Code")
+            {
+            }
+
+            trigger OnAfterGetRecord()
+            begin
+
+                DescriptionText := '';
+                if "Purchase Line"."Description 4" = '' then begin
+                    DescriptionText := "Purchase Line"."Description 3"
+                end else begin
+                    DescriptionText := "Purchase Line"."Description 4"
+                end;
+                if VendorInfo.Get("Purchase Header"."Buy-from Vendor No.") then
+                    VendorAddr := VendorInfo.Address;
+                VendorCity := VendorInfo.City;
+                VendorPostCod := VendorInfo."Post Code";
+                VendorTel := VendorInfo."Phone No.";
+            end;
+
+            trigger OnPreDataItem()
+            begin
+                LastFieldNo := FieldNo("Document Type");
+            end;
         }
     }
+}
 
     requestpage
     {
@@ -297,8 +327,34 @@ Report 80025 LPO
         CompanyInfo.CalcFields(Picture);
     end;
 
+    // Looks up the Approved entry at this approval sequence for DocumentNo and, if found,
+    // resolves the approver's name/signature via HR Employees.
+    local procedure SetApprover(DocumentNo: Code[20]; SequenceNo: Integer; var ApproverName: Text[100]; var ApprovalDate: DateTime; var ApproverEmp: Record "HR Employees")
     var
-        DescriptionText: Text;
+        ApprovalEntry: Record "Approval Entry";
+    begin
+        ApproverName := '';
+        ApprovalDate := 0DT;
+        Clear(ApproverEmp);
+
+        ApprovalEntry.Reset();
+        ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
+        ApprovalEntry.SetRange("Document No.", DocumentNo);
+        ApprovalEntry.SetRange("Sequence No.", SequenceNo);
+        ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+        if ApprovalEntry.FindFirst() then begin
+            ApprovalDate := ApprovalEntry."Last Date-Time Modified";
+
+            ApproverEmp.Reset();
+            ApproverEmp.SetRange("User ID", ApprovalEntry."Approver ID");
+            if ApproverEmp.FindFirst() then begin
+                ApproverEmp.CalcFields(Signature);
+                ApproverName := ApproverEmp.FullName;
+            end;
+        end;
+    end;
+    var
+            DescriptionText: Text;
         LastFieldNo: Integer;
         FooterPrinted: Boolean;
         VendorInfo: Record Vendor;
@@ -309,6 +365,15 @@ Report 80025 LPO
         VendorTel: Text;
         BankAccount: Code[10];
         PurchLine: Record "Purchase Line";
+        ApproverName1: Text[100];
+        ApproverName2: Text[100];
+        ApproverName3: Text[100];
+        Approver1Emp: Record "HR Employees";
+        Approver2Emp: Record "HR Employees";
+        Approver3Emp: Record "HR Employees";
+        ApprovalDate1: DateTime;
+        ApprovalDate2: DateTime;
+        ApprovalDate3: DateTime;
         Tel_CaptionLbl: label 'Tel:';
         Fax_CaptionLbl: label 'Fax:';
         Email_CaptionLbl: label 'Email:';

@@ -1791,7 +1791,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value />
+                    <Value>=First(Fields!ApproverName1.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
                     </Style>
@@ -1829,7 +1829,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value />
+                    <Value>=First(Fields!ApproverName2.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
                     </Style>
@@ -1865,7 +1865,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value />
+                    <Value>=First(Fields!ApproverName3.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
                     </Style>
@@ -1988,21 +1988,11 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="EmptyStringCaption4">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value />
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
+          <Image Name="ApproverSignature1">
+            <Source>Database</Source>
+            <Value>=First(Fields!Signature1.Value, "DataSet_Result")</Value>
+            <MIMEType>image/jpeg</MIMEType>
+            <Sizing>FitProportional</Sizing>
             <Top>13.6103cm</Top>
             <Left>11.14805cm</Left>
             <Height>0.423cm</Height>
@@ -2012,31 +2002,13 @@
               <Border>
                 <Style>None</Style>
               </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
             </Style>
-          </Textbox>
-          <Textbox Name="EmptyStringCaption5">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value />
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
+          </Image>
+          <Image Name="ApproverSignature2">
+            <Source>Database</Source>
+            <Value>=First(Fields!Signature2.Value, "DataSet_Result")</Value>
+            <MIMEType>image/jpeg</MIMEType>
+            <Sizing>FitProportional</Sizing>
             <Top>14.3776cm</Top>
             <Left>11.11277cm</Left>
             <Height>0.423cm</Height>
@@ -2046,31 +2018,13 @@
               <Border>
                 <Style>None</Style>
               </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
             </Style>
-          </Textbox>
-          <Textbox Name="EmptyStringCaption6">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value />
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
+          </Image>
+          <Image Name="ApproverSignature3">
+            <Source>Database</Source>
+            <Value>=First(Fields!Signature3.Value, "DataSet_Result")</Value>
+            <MIMEType>image/jpeg</MIMEType>
+            <Sizing>FitProportional</Sizing>
             <Top>15.14488cm</Top>
             <Left>11.14805cm</Left>
             <Height>0.423cm</Height>
@@ -2080,16 +2034,8 @@
               <Border>
                 <Style>None</Style>
               </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
             </Style>
-          </Textbox>
+          </Image>
           <Textbox Name="Date_Caption2">
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
@@ -2183,7 +2129,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!OrderDate_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!ApprovalDate1.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
                       <Format>dd/MM/yy</Format>
@@ -2220,7 +2166,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!OrderDate_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!ApprovalDate2.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
                       <Format>dd/MM/yy</Format>
@@ -2257,7 +2203,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!OrderDate_PurchaseHeader.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!ApprovalDate3.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
                       <Format>dd/MM/yy</Format>
@@ -2687,11 +2633,32 @@ End Function
         <Field Name="FUND">
           <DataField>FUND</DataField>
         </Field>
-        <Field Name="Document_No_">
-          <DataField>Document_No_</DataField>
+        <Field Name="ApproverName1">
+          <DataField>ApproverName1</DataField>
         </Field>
-        <Field Name="Approval_Code">
-          <DataField>Approval_Code</DataField>
+        <Field Name="ApproverName2">
+          <DataField>ApproverName2</DataField>
+        </Field>
+        <Field Name="ApproverName3">
+          <DataField>ApproverName3</DataField>
+        </Field>
+        <Field Name="Signature1">
+          <DataField>Signature1</DataField>
+        </Field>
+        <Field Name="Signature2">
+          <DataField>Signature2</DataField>
+        </Field>
+        <Field Name="Signature3">
+          <DataField>Signature3</DataField>
+        </Field>
+        <Field Name="ApprovalDate1">
+          <DataField>ApprovalDate1</DataField>
+        </Field>
+        <Field Name="ApprovalDate2">
+          <DataField>ApprovalDate2</DataField>
+        </Field>
+        <Field Name="ApprovalDate3">
+          <DataField>ApprovalDate3</DataField>
         </Field>
       </Fields>
       <Query>

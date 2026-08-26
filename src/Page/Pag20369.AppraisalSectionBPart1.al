@@ -1,6 +1,6 @@
 //APPRAISAL Part B PAGES
 
-page 20369 "Appraisal Section B Part 1"
+Page 50369 "Appraisal Section B Part 1"
 {
     ApplicationArea = All;
     Caption = 'What did you do well in relation to your objectives?';
@@ -70,7 +70,7 @@ page 20369 "Appraisal Section B Part 1"
         HREmployees: Record "HR Employees";
         AppraisalHeader: Record "Appraisal Header";
 }
-page 20370 "Appraisal Section B Part 2"
+Page 50370 "Appraisal Section B Part 2"
 {
     ApplicationArea = All;
     Caption = 'What enabled you to perform well?';
@@ -139,7 +139,7 @@ page 20370 "Appraisal Section B Part 2"
         HREmployees: Record "HR Employees";
         AppraisalHeader: Record "Appraisal Header";
 }
-page 20371 "Appraisal Section B Part 3"
+Page 50371 "Appraisal Section B Part 3"
 {
     ApplicationArea = All;
     Caption = 'What didn’t you do well?';
@@ -208,7 +208,7 @@ page 20371 "Appraisal Section B Part 3"
         HREmployees: Record "HR Employees";
         AppraisalHeader: Record "Appraisal Header";
 }
-page 20372 "Appraisal Section B Part 4"
+Page 50372 "Appraisal Section B Part 4"
 {
     ApplicationArea = All;
     Caption = 'What are some of the problems encountered and how were they handled?';

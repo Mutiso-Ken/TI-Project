@@ -1,4 +1,4 @@
-table 171228 "Portal Documents"
+table 50228 "Portal Documents"
 {
     DataClassification = ToBeClassified;
 

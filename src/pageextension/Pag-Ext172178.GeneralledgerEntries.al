@@ -2,7 +2,7 @@ namespace TISolution.TISolution;
 
 using Microsoft.Finance.GeneralLedger.Ledger;
 
-pageextension 172178 GeneralledgerEntries extends "General Ledger Entries"
+pageextension 60178 GeneralledgerEntries extends "General Ledger Entries"
 
 
 {

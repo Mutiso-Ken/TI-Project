@@ -1,12 +1,7 @@
 #pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006
 report 64008 "RCK Request for Quotation"
 {
-    // version PROC
-    // Adapted from the legacy system: the legacy "Requisition Header"/"Requisition Lines" tables do
-    // not exist here. The report only used "Requisition Header" to look up the tender
-    // Title by the same key already used to find "Procurement Request" below, so the
-    // lookup now reads Title from "Procurement Request" directly; "Requisition Lines"
-    // was declared but never used.
+
 
     DefaultLayout = RDLC;
     RDLCLayout = './Layouts/RCK Request for Quotation.rdlc';
@@ -141,6 +136,33 @@ report 64008 "RCK Request for Quotation"
             {
             }
             column(RFQDeadlineDate; RFQDeadlineDate)
+            {
+            }
+            column(ApproverName1; ApproverName1)
+            {
+            }
+            column(ApproverDate1; ApproverDate1)
+            {
+            }
+            column(Signature1; Approver1Emp.Signature)
+            {
+            }
+            column(ApproverName2; ApproverName2)
+            {
+            }
+            column(ApproverDate2; ApproverDate2)
+            {
+            }
+            column(Signature2; Approver2Emp.Signature)
+            {
+            }
+            column(ApproverName3; ApproverName3)
+            {
+            }
+            column(ApproverDate3; ApproverDate3)
+            {
+            }
+            column(Signature3; Approver3Emp.Signature)
             {
             }
             dataitem("Procurement Request Lines"; "Procurement Request Lines")
@@ -298,6 +320,10 @@ report 64008 "RCK Request for Quotation"
                     RFQDeadlineDate := ProcurementRequest."RFQ Deadlne Date";
                     title := ProcurementRequest.Title;
                 END;
+
+                SetApprover(ProcurementRequest."No.", 1, ApproverName1, ApproverDate1, Approver1Emp);
+                SetApprover(ProcurementRequest."No.", 2, ApproverName2, ApproverDate2, Approver2Emp);
+                SetApprover(ProcurementRequest."No.", 3, ApproverName3, ApproverDate3, Approver3Emp);
             end;
         }
     }
@@ -422,6 +448,44 @@ report 64008 "RCK Request for Quotation"
         ExpectedDeliveryDate: Date;
         RFQDeadlineTime: Time;
         RFQDeadlineDate: Date;
+        ApproverName1: Text[100];
+        ApproverDate1: Text[30];
+        Approver1Emp: Record "HR Employees";
+        ApproverName2: Text[100];
+        ApproverDate2: Text[30];
+        Approver2Emp: Record "HR Employees";
+        ApproverName3: Text[100];
+        ApproverDate3: Text[30];
+        Approver3Emp: Record "HR Employees";
+
+    // For every approval sequence (1, 2, 3) on the Procurement Request behind this RFQ, resolves
+    // the approver's name, approval date and signature via HR Employees, matched on "User ID" =
+    // "Approver ID" - the same lookup already used for the Mission Proposal and Purchase
+    // Requisition Document reports.
+    local procedure SetApprover(DocumentNo: Code[20]; SequenceNo: Integer; var ApproverName: Text[100]; var ApprovalDate: Text[30]; var ApproverEmp: Record "HR Employees")
+    var
+        AppEntry: Record "Approval Entry";
+    begin
+        ApproverName := '';
+        ApprovalDate := '';
+        Clear(ApproverEmp);
+
+        AppEntry.Reset();
+        AppEntry.SetRange("Document No.", DocumentNo);
+        AppEntry.SetRange("Table ID", Database::"Procurement Request");
+        AppEntry.SetRange("Sequence No.", SequenceNo);
+        AppEntry.SetRange(Status, AppEntry.Status::Approved);
+        if AppEntry.FindFirst() then begin
+            ApprovalDate := Format(AppEntry."Last Date-Time Modified");
+
+            ApproverEmp.Reset();
+            ApproverEmp.SetRange("User ID", AppEntry."Approver ID");
+            if ApproverEmp.FindFirst() then begin
+                ApproverEmp.CalcFields(Signature);
+                ApproverName := ApproverEmp.FullName;
+            end;
+        end;
+    end;
 
     procedure GetMonthlyTot(var Periodfrom: Date; var Dept: Code[20]) TotMonthReq: Decimal;
     begin

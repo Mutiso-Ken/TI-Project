@@ -1,4 +1,4 @@
-pageextension 20379 "Fixed Asset" extends "Fixed Asset List"
+pageextension 50379 "Fixed Asset" extends "Fixed Asset List"
 {
     layout
     {
@@ -9,7 +9,7 @@ pageextension 20379 "Fixed Asset" extends "Fixed Asset List"
         }
     }
 }
-pageextension 20380 "Fixed Asset page" extends "Fixed Asset Card"
+pageextension 50380 "Fixed Asset page" extends "Fixed Asset Card"
 {
     layout
     {

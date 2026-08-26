@@ -1,6 +1,6 @@
 //APPRAISAL SECTION B PAGES
 
-page 20373 "Appraisal Section C Part 1"
+Page 50373 "Appraisal Section C Part 1"
 {
     ApplicationArea = All;
     Caption = 'Technical Skills';
@@ -73,7 +73,7 @@ page 20373 "Appraisal Section C Part 1"
         HREmployees: Record "HR Employees";
         AppraisalHeader: Record "Appraisal Header";
 }
-page 20374 "Appraisal Section C Part 2"
+Page 50374 "Appraisal Section C Part 2"
 {
     ApplicationArea = All;
     Caption = 'General Organisation Skills';
@@ -146,7 +146,7 @@ page 20374 "Appraisal Section C Part 2"
         HREmployees: Record "HR Employees";
         AppraisalHeader: Record "Appraisal Header";
 }
-page 20375 "Appraisal Section C Part 3"
+Page 50375 "Appraisal Section C Part 3"
 {
     ApplicationArea = All;
     Caption = 'Self Management & Flexibility';
@@ -219,7 +219,7 @@ page 20375 "Appraisal Section C Part 3"
         HREmployees: Record "HR Employees";
         AppraisalHeader: Record "Appraisal Header";
 }
-page 20376 "Appraisal Section C Part 4"
+Page 50376 "Appraisal Section C Part 4"
 {
     ApplicationArea = All;
     Caption = 'Communication';
@@ -292,7 +292,7 @@ page 20376 "Appraisal Section C Part 4"
         HREmployees: Record "HR Employees";
         AppraisalHeader: Record "Appraisal Header";
 }
-page 20377 "Appraisal Section C Part 5"
+Page 50377 "Appraisal Section C Part 5"
 {
     ApplicationArea = All;
     Caption = 'Leadership';

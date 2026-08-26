@@ -1,5 +1,5 @@
 //************************************************************************
-pageextension 172111 "DimensionValuespageExt" extends "Dimension Values"
+pageextension 60111 "DimensionValuespageExt" extends "Dimension Values"
 
 {
     layout

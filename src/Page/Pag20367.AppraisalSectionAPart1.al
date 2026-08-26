@@ -1,6 +1,6 @@
 
 
-page 20367 "Appraisal Section A Part 1"
+Page 50367 "Appraisal Section A Part 1"
 {
     ApplicationArea = All;
     Caption = 'PART 1';

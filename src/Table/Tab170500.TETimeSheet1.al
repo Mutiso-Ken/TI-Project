@@ -1,5 +1,5 @@
 #pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006 // ForNAV settings
-Table 170500 "TE Time Sheet1"
+Table 50500 "TE Time Sheet1"
 {
     // Serenic Navigator - (c)Copyright Serenic Software, Inc. 1999-2017.
     // By opening this object you acknowledge that this object includes confidential information

@@ -2,7 +2,7 @@ namespace TISolution.TISolution;
 
 using System.Automation;
 
-pageextension 172188 "Approval Entries" extends "Approval Entries"
+pageextension 60188 "Approval Entries" extends "Approval Entries"
 {
     layout
     {

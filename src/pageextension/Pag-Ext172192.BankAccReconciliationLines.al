@@ -1,4 +1,4 @@
-pageextension 172192 "Bank Acc. Reconciliation Lines" extends "Bank Acc. Reconciliation Lines"
+pageextension 60192 "Bank Acc. Reconciliation Lines" extends "Bank Acc. Reconciliation Lines"
 {
     layout
     {
