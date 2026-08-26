@@ -120,13 +120,7 @@ codeunit 80009 CustomEvents
         IsHandled := true;
     end;
 
-    // Standard "Post" auto-releases an Open document inline (via this same codeunit) before
-    // posting it, and the custom Approval Entry workflow used by SendApprovalRequest/"Validate
-    // Approval" on the Purchase Order page is not otherwise wired into that release step - so
-    // Post alone, with no manual Release and no approval, would go straight through. This blocks
-    // release (and therefore Post) for LPOs (Document Type = Order) unless every approval entry
-    // for the document is Approved - covering the manual Release action and Post's auto-release
-    // alike, not just the one "Validate Approval" button.
+ 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeReleasePurchaseDoc', '', true, true)]
     local procedure BlockOrderReleaseWithoutFullApproval(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; var SkipCheckReleaseRestrictions: Boolean; var IsHandled: Boolean; SkipWhseRequestOperations: Boolean)
     var
