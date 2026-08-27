@@ -54,16 +54,6 @@ Report 80025 LPO
             {
             }
 
-            trigger OnAfterGetRecord()
-            begin
-                // Prepared By Finance Officer / Checked By Head of Finance / Authorised By
-                // Executive Director: one HR Employee (matched to the approver via User ID) per
-                // approval sequence, same lookup as Mission Proposal and the Approval Entries
-                // With Sign factbox.
-                SetApprover("Purchase Header"."No.", 1, ApproverName1, ApprovalDate1, Approver1Emp);
-                SetApprover("Purchase Header"."No.", 2, ApproverName2, ApprovalDate2, Approver2Emp);
-                SetApprover("Purchase Header"."No.", 3, ApproverName3, ApprovalDate3, Approver3Emp);
-            end;
             dataitem("Purchase Line"; "Purchase Line")
         {
                 DataItemLink = "Document No." = field("No.");
@@ -302,6 +292,17 @@ Report 80025 LPO
                 LastFieldNo := FieldNo("Document Type");
             end;
         }
+
+            trigger OnAfterGetRecord()
+            begin
+                // Prepared By Finance Officer / Checked By Head of Finance / Authorised By
+                // Executive Director: one HR Employee (matched to the approver via User ID) per
+                // approval sequence, same lookup as Mission Proposal and the Approval Entries
+                // With Sign factbox.
+                SetApprover("Purchase Header"."No.", 1, ApproverName1, ApprovalDate1, Approver1Emp);
+                SetApprover("Purchase Header"."No.", 2, ApproverName2, ApprovalDate2, Approver2Emp);
+                SetApprover("Purchase Header"."No.", 3, ApproverName3, ApprovalDate3, Approver3Emp);
+            end;
     }
 }
 

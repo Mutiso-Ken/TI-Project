@@ -2405,6 +2405,33 @@ End Function
         <Field Name="OrderDate_PurchaseHeader">
           <DataField>OrderDate_PurchaseHeader</DataField>
         </Field>
+        <Field Name="ApproverName1">
+          <DataField>ApproverName1</DataField>
+        </Field>
+        <Field Name="ApproverName2">
+          <DataField>ApproverName2</DataField>
+        </Field>
+        <Field Name="ApproverName3">
+          <DataField>ApproverName3</DataField>
+        </Field>
+        <Field Name="Signature1">
+          <DataField>Signature1</DataField>
+        </Field>
+        <Field Name="Signature2">
+          <DataField>Signature2</DataField>
+        </Field>
+        <Field Name="Signature3">
+          <DataField>Signature3</DataField>
+        </Field>
+        <Field Name="ApprovalDate1">
+          <DataField>ApprovalDate1</DataField>
+        </Field>
+        <Field Name="ApprovalDate2">
+          <DataField>ApprovalDate2</DataField>
+        </Field>
+        <Field Name="ApprovalDate3">
+          <DataField>ApprovalDate3</DataField>
+        </Field>
         <Field Name="ReportForNavId_6547">
           <DataField>ReportForNavId_6547</DataField>
         </Field>
@@ -2632,33 +2659,6 @@ End Function
         </Field>
         <Field Name="FUND">
           <DataField>FUND</DataField>
-        </Field>
-        <Field Name="ApproverName1">
-          <DataField>ApproverName1</DataField>
-        </Field>
-        <Field Name="ApproverName2">
-          <DataField>ApproverName2</DataField>
-        </Field>
-        <Field Name="ApproverName3">
-          <DataField>ApproverName3</DataField>
-        </Field>
-        <Field Name="Signature1">
-          <DataField>Signature1</DataField>
-        </Field>
-        <Field Name="Signature2">
-          <DataField>Signature2</DataField>
-        </Field>
-        <Field Name="Signature3">
-          <DataField>Signature3</DataField>
-        </Field>
-        <Field Name="ApprovalDate1">
-          <DataField>ApprovalDate1</DataField>
-        </Field>
-        <Field Name="ApprovalDate2">
-          <DataField>ApprovalDate2</DataField>
-        </Field>
-        <Field Name="ApprovalDate3">
-          <DataField>ApprovalDate3</DataField>
         </Field>
       </Fields>
       <Query>
