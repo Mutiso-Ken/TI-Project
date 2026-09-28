@@ -207,6 +207,7 @@ codeunit 90004 ProcurementEntry
         RequestType: Text;
         VendorID: code[50];
         FilterID: code[50];
+        Email: Text;
 
     begin
         Clear(RequestJson);
@@ -219,6 +220,11 @@ codeunit 90004 ProcurementEntry
             VendorID := JsonToken.AsValue().AsText();
 
 
+        if ((RequestType = 'vendor_lookup_by_email')) then begin
+            if RequestJson.Get('email', JsonToken) then
+                Email := JsonToken.AsValue().AsText();
+            exit(GetVendorByEmail(Email));
+        end;
         if ((RequestType = 'tender_list')) then
             exit(GetVendorTenderList(VendorID));
         if ((RequestType = 'registration_details')) then
@@ -268,6 +274,38 @@ codeunit 90004 ProcurementEntry
             "Procurement List".Advertised := true;
             "Procurement List".Modify();
         end;
+    end;
+
+    local procedure GetVendorByEmail(Email: Text): Text
+    var
+        SupplierCategoryTable: Record "Supplier Category";
+        jsonobject: JsonObject;
+    begin
+        Clear(Outputjson);
+        if Email = '' then
+            exit(Format(AddResponseHead(Outputjson, false)));
+
+        VendorTable.Reset();
+        VendorTable.SetFilter("E-Mail", '@' + Email);
+        if VendorTable.FindFirst() then begin
+            Clear(jsonobject);
+            jsonobject.Add('No', VendorTable."No.");
+            jsonobject.Add('Name', VendorTable.Name);
+            jsonobject.Add('Contact', VendorTable.Contact);
+            jsonobject.Add('Email', VendorTable."E-Mail");
+            jsonobject.Add('Phone', VendorTable."Phone No.");
+            jsonobject.Add('Address', VendorTable.Address);
+            jsonobject.Add('PIN', VendorTable."PIN No.");
+            jsonobject.Add('CRN', VendorTable."Certificate of Incorporation");
+            jsonobject.Add('Category', VendorTable."Supplier Category");
+            if SupplierCategoryTable.Get(VendorTable."Supplier Category") then
+                jsonobject.Add('CategoryDescription', SupplierCategoryTable.Description)
+            else
+                jsonobject.Add('CategoryDescription', '');
+            Outputjson.Add('VendorLookup', jsonobject);
+            exit(Format(AddResponseHead(Outputjson, true)));
+        end;
+        exit(Format(AddResponseHead(Outputjson, false)));
     end;
 
     local procedure GetVendorTenderList(VendorID: Code[50]): Text

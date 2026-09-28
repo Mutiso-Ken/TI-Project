@@ -853,6 +853,14 @@ Page 50390 "Admin Role Center"
                 group("Prospective Vendors")
                 {
                     Caption = 'Prospective Vendors';
+                    action("Vendor Onboarding")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Vendor Onboarding';
+                        ToolTip = 'Onboard a new vendor for e-Procurement portal access.';
+                        RunObject = page "Vendor Onboarding List";
+                        Image = NewCustomer;
+                    }
                     action("Vendor Registration - Pending Review")
                     {
                         ApplicationArea = All;
