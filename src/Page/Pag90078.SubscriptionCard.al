@@ -58,10 +58,10 @@ page 90078 "Subscription Card"
                 {
                     ToolTip = 'Specifies how this subscription is paid.';
                 }
-                field("Auto Renew"; Rec."Auto Renew")
-                {
-                    ToolTip = 'Specifies if this subscription renews automatically.';
-                }
+                // field("Auto Renew"; Rec."Auto Renew")
+                // {
+                //     ToolTip = 'Specifies if this subscription renews automatically.';
+                // }
             }
             group(Dates)
             {
@@ -78,6 +78,7 @@ page 90078 "Subscription Card"
                 field("Next Due Date"; Rec."Next Due Date")
                 {
                     ToolTip = 'Specifies when this subscription is next due for renewal.';
+                    Editable = false;
                 }
                 field("Reminder Days Before"; Rec."Reminder Days Before")
                 {
@@ -99,10 +100,24 @@ page 90078 "Subscription Card"
                     ToolTip = 'Specifies any remarks about this subscription.';
                 }
             }
+            group(NewSubscriptionNotice)
+            {
+                ShowCaption = false;
+                Visible = Rec."No." = '';
+
+                field(SaveFirstNotice; SaveFirstNoticeLbl)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ShowCaption = false;
+                    ToolTip = 'Save the subscription before adding renewal history.';
+                }
+            }
             part("Renewal History"; "Subscription Renewal History")
             {
                 ApplicationArea = All;
                 Caption = 'Renewal History';
+                Enabled = (Rec."No." <> '') and (Rec.Status = Rec.Status::Active);
                 SubPageLink = "Subscription No." = field("No.");
             }
         }
@@ -154,6 +169,7 @@ page 90078 "Subscription Card"
     trigger OnAfterGetCurrRecord()
     begin
         SetDueStyle();
+        CurrPage.Editable(Rec.Status = Rec.Status::Active);
     end;
 
     local procedure SetDueStyle()
@@ -172,4 +188,5 @@ page 90078 "Subscription Card"
 
     var
         DueStyleExpr: Text;
+        SaveFirstNoticeLbl: Label 'Enter the subscription No. above and save this record before adding renewal history lines.';
 }

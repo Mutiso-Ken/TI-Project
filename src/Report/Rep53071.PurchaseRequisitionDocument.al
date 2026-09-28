@@ -47,10 +47,16 @@ report 53071 "Purchase Requisition Document"
             column(DateTimeFirstApprove; DateTimeFirstApprove)
             {
             }
+            column(FirstApproverSignature; FirstApproverEmp.Signature)
+            {
+            }
             column(SecondApproverID; SecondApproverID)
             {
             }
             column(DateTimeSecondApprove; DateTimeSecondApprove)
+            {
+            }
+            column(SecondApproverSignature; SecondApproverEmp.Signature)
             {
             }
             column(ThirdApproverID; ThirdApproverID)
@@ -59,16 +65,25 @@ report 53071 "Purchase Requisition Document"
             column(DateTimeThirdApprove; DateTimeThirdApprove)
             {
             }
+            column(ThirdApproverSignature; ThirdApproverEmp.Signature)
+            {
+            }
             column(FourthApproverID; FourthApproverID)
             {
             }
             column(DateTimeFourthApprove; DateTimeFourthApprove)
             {
             }
+            column(FourthApproverSignature; FourthApproverEmp.Signature)
+            {
+            }
             column(FifthApproverID; FifthApproverID)
             {
             }
             column(DateTimeFifthApprove; DateTimeFifthApprove)
+            {
+            }
+            column(FifthApproverSignature; FifthApproverEmp.Signature)
             {
             }
             column(No_PurchaseHeader; "Purchase Header"."No.")
@@ -204,11 +219,13 @@ report 53071 "Purchase Requisition Document"
                 column(sno; SNo)
                 {
                 }
+                column(TotalUnitAmount; TotalUnitAmount) { }
 
                 trigger OnAfterGetRecord()
                 begin
                     SNo += 1;
                     TotalAmount += "Purchase Line".Amount;
+                    TotalUnitAmount := Quantity * "Direct Unit Cost";
                 end;
             }
 
@@ -238,11 +255,11 @@ report 53071 "Purchase Requisition Document"
                     DateTimeSend := Format(ApprovalEntry."Date-Time Sent for Approval");
                 end;
 
-                GetApprovalLevel(1, FirstApproverID, DateTimeFirstApprove);
-                GetApprovalLevel(2, SecondApproverID, DateTimeSecondApprove);
-                GetApprovalLevel(3, ThirdApproverID, DateTimeThirdApprove);
-                GetApprovalLevel(4, FourthApproverID, DateTimeFourthApprove);
-                GetApprovalLevel(5, FifthApproverID, DateTimeFifthApprove);
+                GetApprovalLevel(1, FirstApproverID, DateTimeFirstApprove, FirstApproverEmp);
+                GetApprovalLevel(2, SecondApproverID, DateTimeSecondApprove, SecondApproverEmp);
+                GetApprovalLevel(3, ThirdApproverID, DateTimeThirdApprove, ThirdApproverEmp);
+                GetApprovalLevel(4, FourthApproverID, DateTimeFourthApprove, FourthApproverEmp);
+                GetApprovalLevel(5, FifthApproverID, DateTimeFifthApprove, FifthApproverEmp);
             end;
 
             trigger OnPreDataItem()
@@ -273,24 +290,35 @@ report 53071 "Purchase Requisition Document"
         ExecutionTimeText: Text;
         ApprovalEntry: Record "Approval Entry";
         SenderID: Code[80];
+        TotalUnitAmount: Decimal;
         DateTimeSend: Text;
         FirstApproverID: Code[80];
         DateTimeFirstApprove: Text;
+        FirstApproverEmp: Record "HR Employees";
         SecondApproverID: Code[80];
         DateTimeSecondApprove: Text;
+        SecondApproverEmp: Record "HR Employees";
         ThirdApproverID: Code[80];
         DateTimeThirdApprove: Text;
+        ThirdApproverEmp: Record "HR Employees";
         FourthApproverID: Code[80];
         DateTimeFourthApprove: Text;
+        FourthApproverEmp: Record "HR Employees";
         FifthApproverID: Code[80];
         DateTimeFifthApprove: Text;
+        FifthApproverEmp: Record "HR Employees";
         SNo: Integer;
         TotalAmount: Decimal;
 
-    local procedure GetApprovalLevel(SequenceNo: Integer; var ApproverID: Code[80]; var DateTimeApproved: Text)
+    // Resolves the Approved entry at this sequence and, via HR Employees matched on "User ID" =
+    // "Approver ID", the approver's signature - the same lookup used by the LPO, RFQ and Mission
+    // Proposal reports.
+    local procedure GetApprovalLevel(SequenceNo: Integer; var ApproverID: Code[80]; var DateTimeApproved: Text; var ApproverEmp: Record "HR Employees")
     var
         LevelApprovalEntry: Record "Approval Entry";
     begin
+        Clear(ApproverEmp);
+
         LevelApprovalEntry.Reset();
         LevelApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
         LevelApprovalEntry.SetRange("Document No.", "Purchase Header"."No.");
@@ -299,6 +327,11 @@ report 53071 "Purchase Requisition Document"
         if LevelApprovalEntry.FindFirst() then begin
             ApproverID := LevelApprovalEntry."Approver ID";
             DateTimeApproved := Format(LevelApprovalEntry."Last Date-Time Modified");
+
+            ApproverEmp.Reset();
+            ApproverEmp.SetRange("User ID", LevelApprovalEntry."Approver ID");
+            if ApproverEmp.FindFirst() then
+                ApproverEmp.CalcFields(Signature);
         end;
     end;
 }

@@ -17,6 +17,7 @@ page 90074 "Asset Assignment History"
                 field("Employee No."; Rec."Employee No.")
                 {
                     ToolTip = 'Specifies the employee the asset is assigned to.';
+                    Editable = Rec.Status = Rec.Status::Assigned;
                 }
                 field("Employee Name"; Rec."Employee Name")
                 {
@@ -25,11 +26,13 @@ page 90074 "Asset Assignment History"
                 field("Assigned Date"; Rec."Assigned Date")
                 {
                     ToolTip = 'Specifies the date the asset was assigned.';
+                    Editable = Rec.Status = Rec.Status::Assigned;
                 }
-                field("Expected Return Date"; Rec."Expected Return Date")
-                {
-                    ToolTip = 'Specifies when the asset is expected back.';
-                }
+                // field("Expected Return Date"; Rec."Expected Return Date")
+                // {
+                //     ToolTip = 'Specifies when the asset is expected back.';
+                //     Editable = Rec.Status = Rec.Status::Assigned;
+                // }
                 field("Return Date"; Rec."Return Date")
                 {
                     ToolTip = 'Specifies the date the asset was actually returned.';
@@ -41,6 +44,7 @@ page 90074 "Asset Assignment History"
                 field("Condition on Assignment"; Rec."Condition on Assignment")
                 {
                     ToolTip = 'Specifies the condition of the asset when handed over.';
+                    Editable = Rec.Status = Rec.Status::Assigned;
                 }
                 field("Condition on Return"; Rec."Condition on Return")
                 {
@@ -73,6 +77,10 @@ page 90074 "Asset Assignment History"
                 begin
                     if Rec.Status = Rec.Status::Returned then
                         Error('This assignment is already marked as returned.');
+                    if Rec."Assigned Date" = 0D then
+                        Error('Assigned Date must be set before this asset can be returned.');
+                    if Rec."Assigned Date" > Today then
+                        Error('This asset cannot be returned before its Assigned Date.');
 
                     Rec."Return Date" := Today;
                     Rec.Status := Rec.Status::Returned;
@@ -87,8 +95,8 @@ page 90074 "Asset Assignment History"
         AssetAssignmentHistory: Record "Asset Assignment History";
     begin
         AssetAssignmentHistory.Reset();
-        if AssetAssignmentHistory.Find('-') then
-            AssetAssignmentHistory.DeleteAll();
+        // if AssetAssignmentHistory.Find('-') then
+        //     AssetAssignmentHistory.DeleteAll();
         AssetAssignmentHistory.SetRange("Fixed Asset No.", Rec."Fixed Asset No.");
         AssetAssignmentHistory.SetRange(Status, AssetAssignmentHistory.Status::Assigned);
         if not AssetAssignmentHistory.IsEmpty() then

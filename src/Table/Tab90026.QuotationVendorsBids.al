@@ -99,6 +99,30 @@ table 90026 "Quotation Vendors Bids"
         {
             DataClassification = ToBeClassified;
         }
+        field(15; "Negotiation Requested"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(16; "Negotiated Unit Price"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(17; "Negotiated VAT %"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(18; "Negotiated Amount"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(19; "Negotiated Submitted"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(20; "Negotiation Date"; DateTime)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys

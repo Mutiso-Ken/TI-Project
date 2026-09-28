@@ -1022,36 +1022,28 @@ Page 50390 "Admin Role Center"
                         RunObject = page "Quotations Awarded";
                     }
                 }
-                group("DirectProcurementGrp")
+                group("Direct Procurement")
                 {
-
                     Caption = 'Direct Procurement';
-                    action("Direct Procurement")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Direct Procurement';
-                        RunObject = page "Procurement Request List";
-                        RunPageView = where("Procurement Method" = filter("Direct Procurement"));
-                    }
                     action("Direct Procurement List")
                     {
-                        ApplicationArea = All;
                         Caption = 'Direct Procurement List';
                         Image = DisableBreakpoint;
+                        ApplicationArea = all;
                         RunObject = page "Direct Procurement List";
                     }
                     action("Awrded Direct Procurement List")
                     {
-                        ApplicationArea = All;
                         Caption = 'Awarded Direct Procurement List';
                         Image = Certificate;
+                        ApplicationArea = all;
                         RunObject = page "Awrded Direct Procurement List";
                     }
                     action("Direct Procurement List-Orders")
                     {
-                        ApplicationArea = All;
                         Caption = 'Direct Procurement- Created Orders';
                         Image = BankAccountLedger;
+                        ApplicationArea = all;
                         RunObject = page "Direct Procurement List-Orders";
                     }
                 }
@@ -1670,6 +1662,11 @@ Page 50390 "Admin Role Center"
                 {
                     ApplicationArea = Basic, Suite;
                     RunObject = Page "Subscription List";
+                }
+                action("Laptop Replacement Requests")
+                {
+                    ApplicationArea = Basic, Suite;
+                    RunObject = Page "Laptop Replacement Requests";
                 }
             }
         }

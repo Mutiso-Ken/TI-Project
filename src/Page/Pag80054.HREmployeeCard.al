@@ -728,6 +728,23 @@ Page 80054 "HR Employee Card"
             group("&Print")
             {
                 Caption = '&Print';
+                action("Leave Taken Report")
+                {
+                    ApplicationArea = Basic;
+                    Caption = 'Leave Taken Report';
+                    Image = PrintReport;
+                    Promoted = true;
+                    PromotedCategory = Category4;
+                    ToolTip = 'Show the leave applications this employee took in a specified period, when they were applied for, the days requested, and when they were approved.';
+
+                    trigger OnAction()
+                    begin
+                        HRLeaveApp.Reset;
+                        HRLeaveApp.SetRange(HRLeaveApp."Employee No", Rec."No.");
+                        Commit();
+                        Report.Run(80043, true, true, HRLeaveApp);
+                    end;
+                }
                 action("Personal Information File")
                 {
                     ApplicationArea = Basic;
@@ -1154,6 +1171,7 @@ Page 80054 "HR Employee Card"
         prEmployees: Record "HR Employees";
         Mail: Codeunit Mail;
         HREmp: Record "HR Employees";
+        HRLeaveApp: Record "HR Leave Application";
         SupervisorNames: Text[60];
         Misc: Record "Misc. Article Information";
         Conf: Record "Confidential Information";

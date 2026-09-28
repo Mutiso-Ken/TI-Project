@@ -302,32 +302,35 @@ Table 91331 "Appraisal Header"
     }
 
     trigger OnInsert()
+    var
+        newAppCode: Code[50];
     begin
-        if "Appraisal Code" = '' then begin
+        if Rec."Appraisal Code" = '' then begin
             HRsetup.Get();
             HRsetup.TestField("Appraisal Nos.");
-            "Appraisal Code" := NoSeriesManagement.GetNextNo(HRsetup."Appraisal Nos.", 0D, true);
+            newAppCode := NoSeriesManagement.GetNextNo(HRsetup."Appraisal Nos.", 0D, true);
+            Rec."Appraisal Code" := newAppCode;
         end;
         Validate("Employee No");
         Validate("Review Period");
         "Creation Date" := Today;
 
         AppraisalLinesSectionA.Reset();
-        AppraisalLinesSectionA.SetRange("Appraisal Code", "Appraisal Code");
+        AppraisalLinesSectionA.SetRange("Appraisal Code", newAppCode);
         if AppraisalLinesSectionA.FindSet() then
             repeat
                 AppraisalLinesSectionA.Delete();
             until AppraisalLinesSectionA.Next() = 0;
 
         AppraisalLinesSectionB.Reset();
-        AppraisalLinesSectionB.SetRange("Appraisal Code", "Appraisal Code");
+        AppraisalLinesSectionB.SetRange("Appraisal Code", newAppCode);
         if AppraisalLinesSectionB.FindSet() then
             repeat
                 AppraisalLinesSectionB.Delete();
             until AppraisalLinesSectionB.Next() = 0;
 
         AppraisalLinesSectionC.Reset();
-        AppraisalLinesSectionC.SetRange("Appraisal Code", "Appraisal Code");
+        AppraisalLinesSectionC.SetRange("Appraisal Code", newAppCode);
         if AppraisalLinesSectionC.FindSet() then
             repeat
                 AppraisalLinesSectionC.Delete();
@@ -342,14 +345,14 @@ Table 91331 "Appraisal Header"
                 LineNo += 1;
                 AppraisalLinesSectionC.Init();
                 AppraisalLinesSectionC."Line No." := LineNo;
-                AppraisalLinesSectionC."Appraisal Code" := "Appraisal Code";
+                AppraisalLinesSectionC."Appraisal Code" := Rec."Appraisal Code";
                 AppraisalLinesSectionC.Question := AppraisalQuestions.Description;
                 AppraisalLinesSectionC.Part := AppraisalQuestions.Part;
                 AppraisalLinesSectionC.Insert();
             until AppraisalQuestions.Next() = 0;
 
         AppraisalLinesSectionD.Reset();
-        AppraisalLinesSectionD.SetRange("Appraisal Code", "Appraisal Code");
+        AppraisalLinesSectionD.SetRange("Appraisal Code", Rec."Appraisal Code");
         if AppraisalLinesSectionD.FindSet() then
             repeat
                 AppraisalLinesSectionD.Delete();
@@ -364,14 +367,14 @@ Table 91331 "Appraisal Header"
                 LineNo += 1;
                 AppraisalLinesSectionD.Init();
                 AppraisalLinesSectionD."Line No." := LineNo;
-                AppraisalLinesSectionD."Appraisal Code" := "Appraisal Code";
+                AppraisalLinesSectionD."Appraisal Code" := Rec."Appraisal Code";
                 AppraisalLinesSectionD.Question := AppraisalQuestions.Description;
                 AppraisalLinesSectionD.Part := AppraisalQuestions.Part;
                 AppraisalLinesSectionD.Insert();
             until AppraisalQuestions.Next() = 0;
 
         AppraisalApprovalsTracking.Reset();
-        AppraisalApprovalsTracking.SetRange("Appraisal Code", "Appraisal Code");
+        AppraisalApprovalsTracking.SetRange("Appraisal Code", newAppCode);
         if AppraisalApprovalsTracking.FindSet() then
             repeat
                 AppraisalApprovalsTracking.Delete();

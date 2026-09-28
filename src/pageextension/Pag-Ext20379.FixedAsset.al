@@ -4,7 +4,11 @@ pageextension 50379 "Fixed Asset" extends "Fixed Asset List"
     {
         addafter(Description)
         {
-            field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code") { ApplicationArea = all; }
+            field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
+            {
+                ApplicationArea = all;
+                Caption = 'Fund Code';
+            }
             field("Global Dimension 2 Code"; Rec."Global Dimension 2 Code") { ApplicationArea = all; }
         }
     }
@@ -19,6 +23,7 @@ pageextension 50380 "Fixed Asset page" extends "Fixed Asset Card"
             field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
             {
                 ApplicationArea = all;
+                Caption = 'Fund Code';
             }
             field("Global Dimension 2 Code"; Rec."Global Dimension 2 Code")
             {

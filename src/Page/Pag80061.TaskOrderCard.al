@@ -336,6 +336,24 @@ Page 80061 "Task Order Card"
             }
             group("Procurement Processing")
             {
+                action("Mark as Completed")
+                {
+                    ApplicationArea = Basic;
+                    Image = ProdBOMMatrixPerVersion;
+                    Promoted = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    PromotedOnly = true;
+                    // Visible = ReleasedDocument;
+
+                    trigger OnAction()
+                    begin
+                        if Confirm('Mark purchase request as completed') then begin
+                            Rec.Completed := true;
+                            Rec.Modify;
+                        end;
+                    end;
+                }
                 action("Create Procurement Process")
                 {
                     ApplicationArea = Basic;
@@ -343,7 +361,7 @@ Page 80061 "Task Order Card"
                     Promoted = true;
                     PromotedCategory = Process;
                     PromotedIsBig = true;
-                    ToolTip = 'Send this approved requisition''s lines into Procurement (Tender/RFQ/Direct Procurement/RFP), grouped per line by their Procurement Method.';
+                    ToolTip = 'Send this approved requisition`s lines into Procurement (Tender/RFQ/Direct Procurement/RFP), grouped per line by their Procurement Method.';
                     Visible = IsFullyApproved;
 
                     trigger OnAction();

@@ -59,20 +59,14 @@ page 67056 "Direct Procurement Card"
                 SubPageLink = "Procurement No" = FIELD("No.");
             }
         }
+
         area(factboxes)
         {
-
             part("Attached Documents"; "Document Uploads")
             {
-                ApplicationArea = Basic;
-                Caption = 'Attachments';
-                SubPageLink = "Document Number" = field("No.");
-            }
-            part(ApprovalEntriesFactbox; "Approval Entries With Sign")
-            {
                 ApplicationArea = All;
-                Caption = 'Approval Entries';
-                SubPageLink = "Document No." = field("No."), "Table ID" = const(Database::"Procurement Request");
+                Caption = 'Attachments';
+                SubPageLink = "Document Number" = FIELD("No.");
             }
         }
     }
@@ -551,10 +545,10 @@ page 67056 "Direct Procurement Card"
                 Recepient := Vendor."E-Mail";
                 CCRecepient := PurchSetup."Procurement Email";
                 Body := 'Dear ' + FORMAT(ProcurementRequest."Vendor Name") + ',<BR>' +
-                 '<br> You have been invited for a quotation at TI Kenya.' +
+                 '<br> You have been invited for a quotation at RCK.' +
                  ' Please fill in the quote details in the procurement portal and the form attached below and submit.  <br>' +
           '<br> link: ' + PurchSetup."Procurement Portal" +
-          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>TI Kenya.';
+          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>RCK Kenya.';
                 Clear(SendToList);
                 if Recepient <> '' then begin
                     SendToList.Add(Recepient);
@@ -585,10 +579,10 @@ page 67056 "Direct Procurement Card"
                 Recepient := Vendor."E-Mail";
                 CCRecepient := PurchSetup."Procurement Email";
                 Body := 'Dear ' + FORMAT(ProcurementRequest."Vendor Name") + ',' +
-                 '<br> You have been invited for a quotation at TI Kenya.' +
+                 '<br> You have been invited for a quotation at RCK.' +
                  ' Please fill in the quote details in the procurement portal and the form attached below and submit. <br>' +
           '<br> link: ' + PurchSetup."Procurement Portal" +
-          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>TI Kenya.';
+          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>RCK Kenya.';
                 Clear(SendToList);
                 if Recepient <> '' then begin
 
@@ -655,9 +649,9 @@ page 67056 "Direct Procurement Card"
                 Recepient := Vendor."E-Mail";
                 CCRecepient := PurchSetup."Procurement Email";
                 Body := 'Dear ' + FORMAT(ProcurementRequest."Vendor Name") + ',<BR>' +
-                 '<br> You have been invited for a quotation at TI Kenya.' +
+                 '<br> You have been invited for a quotation at RCK.' +
                  ' Please fill in the quote details on attached RFQ and submit. <br>' +
-          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>TI Kenya.';
+          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>RCK Kenya.';
                 Clear(SendToList);
                 if Recepient <> '' then begin
                     SendToList.Add(Recepient);
@@ -688,10 +682,10 @@ page 67056 "Direct Procurement Card"
                 Recepient := Vendor."E-Mail";
                 CCRecepient := PurchSetup."Procurement Email";
                 Body := 'Dear ' + FORMAT(ProcurementRequest."Vendor Name") + ',' +
-                 '<br> You have been invited for a quotation at TI Kenya.' +
+                 '<br> You have been invited for a quotation at RCK.' +
                  ' Please fill in the quote details in the procurement portal below and submit. <br>' +
           '<br> link: ' + PurchSetup."Procurement Portal" +
-          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>TI Kenya.';
+          '<Br><Br>Regards,' + '<br>Procurement,' + '<br>RCK Kenya.';
                 Clear(SendToList);
                 if Recepient <> '' then begin
 

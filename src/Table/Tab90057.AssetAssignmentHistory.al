@@ -59,11 +59,25 @@ table 90057 "Asset Assignment History"
         field(6; "Assigned Date"; Date)
         {
             Caption = 'Assigned Date';
+
+            trigger OnValidate()
+            begin
+                if "Assigned Date" = 0D then
+                    Error('Assigned Date must not be blank.');
+                // if ("Expected Return Date" <> 0D) and ("Expected Return Date" < "Assigned Date") then
+                //     Error('Expected Return Date cannot be before the Assigned Date.');
+            end;
         }
-        field(7; "Expected Return Date"; Date)
-        {
-            Caption = 'Expected Return Date';
-        }
+        // field(7; "Expected Return Date"; Date)
+        // {
+        //     Caption = 'Expected Return Date';
+
+        //     trigger OnValidate()
+        //     begin
+        //         if ("Expected Return Date" <> 0D) and ("Assigned Date" <> 0D) and ("Expected Return Date" < "Assigned Date") then
+        //             Error('Expected Return Date cannot be before the Assigned Date.');
+        //     end;
+        // }
         field(8; "Return Date"; Date)
         {
             Caption = 'Return Date';
@@ -109,19 +123,40 @@ table 90057 "Asset Assignment History"
         // }
     }
 
-    // trigger OnInsert()
-    // var
-    //     AssetAssignmentHistory: Record "Asset Assignment History";
-    // begin
-    //     if "Assigned Date" = 0D then
-    //         "Assigned Date" := Today;
-    //     if "Assigned By" = '' then
-    //         "Assigned By" := UserId;
-    //     Status := Status::Assigned;
+    trigger OnInsert()
+    var
+        AssetAssignmentHistory: Record "Asset Assignment History";
+    begin
+        if "Assigned Date" = 0D then
+            "Assigned Date" := Today;
+        if "Assigned By" = '' then
+            "Assigned By" := UserId;
+        Status := Status::Assigned;
 
-    //     AssetAssignmentHistory.SetRange("Fixed Asset No.", "Fixed Asset No.");
-    //     AssetAssignmentHistory.SetRange(Status, AssetAssignmentHistory.Status::Assigned);
-    //     if not AssetAssignmentHistory.IsEmpty() then
-    //         Error('Fixed Asset %1 is already assigned and has not been returned yet. Return it before reassigning.', "Fixed Asset No.");
-    // end;
+        AssetAssignmentHistory.SetRange("Fixed Asset No.", "Fixed Asset No.");
+        AssetAssignmentHistory.SetRange(Status, AssetAssignmentHistory.Status::Assigned);
+        if not AssetAssignmentHistory.IsEmpty() then
+            Error('Fixed Asset %1 is already assigned and has not been returned yet. Return it before reassigning.', "Fixed Asset No.");
+    end;
+
+    trigger OnModify()
+    begin
+        if xRec.Status <> xRec.Status::Returned then
+            exit;
+
+        if HasDisallowedChangeAfterReturn() then
+            Error('This assignment has already been returned and can no longer be edited, except for Condition on Return and Remarks.');
+    end;
+
+    local procedure HasDisallowedChangeAfterReturn(): Boolean
+    begin
+        exit(
+            ("Fixed Asset No." <> xRec."Fixed Asset No.") or
+            ("Employee No." <> xRec."Employee No.") or
+            ("Assigned Date" <> xRec."Assigned Date") or
+            // ("Expected Return Date" <> xRec."Expected Return Date") or
+            ("Return Date" <> xRec."Return Date") or
+            (Status <> xRec.Status) or
+            ("Condition on Assignment" <> xRec."Condition on Assignment"));
+    end;
 }

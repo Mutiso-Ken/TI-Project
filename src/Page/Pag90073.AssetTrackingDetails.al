@@ -19,6 +19,7 @@ page 90073 "Asset Tracking Details"
                 field("No."; Rec."No.")
                 {
                     ToolTip = 'Specifies the number of the involved entry or record, according to the specified number series.';
+                    Editable = false;
                 }
                 field(Description; Rec.Description)
                 {
@@ -28,6 +29,10 @@ page 90073 "Asset Tracking Details"
                 {
                     ToolTip = 'Specifies the class that the fixed asset belongs to.';
                 }
+                field("FA Subclass Code"; Rec."FA Subclass Code")
+                {
+                    ToolTip = 'Specifies the subclass that the fixed asset belongs to.';
+                }
                 field("Tag Number"; Rec."Tag Number")
                 {
                     ToolTip = 'Specifies the value of the Tag Number field.', Comment = '%';
@@ -35,6 +40,25 @@ page 90073 "Asset Tracking Details"
                 field("Serial No."; Rec."Serial No.")
                 {
                     ToolTip = 'Specifies the fixed asset''s serial number.';
+                }
+                field("Acquisition Date"; Rec."Acquisition Date")
+                {
+                    ToolTip = 'Specifies the date the fixed asset was acquired.';
+                }
+                field("Staff Assigned"; Rec."Staff Assigned")
+                {
+                    ToolTip = 'Specifies the staff member currently assigned this fixed asset.';
+                    Editable = false;
+                }
+                field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
+                {
+                    Caption = 'Fund Code';
+                    ToolTip = 'Specifies the fund that this fixed asset belongs to.';
+                }
+                field("Global Dimension 2 Code"; Rec."Global Dimension 2 Code")
+                {
+                    Caption = 'Department';
+                    ToolTip = 'Specifies the department that this fixed asset belongs to.';
                 }
                 field("Warranty Date"; Rec."Warranty Date")
                 {

@@ -5,6 +5,7 @@ page 90075 "Subscription Renewal History"
     SourceTable = "Subscription Renewal History";
     SourceTableView = sorting("Entry No.") order(descending);
     ApplicationArea = All;
+    DelayedInsert = true;
 
     layout
     {
@@ -43,4 +44,13 @@ page 90075 "Subscription Renewal History"
             }
         }
     }
+    trigger OnNewRecord(BelowxRec: Boolean)
+    var
+        ParentSubscriptionNo: Code[20];
+    begin
+        Rec.FilterGroup(4);
+        ParentSubscriptionNo := CopyStr(Rec.GetFilter("Subscription No."), 1, MaxStrLen(Rec."Subscription No."));
+        Rec.FilterGroup(0);
+        Rec."Subscription No." := ParentSubscriptionNo;
+    end;
 }

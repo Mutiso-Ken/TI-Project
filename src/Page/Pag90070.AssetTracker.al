@@ -34,6 +34,11 @@ page 90070 "Asset Tracker"
                 {
                     ToolTip = 'Specifies the value of the Tag Number field.', Comment = '%';
                 }
+                field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
+                {
+                    Caption = 'Fund Code';
+                    ToolTip = 'Specifies the fund that this fixed asset belongs to.';
+                }
             }
         }
     }

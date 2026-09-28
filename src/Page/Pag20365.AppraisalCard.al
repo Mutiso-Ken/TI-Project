@@ -193,7 +193,7 @@ Page 50365 "Appraisal Card"
                 field("Immediate Supervisor Comments"; Rec."Immediate Supervisor Comments")
                 {
                     ApplicationArea = all;
-                    Editable = false;
+                    Editable = MakeSupervisorEditingTrue;
                 }
                 field("General Appraiser Comments"; Rec."General Appraiser Comments")
                 {
@@ -208,7 +208,7 @@ Page 50365 "Appraisal Card"
                 field("HR Comments"; Rec."HR Comments")
                 {
                     ApplicationArea = all;
-                    Editable = false;
+                    Editable = HrViewingTrue;
                 }
                 field("ED Comments"; Rec."ED Comments")
                 {
@@ -338,9 +338,6 @@ Page 50365 "Appraisal Card"
                     Image = ApplyEntries;
                     Promoted = true;
                     PromotedCategory = Process;
-                    // Visible = false;
-
-
                     RunObject = page "Appraisal Approval Tracking";
                     RunPageLink = "Appraisal Code" = field("Appraisal Code");
                 }
@@ -383,6 +380,9 @@ Page 50365 "Appraisal Card"
                     MakeAppraiseeEditingTrue := true;
             end;
         end;
+
+        if UserId = 'TIKENYA\AKANJA' then
+            HrViewingTrue := true;
     end;
 
     local procedure UpdateApprisalApprovers(): Text
@@ -407,5 +407,6 @@ Page 50365 "Appraisal Card"
         AppraisalApprovalsTracking: Record "Appraisal Approvals Tracking";
         Portalcodeunit: Codeunit PortalEntry;
         AppraisalHeader: Record "Appraisal Header";
+        HrViewingTrue: Boolean;
 }
 

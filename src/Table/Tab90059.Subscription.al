@@ -105,7 +105,14 @@ table 90059 Subscription
             Status := Status::Active;
     end;
 
+    trigger OnModify()
+    begin
+        // if (xRec.Status = xRec.Status::Cancelled) and (Status = xRec.Status::Cancelled) then
+        //     Error('This subscription is cancelled and can no longer be edited. Reactivate it first.');
+    end;
+
     procedure DaysUntilDue(): Integer
+
     begin
         if "Next Due Date" = 0D then
             exit(0);

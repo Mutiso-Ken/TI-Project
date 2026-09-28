@@ -151,6 +151,10 @@ Page 80027 "HR Setup"
                 {
                     ApplicationArea = Basic;
                 }
+                field("Laptop Replacement Nos."; Rec."Laptop Replacement Nos.")
+                {
+                    ApplicationArea = Basic;
+                }
             }
             group(Leave)
             {

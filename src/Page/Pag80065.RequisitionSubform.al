@@ -146,12 +146,7 @@ Page 80065 "Requisition Subform"
                     Editable = false;
                     ToolTip = 'Specifies the number of units of the item that will be specified on the line.';
                 }
-                field("Total Amount"; Rec."Total Amount")
-                {
-                    ApplicationArea = Basic;
-                    Editable = false;
-                    ToolTip = 'Specifies the quantity multiplied by the unit cost, used to validate the line before the procurement process is created.';
-                }
+            
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
                     ApplicationArea = Advanced;

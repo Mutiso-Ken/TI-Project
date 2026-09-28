@@ -33,7 +33,7 @@ report 90040 "Asset Assignment History"
                 column(Employee_No; "Employee No.") { }
                 column(Employee_Name; "Employee Name") { }
                 column(Assigned_Date; "Assigned Date") { }
-                column(Expected_Return_Date; "Expected Return Date") { }
+                // column(Expected_Return_Date; "Expected Return Date") { }
                 column(Return_Date; "Return Date") { }
                 column(Status_Text; Format(Status)) { }
                 column(Condition_On_Assignment; "Condition on Assignment") { }

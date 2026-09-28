@@ -228,6 +228,11 @@ Table 80027 "HR Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
         }
+        field(50027; "Laptop Replacement Nos."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "No. Series".Code;
+        }
     }
 
     keys

@@ -156,11 +156,11 @@ codeunit 50047 PortalEntry
             exit(GetBudgetLineCodes(JsonToken.AsValue().AsCode()));
         end;
         if RequestType = 'budget_categories' then begin
-            if RequestJson.Get('element_type', JsonToken) and not JsonToken.AsValue().IsNull then
-                fundCode := JsonToken.AsValue().AsCode();
+            // if RequestJson.Get('element_type', JsonToken) and not JsonToken.AsValue().IsNull then
+            //     fundCode := JsonToken.AsValue().AsCode();
             if RequestJson.Get('line_type', JsonToken) and not JsonToken.AsValue().IsNull then
                 budgetLineCode := JsonToken.AsValue().AsCode();
-            exit(GetBudgetCategoryCodes(fundCode, budgetLineCode));
+            exit(GetBudgetCategoryCodes(budgetLineCode));
         end;
         exit(Format(AddResponseHead(OutputJson, false)));
     end;
@@ -173,9 +173,8 @@ codeunit 50047 PortalEntry
         Clear(jarray);
         DimensionsTable.RESET;
         DimensionsTable.SetFilter("Global Dimension No.", '3');
-        DimensionsTable.SetFilter(Name, '<>', '');
         DimensionsTable.SetRange(Blocked, false);
-        DimensionsTable.SETRANGE("Fund Code", fundCode);
+        // DimensionsTable.SETRANGE("Fund Code", fundCode);
         DimensionsTable.SETCURRENTKEY(Name);
         DimensionsTable.ASCENDING(TRUE);
         IF DimensionsTable.FINDFIRST THEN
@@ -183,23 +182,23 @@ codeunit 50047 PortalEntry
                 Clear(jobject);
                 jobject.Add('Code', DimensionsTable.Code);
                 jobject.Add('Name', DimensionsTable.Name);
-                jarray.Add(jobject);
+                if DimensionsTable.Name <> '' then
+                    jarray.Add(jobject);
             UNTIL DimensionsTable.NEXT = 0;
         exit(Format(jarray));
     end;
 
-    local procedure GetBudgetCategoryCodes(fundCode: Code[50]; budgetLineCode: Code[50]): Text
+    local procedure GetBudgetCategoryCodes(budgetLineCode: Code[50]): Text
     var
         jarray: JsonArray;
         jobject: JsonObject;
     begin
         Clear(jarray);
         DimensionsTable.RESET;
-        DimensionsTable.SetFilter("Global Dimension No.", '5');
-        DimensionsTable.SetFilter(Name, '<>', '');
+        DimensionsTable.SetFilter("Global Dimension No.", '4');
         DimensionsTable.SetRange(Blocked, false);
-        DimensionsTable.SETRANGE("Fund Code", fundCode);
-        DimensionsTable.SetRange("Budget Line", budgetLineCode);
+        // DimensionsTable.SETRANGE("Fund Code", fundCode);
+        // DimensionsTable.SetRange("Budget Line", budgetLineCode);
         DimensionsTable.SETCURRENTKEY(Name);
         DimensionsTable.ASCENDING(TRUE);
         IF DimensionsTable.FINDFIRST THEN
@@ -207,7 +206,8 @@ codeunit 50047 PortalEntry
                 Clear(jobject);
                 jobject.Add('Code', DimensionsTable.Code);
                 jobject.Add('Name', DimensionsTable.Name);
-                jarray.Add(jobject);
+                if DimensionsTable.Name <> '' then
+                    jarray.Add(jobject);
             UNTIL DimensionsTable.NEXT = 0;
         exit(Format(jarray));
     end;
@@ -713,25 +713,113 @@ codeunit 50047 PortalEntry
     var
         jsontoken: JsonToken;
         outputjson: JsonObject;
+        newAppCode: Code[50];
+        HRsetup: Record "HR Setup";
+        NoSeriesManagement: Codeunit "No. Series";
+        AppraisalQuestions: record "Appraisal Questions";
+        LineNo: Integer;
     begin
-        AppraisalHeader.Reset();
-        RequestJson.Get('employee_no', jsontoken);
-        AppraisalHeader.SetRange("Employee No", jsontoken.AsValue().AsCode());
-        if AppraisalHeader.FindSet() then
-            repeat
-                AppraisalHeader.Delete();
-            until AppraisalHeader.Next() = 0;
 
-        AppraisalHeader.Init();
-        AppraisalHeader."Employee No" := jsontoken.AsValue().AsCode();
-        // RequestJson.Get('start_date', jsontoken);
-        // AppraisalHeader."Start Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
-        // RequestJson.Get('end_date', jsontoken);
-        // AppraisalHeader."End Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
-        if AppraisalHeader.Insert(true) then
-            exit(Format(AddResponseHead(outputjson, true)));
+        HRsetup.Get();
+        if HRsetup."Appraisal Sessions Active" then begin
+            if ((HRsetup."Review Start Date" < Today) and (HRsetup."Review End Date" > Today)) then begin
+
+                AppraisalHeader.Reset();
+                RequestJson.Get('employee_no', jsontoken);
+                AppraisalHeader.SetRange("Employee No", jsontoken.AsValue().AsCode());
+                // AppraisalHeader.SetRange(Status, AppraisalHeader.Status::Open);
+                if AppraisalHeader.FindSet() then
+                    repeat
+                        if not (AppraisalHeader.Status = AppraisalHeader.Status::Approved) then
+                            AppraisalHeader.Delete();
+                    until AppraisalHeader.Next() = 0;
+
+                AppraisalHeader.Reset();
+                AppraisalHeader.Init();
+                AppraisalHeader."Employee No" := jsontoken.AsValue().AsCode();
+                // RequestJson.Get('start_date', jsontoken);
+                // AppraisalHeader."Start Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
+                // RequestJson.Get('end_date', jsontoken);
+                // AppraisalHeader."End Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
+                HRsetup.Get();
+                HRsetup.TestField("Appraisal Nos.");
+                newAppCode := NoSeriesManagement.GetNextNo(HRsetup."Appraisal Nos.", 0D, true);
+                AppraisalHeader."Appraisal Code" := newAppCode;
+                AppraisalHeader."Creation Date" := Today;
+                if AppraisalHeader.Insert() then begin
+
+                    AppraisalHeader.Validate("Employee No");
+                    AppraisalHeader.Validate("Review Period");
+                    AppraisalHeader.Modify();
+                    AppraisalLinesSectionA.Reset();
+                    AppraisalLinesSectionA.SetRange("Appraisal Code", newAppCode);
+                    if AppraisalLinesSectionA.FindSet() then
+                        repeat
+                            AppraisalLinesSectionA.Delete();
+                        until AppraisalLinesSectionA.Next() = 0;
+
+                    AppraisalLinesSectionB.Reset();
+                    AppraisalLinesSectionB.SetRange("Appraisal Code", newAppCode);
+                    if AppraisalLinesSectionB.FindSet() then
+                        repeat
+                            AppraisalLinesSectionB.Delete();
+                        until AppraisalLinesSectionB.Next() = 0;
+
+                    AppraisalLinesSectionC.Reset();
+                    AppraisalLinesSectionC.SetRange("Appraisal Code", newAppCode);
+                    if AppraisalLinesSectionC.FindSet() then
+                        repeat
+                            AppraisalLinesSectionC.Delete();
+                        until AppraisalLinesSectionC.Next() = 0;
+
+                    AppraisalLinesSectionC.Reset();
+                    LineNo := AppraisalLinesSectionC.Count();
+                    AppraisalQuestions.Reset();
+                    AppraisalQuestions.SetRange(Section, AppraisalQuestions.Section::"Section C");
+                    if AppraisalQuestions.FindSet() then
+                        repeat
+                            LineNo += 1;
+                            AppraisalLinesSectionC.Init();
+                            AppraisalLinesSectionC."Line No." := LineNo;
+                            AppraisalLinesSectionC."Appraisal Code" := newAppCode;
+                            AppraisalLinesSectionC.Question := AppraisalQuestions.Description;
+                            AppraisalLinesSectionC.Part := AppraisalQuestions.Part;
+                            AppraisalLinesSectionC.Insert();
+                        until AppraisalQuestions.Next() = 0;
+
+                    AppraisalLinesSectionD.Reset();
+                    AppraisalLinesSectionD.SetRange("Appraisal Code", newAppCode);
+                    if AppraisalLinesSectionD.FindSet() then
+                        repeat
+                            AppraisalLinesSectionD.Delete();
+                        until AppraisalLinesSectionD.Next() = 0;
+
+                    AppraisalLinesSectionD.Reset();
+                    LineNo := AppraisalLinesSectionD.Count();
+                    AppraisalQuestions.Reset();
+                    AppraisalQuestions.SetRange(Section, AppraisalQuestions.Section::"Section D");
+                    if AppraisalQuestions.FindSet() then
+                        repeat
+                            LineNo += 1;
+                            AppraisalLinesSectionD.Init();
+                            AppraisalLinesSectionD."Line No." := LineNo;
+                            AppraisalLinesSectionD."Appraisal Code" := newAppCode;
+                            AppraisalLinesSectionD.Question := AppraisalQuestions.Description;
+                            AppraisalLinesSectionD.Part := AppraisalQuestions.Part;
+                            AppraisalLinesSectionD.Insert();
+                        until AppraisalQuestions.Next() = 0;
+
+                    AppraisalApprovalsTracking.Reset();
+                    AppraisalApprovalsTracking.SetRange("Appraisal Code", newAppCode);
+                    if AppraisalApprovalsTracking.FindSet() then
+                        repeat
+                            AppraisalApprovalsTracking.Delete();
+                        until AppraisalApprovalsTracking.Next() = 0;
+                    exit(Format(AddResponseHead(outputjson, true)));
+                end;
+            end;
+        end;
         exit(Format(AddResponseHead(outputjson, false)));
-
     end;
 
     local procedure AppraisalApprovalUpdates(RequestJson: JsonObject): Text
@@ -2666,25 +2754,25 @@ codeunit 50047 PortalEntry
         RequiredDate: Date;
     begin
 
-        RequestJson.Get('employee_number', JsonToken);
-        StaffID := JsonToken.AsValue().AsText();
+        if RequestJson.Get('employee_number', JsonToken) and not JsonToken.AsValue().IsNull then
+            StaffID := JsonToken.AsValue().AsText();
         if RequestJson.Get('date_required', JsonToken) then begin
             DateText := JsonToken.AsValue().AsText();
             if DateText <> '' then
                 Evaluate(RequiredDate, DateText, 9);
         end;
-        RequestJson.Get('fund_code', JsonToken);
-        FundCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('program_code', JsonToken);
-        ProgramCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('department_code', JsonToken);
-        DepartmentCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('budget_lines_code', JsonToken);
-        BudgetLinesCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('budget_category_code', JsonToken);
-        BudgetCategoryCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('currency_code', JsonToken);
-        Currency := JsonToken.AsValue().AsText();
+        if RequestJson.Get('fund_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            FundCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('program_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            ProgramCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('department_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            DepartmentCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('budget_lines_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            BudgetLinesCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('budget_category_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            BudgetCategoryCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('currency_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            Currency := JsonToken.AsValue().AsText();
 
         EmployeeTable.Reset();
         EmployeeTable.SetRange("No.", StaffID);
@@ -2746,18 +2834,18 @@ codeunit 50047 PortalEntry
             if DateText <> '' then
                 Evaluate(RequiredDate, DateText, 9);
         end;
-        RequestJson.Get('number', JsonToken);
-        RequestNumber := JsonToken.AsValue().AsText();
-        RequestJson.Get('fund_code', JsonToken);
-        FundCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('program_code', JsonToken);
-        ProgramCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('department_code', JsonToken);
-        DepartmentCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('budget_lines_code', JsonToken);
-        BudgetLinesCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('budget_category_code', JsonToken);
-        BudgetCategoryCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('number', JsonToken) and not JsonToken.AsValue().IsNull then
+            RequestNumber := JsonToken.AsValue().AsText();
+        if RequestJson.Get('fund_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            FundCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('program_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            ProgramCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('department_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            DepartmentCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('budget_lines_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            BudgetLinesCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('budget_category_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            BudgetCategoryCode := JsonToken.AsValue().AsText();
 
         PurchasesHeaderTable.Reset();
         PurchasesHeaderTable.SetRange("No.", RequestNumber);
@@ -3036,16 +3124,16 @@ codeunit 50047 PortalEntry
             if DateText <> '' then
                 Evaluate(Date, DateText, 9);
         end;
-        RequestJson.Get('fund_code', JsonToken);
-        FundCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('program_code', JsonToken);
-        ProgramCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('department_code', JsonToken);
-        DepartmentCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('budget_lines_code', JsonToken);
-        BudgetLinesCode := JsonToken.AsValue().AsText();
-        RequestJson.Get('budget_category_code', JsonToken);
-        BudgetCategoryCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('fund_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            FundCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('program_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            ProgramCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('department_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            DepartmentCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('budget_lines_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            BudgetLinesCode := JsonToken.AsValue().AsText();
+        if RequestJson.Get('budget_category_code', JsonToken) and not JsonToken.AsValue().IsNull then
+            BudgetCategoryCode := JsonToken.AsValue().AsText();
 
         EmployeeTable.Reset();
         EmployeeTable.SetRange("No.", StaffID);
@@ -4517,7 +4605,7 @@ codeunit 50047 PortalEntry
                     line.Add('date', PurchasesLineTable."Expected Receipt Date");
                     line.Add('activity', PurchasesLineTable."Description 3");
                     line.Add('duration', PurchasesLineTable."Unit of Measure");
-                    line.Add('output', PurchasesLineTable."Description 2");
+                    line.Add('output', PurchasesLineTable."Description 6");
                     lines.Add(line);
                 until PurchasesLineTable.Next() = 0;
                 element.Add('mission_proposal_activities', lines);
@@ -4770,7 +4858,7 @@ codeunit 50047 PortalEntry
                                     PurchasesLineTable."Expected Receipt Date" := DateExpected;
                                     PurchasesLineTable."Description 3" := Activity;
                                     PurchasesLineTable."Unit of Measure" := Duration;
-                                    PurchasesLineTable."Description 2" := Output;
+                                    PurchasesLineTable."Description 6" := Output;
                                     PurchasesLineTable.Modify();
                                 end else begin
                                     PurchasesLineTable.Reset();
@@ -4785,7 +4873,7 @@ codeunit 50047 PortalEntry
                                         PurchasesLineTable."Expected Receipt Date" := DateExpected;
                                         PurchasesLineTable."Description 3" := Activity;
                                         PurchasesLineTable."Unit of Measure" := Duration;
-                                        PurchasesLineTable."Description 2" := Output;
+                                        PurchasesLineTable."Description 6" := Output;
                                         PurchasesLineTable.Insert();
                                     end else begin
                                         LineNo := 100;
@@ -5456,6 +5544,27 @@ codeunit 50047 PortalEntry
             end;
         end
 
+    end;
+
+    procedure StaffAppraisalReport(appraisalNumber: Code[20]; var Base64Txt: Text)
+    var
+        Filename: Text[100];
+        TempBlob: Codeunit "Temp Blob";
+        StatementOutstream: OutStream;
+        StatementInstream: InStream;
+        AppraisalReport: Report 50038;
+        Base64Convert: Codeunit "Base64 Convert";
+    begin
+        AppraisalHeader.Reset();
+        AppraisalHeader.SetRange("Appraisal Code", appraisalNumber);
+        if AppraisalHeader.FindFirst() then begin
+            AppraisalReport.SetTableView(AppraisalHeader);
+            TempBlob.CreateOutStream(StatementOutstream);
+            if AppraisalReport.SaveAs('', ReportFormat::Pdf, StatementOutstream) then begin
+                TempBlob.CreateInStream(StatementInstream);
+                Base64Txt := Base64Convert.ToBase64(StatementInstream, true);
+            end;
+        end;
     end;
 
     procedure UpdateRepeatingAppraisalLines(reqNumber: Code[50]): Boolean

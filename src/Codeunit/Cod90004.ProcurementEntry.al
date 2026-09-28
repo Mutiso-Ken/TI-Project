@@ -283,7 +283,7 @@ codeunit 90004 ProcurementEntry
             "Procurement List".Reset();
             "Procurement List".SetRange("Vendor No", VendorID);
             "Procurement List".SetRange("Procurement Method", "Procurement List"."Procurement Method"::"Direct Procurement");
-            "Procurement List".SetRange(Advertised, true);
+            // "Procurement List".SetRange(Advertised, true);
             "Procurement List".SetFilter("Creation Date", '>%1', 20260101D);
             "Procurement List".SetFilter("RFQ Deadlne Date", '>=%1', Today);
             // "Procurement List".SetFilter("RFQ Deadline Time", '>=%1', Time);
@@ -309,9 +309,9 @@ codeunit 90004 ProcurementEntry
             "Procurement List".Reset();
             // "Procurement List".SetRange("Vendor No", VendorID);
             // "Procurement List".SetRange("Supplier Category", VendorTable."Supplier Category");
-            "Procurement List".SetFilter("Supplier Category", '%1|%2|%3', VendorTable."Supplier Category", VendorTable."Secondary Supplier Category 1", VendorTable."Secondary Supplier Category 2");
+            // "Procurement List".SetFilter("Supplier Category", '%1|%2|%3', VendorTable."Supplier Category", VendorTable."Secondary Supplier Category 1", VendorTable."Secondary Supplier Category 2");
             "Procurement List".SetRange("Procurement Method", "Procurement List"."Procurement Method"::RFQ);
-            "Procurement List".SetRange(Advertised, true);
+            // "Procurement List".SetRange(Advertised, true);
             "Procurement List".SetFilter("Creation Date", '>%1', 20260101D);
             "Procurement List".SetFilter("RFQ Deadlne Date", '>=%1', Today);
             // "Procurement List".SetFilter("RFQ Deadline Time", '>=%1', Time);
@@ -338,41 +338,41 @@ codeunit 90004 ProcurementEntry
                     end;
                 until "Procurement List".Next() = 0;
             end;
-            "Procurement List".Reset();
-            // "Procurement List".SetRange("Vendor No", VendorID);
-            // "Procurement List".SetRange("Supplier Category", VendorTable."Supplier Category");
-            "Procurement List".SetFilter("Supplier Category", '%1|%2|%3', VendorTable."Supplier Category", VendorTable."Secondary Supplier Category 1", VendorTable."Secondary Supplier Category 2");
-            "Procurement List".SetRange("Procurement Method", "Procurement List"."Procurement Method"::RFQ);
-            "Procurement List".SetRange(Advertised, true);
-            // "Procurement List".SetFilter("Creation Date", '>%1', 20260101D);
-            "Procurement List".SetFilter("RFQ Deadlne Date", '>=%1', Today);
-            // "Procurement List".SetFilter("RFQ Deadline Time", '>=%1', Time);
-            // "Procurement List".SetFilter("RFQ Deadlne Date", '%1..', Today);
-            "Procurement List".SetRange("No.", 'QUOT002121');
-            if "Procurement List".FindSet() then begin
-                // Clear(jsonarray);
-                repeat
-                    if (("Procurement List"."RFQ Deadlne Date" = Today) and ("Procurement List"."RFQ Deadline Time" < Time)) then begin
-                    end else begin
-                        SelectedVendors.Reset();
-                        SelectedVendors.SetRange("Reference No", "Procurement List"."No.");
-                        SelectedVendors.SetRange("Vendor Category", "Procurement List"."Supplier Category");
-                        SelectedVendors.SetRange("Vendor No.", VendorTable."No.");
-                        if SelectedVendors.FindFirst() then begin
-                            Clear(jsonobject);
-                            jsonobject.add('No', "Procurement List"."No.");
-                            jsonobject.add('Status', Format("Procurement List".Status));
-                            jsonobject.add('Title', "Procurement List".Title);
-                            jsonobject.add('RequisitionNo', "Procurement List"."Requisiton No");
-                            jsonobject.add('CreationDate', "Procurement List"."Creation Date");
-                            jsonobject.add('DeadlineDate', CreateDateTime("Procurement List"."RFQ Deadlne Date", "Procurement List"."RFQ Deadline Time"));
-                            jsonobject.add('expected_delivery_date', "Procurement List"."Expected Delivery Date");
-                            jsonarray.Add(jsonobject);
-                        end;
-                    end;
-                until "Procurement List".Next() = 0;
-                // exit(Format(AddResponseHead(Outputjson, true)));
-            end;
+            // "Procurement List".Reset();
+            // // "Procurement List".SetRange("Vendor No", VendorID);
+            // // "Procurement List".SetRange("Supplier Category", VendorTable."Supplier Category");
+            // // "Procurement List".SetFilter("Supplier Category", '%1|%2|%3', VendorTable."Supplier Category", VendorTable."Secondary Supplier Category 1", VendorTable."Secondary Supplier Category 2");
+            // "Procurement List".SetRange("Procurement Method", "Procurement List"."Procurement Method"::RFQ);
+            // "Procurement List".SetRange(Advertised, true);
+            // // "Procurement List".SetFilter("Creation Date", '>%1', 20260101D);
+            // "Procurement List".SetFilter("RFQ Deadlne Date", '>=%1', Today);
+            // // "Procurement List".SetFilter("RFQ Deadline Time", '>=%1', Time);
+            // // "Procurement List".SetFilter("RFQ Deadlne Date", '%1..', Today);
+            // "Procurement List".SetRange("No.", 'QUOT002121');
+            // if "Procurement List".FindSet() then begin
+            //     // Clear(jsonarray);
+            //     repeat
+            //         if (("Procurement List"."RFQ Deadlne Date" = Today) and ("Procurement List"."RFQ Deadline Time" < Time)) then begin
+            //         end else begin
+            //             SelectedVendors.Reset();
+            //             SelectedVendors.SetRange("Reference No", "Procurement List"."No.");
+            //             SelectedVendors.SetRange("Vendor Category", "Procurement List"."Supplier Category");
+            //             SelectedVendors.SetRange("Vendor No.", VendorTable."No.");
+            //             if SelectedVendors.FindFirst() then begin
+            //                 Clear(jsonobject);
+            //                 jsonobject.add('No', "Procurement List"."No.");
+            //                 jsonobject.add('Status', Format("Procurement List".Status));
+            //                 jsonobject.add('Title', "Procurement List".Title);
+            //                 jsonobject.add('RequisitionNo', "Procurement List"."Requisiton No");
+            //                 jsonobject.add('CreationDate', "Procurement List"."Creation Date");
+            //                 jsonobject.add('DeadlineDate', CreateDateTime("Procurement List"."RFQ Deadlne Date", "Procurement List"."RFQ Deadline Time"));
+            //                 jsonobject.add('expected_delivery_date', "Procurement List"."Expected Delivery Date");
+            //                 jsonarray.Add(jsonobject);
+            //             end;
+            //         end;
+            //     until "Procurement List".Next() = 0;
+            //     // exit(Format(AddResponseHead(Outputjson, true)));
+            // end;
             Outputjson.Add('RFQList', jsonarray);
             "Procurement List".Reset();
             "Procurement List".SetRange("Vendor No", VendorID);
@@ -1698,21 +1698,21 @@ codeunit 90004 ProcurementEntry
             RFQVendorBids.SetRange("Quote No", "Procurement List"."No.");
             RFQVendorBids.SetRange("Vendor No", vendorNumber);
             if RFQVendorBids.Find('-') then begin
-                // if not RFQVendorBids."Negotiation Requested" then begin
-                //     Outputjson.Add('response_message', 'Negotiation has not been opened for this item.');
-                //     exit(Format(AddResponseHead(Outputjson, false)));
-                // end;
+                if not RFQVendorBids."Negotiation Requested" then begin
+                    Outputjson.Add('response_message', 'Negotiation has not been opened for this item.');
+                    exit(Format(AddResponseHead(Outputjson, false)));
+                end;
 
-                // if Requestjson.Get('NegotiatedUnitPrice', JsonToken) then
-                //     RFQVendorBids."Negotiated Unit Price" := JsonToken.AsValue().AsDecimal();
-                // if Requestjson.Get('NegotiatedVATAmount', JsonToken) then
-                //     RFQVendorBids."Negotiated VAT %" := JsonToken.AsValue().AsDecimal();
-                // if Requestjson.Get('NegotiatedTotalAmount', JsonToken) then
-                //     RFQVendorBids."Negotiated Amount" := JsonToken.AsValue().AsDecimal();
-                // RFQVendorBids."Negotiated Submitted" := true;
-                // RFQVendorBids."Negotiation Date" := CurrentDateTime;
-                // if RFQVendorBids.Modify() then
-                //     exit(Format(AddResponseHead(Outputjson, true)));
+                if Requestjson.Get('NegotiatedUnitPrice', JsonToken) then
+                    RFQVendorBids."Negotiated Unit Price" := JsonToken.AsValue().AsDecimal();
+                if Requestjson.Get('NegotiatedVATAmount', JsonToken) then
+                    RFQVendorBids."Negotiated VAT %" := JsonToken.AsValue().AsDecimal();
+                if Requestjson.Get('NegotiatedTotalAmount', JsonToken) then
+                    RFQVendorBids."Negotiated Amount" := JsonToken.AsValue().AsDecimal();
+                RFQVendorBids."Negotiated Submitted" := true;
+                RFQVendorBids."Negotiation Date" := CurrentDateTime;
+                if RFQVendorBids.Modify() then
+                    exit(Format(AddResponseHead(Outputjson, true)));
             end else begin
                 Outputjson.Add('response_message', 'No existing bid found for this item.');
                 exit(Format(AddResponseHead(Outputjson, false)));

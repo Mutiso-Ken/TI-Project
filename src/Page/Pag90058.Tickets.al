@@ -38,4 +38,30 @@ page 90058 Tickets
             }
         }
     }
+
+    actions
+    {
+        area(Processing)
+        {
+            action(TicketsOverview)
+            {
+                ApplicationArea = All;
+                Caption = 'Tickets Overview';
+                Ellipsis = true;
+                Image = Report;
+                Promoted = true;
+                PromotedCategory = Report;
+                PromotedIsBig = true;
+                ToolTip = 'Print the complete list of helpdesk tickets, with counts by status.';
+
+                trigger OnAction()
+                var
+                    HelpDeskTicket: Record "HelpDesk Tickets";
+                begin
+                    HelpDeskTicket.CopyFilters(Rec);
+                    Report.Run(Report::"Helpdesk Tickets Overview", true, false, HelpDeskTicket);
+                end;
+            }
+        }
+    }
 }
