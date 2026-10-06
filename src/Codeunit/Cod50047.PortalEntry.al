@@ -135,6 +135,12 @@ codeunit 50047 PortalEntry
         if (RequestType = 'helpdesk_tickets') then
             exit(GetHelpDeskTickets(RequestEmployeeID));
 
+        if (RequestType = 'laptop_replacement_requests') then
+            exit(GetLaptopReplacementRequests(RequestEmployeeID));
+
+        if (RequestType = 'assigned_laptops') then
+            exit(GetAssignedLaptops(RequestEmployeeID));
+
         if (RequestType = 'appraisals') then
             exit(GetAppraisals(RequestEmployeeID));
 
@@ -714,6 +720,7 @@ codeunit 50047 PortalEntry
         jsontoken: JsonToken;
         outputjson: JsonObject;
         newAppCode: Code[50];
+        existingAppCode: Code[50];
         HRsetup: Record "HR Setup";
         NoSeriesManagement: Codeunit "No. Series";
         AppraisalQuestions: record "Appraisal Questions";
@@ -722,17 +729,17 @@ codeunit 50047 PortalEntry
 
         HRsetup.Get();
         if HRsetup."Appraisal Sessions Active" then begin
-            if ((HRsetup."Review Start Date" < Today) and (HRsetup."Review End Date" > Today)) then begin
+            if ((HRsetup."Review Start Date" <= Today) and (HRsetup."Review End Date" >= Today)) then begin
 
-                AppraisalHeader.Reset();
+                // One appraisal per employee per review period: never delete or duplicate an existing one.
                 RequestJson.Get('employee_no', jsontoken);
-                AppraisalHeader.SetRange("Employee No", jsontoken.AsValue().AsCode());
-                // AppraisalHeader.SetRange(Status, AppraisalHeader.Status::Open);
-                if AppraisalHeader.FindSet() then
-                    repeat
-                        if not (AppraisalHeader.Status = AppraisalHeader.Status::Approved) then
-                            AppraisalHeader.Delete();
-                    until AppraisalHeader.Next() = 0;
+                AppraisalHeader.Reset();
+                existingAppCode := AppraisalHeader.FindAppraisalForPeriod(jsontoken.AsValue().AsCode(), AppraisalHeader.GetActiveReviewPeriod(), '');
+                if existingAppCode <> '' then begin
+                    outputjson.Add('message', StrSubstNo('You already have appraisal %1 for this appraisal period.', existingAppCode));
+                    outputjson.Add('existing_appraisal_number', existingAppCode);
+                    exit(Format(AddResponseHead(outputjson, false)));
+                end;
 
                 AppraisalHeader.Reset();
                 AppraisalHeader.Init();
@@ -893,6 +900,15 @@ codeunit 50047 PortalEntry
         lines: JsonArray;
         line: JsonObject;
         LineNo: Integer;
+        // Line numbers of the rows posted for each section, in the order they were posted, so the portal can
+        // give newly added rows their real line number without reloading (and wiping) the form.
+        SavedLinesA1: JsonArray;
+        SavedLinesA2: JsonArray;
+        SavedLinesB1: JsonArray;
+        SavedLinesB2: JsonArray;
+        SavedLinesB3: JsonArray;
+        SavedLinesB4: JsonArray;
+        SavedLines: JsonObject;
 
         updatingUser: code[50];
     begin
@@ -909,6 +925,9 @@ codeunit 50047 PortalEntry
         RequestJson.Get('appraisal_number', jsontoken);
         AppraisalHeader.SetRange("Appraisal Code", jsontoken.AsValue().AsCode());
         if AppraisalHeader.Find('-') then begin
+            // An approved appraisal is final. Report the failure instead of silently dropping the user's input.
+            if AppraisalHeader.Status = AppraisalHeader.Status::Approved then
+                exit(Format(AddResponseHead(outputjson, false)));
             AppraisalHeader.Validate("Employee No");
             if updatingUser = AppraisalHeader."Appraisal Supervisor2" then begin
                 if RequestJson.Get('generalAppraiserComments', jsontoken) and not jsontoken.AsValue().IsNull then
@@ -990,6 +1009,7 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part A";
                             AppraisalLinesSectionA.Insert(true);
                         end;
+                        SavedLinesA1.Add(AppraisalLinesSectionA."Line No");
                         COMMIT();
                     end;
                 end;
@@ -1041,6 +1061,7 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part B";
                             AppraisalLinesSectionA.Insert(true);
                         end;
+                        SavedLinesA2.Add(AppraisalLinesSectionA."Line No");
                     end;
                 end;
             end;
@@ -1092,6 +1113,7 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 1";
                             AppraisalLinesSectionB.Insert(true);
                         end;
+                        SavedLinesB1.Add(AppraisalLinesSectionB."Line No");
                     end;
                 end;
             end;
@@ -1143,6 +1165,7 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 2";
                             AppraisalLinesSectionB.Insert(true);
                         end;
+                        SavedLinesB2.Add(AppraisalLinesSectionB."Line No");
                     end;
                 end;
             end;
@@ -1194,6 +1217,7 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 3";
                             AppraisalLinesSectionB.Insert(true);
                         end;
+                        SavedLinesB3.Add(AppraisalLinesSectionB."Line No");
                     end;
                 end;
             end;
@@ -1245,6 +1269,7 @@ codeunit 50047 PortalEntry
                             AppraisalLinesSectionB.Part := AppraisalLinesSectionB.Part::"Part 4";
                             AppraisalLinesSectionB.Insert(true);
                         end;
+                        SavedLinesB4.Add(AppraisalLinesSectionB."Line No");
                     end;
                 end;
             end;
@@ -1547,6 +1572,13 @@ codeunit 50047 PortalEntry
                     end;
                 end;
             end;
+            SavedLines.Add('sectionapart1', SavedLinesA1);
+            SavedLines.Add('sectionapart2', SavedLinesA2);
+            SavedLines.Add('sectionbpart1', SavedLinesB1);
+            SavedLines.Add('sectionbpart2', SavedLinesB2);
+            SavedLines.Add('sectionbpart3', SavedLinesB3);
+            SavedLines.Add('sectionbpart4', SavedLinesB4);
+            outputjson.Add('saved_lines', SavedLines);
             exit(Format(AddResponseHead(outputjson, true)));
         end;
         exit(Format(AddResponseHead(outputjson, false)));
@@ -1646,6 +1678,12 @@ codeunit 50047 PortalEntry
             RequestJson.Get('ticket', JsonToken);
             ElementInformation := JsonToken.AsObject();
             exit(NewHelpDeskTicket(ElementInformation));
+        end;
+
+        if (SubmissionType = 'laptop_replacement_submission') then begin
+            RequestJson.Get('laptop_request', JsonToken);
+            ElementInformation := JsonToken.AsObject();
+            exit(NewLaptopReplacementRequest(ElementInformation));
         end;
 
         //Time Sheet Modification
@@ -3189,11 +3227,20 @@ codeunit 50047 PortalEntry
         Base64Convert: Codeunit "Base64 Convert";
         MediaId: Guid;
         i: Integer;
+        SignatureParts: List of [Text];
     begin
+        // 'signature:<appraisee|supervisor>:<appraisal no>' saves the signature on that specific appraisal.
+        if ImageType.StartsWith('signature:') then begin
+            SignatureParts := ImageType.Split(':');
+            if SignatureParts.Count() <> 3 then
+                exit(false);
+            exit(SaveAppraisalSignature(memberNumber, SignatureParts.Get(2), CopyStr(SignatureParts.Get(3), 1, 50), Base64Text, FileName, MimeType));
+        end;
+
         if EmployeeTable.Get(memberNumber) then begin
             AppraisalHeader.Reset();
             AppraisalHeader.SetRange("Employee No", EmployeeTable."No.");
-            if AppraisalHeader.FindFirst() then begin
+            if AppraisalHeader.FindLast() then begin
 
                 if (ImageType = 'signature') then begin
                     for i := AppraisalHeader."Appraisee Signature".Count downto 1 do begin
@@ -3215,6 +3262,101 @@ codeunit 50047 PortalEntry
         end;
     end;
 
+    // Appraisal signatures are kept per appraisal, so each appraisal has its own appraisee and immediate supervisor signature.
+    // The portal passes the role and appraisal in the image type as 'signature:<appraisee|supervisor>:<appraisal no>'.
+    // Appraisee: only the employee, while the appraisal is Open. Supervisor: only the immediate supervisor, while it is pending.
+    local procedure SaveAppraisalSignature(signerNumber: Code[50]; role: Text; appraisalNumber: Code[50]; Base64Text: Text; FileName: Text; MimeType: Text): Boolean
+    var
+        TempBlob: Codeunit "Temp Blob";
+        InStr: InStream;
+        OutStr: OutStream;
+        Base64Convert: Codeunit "Base64 Convert";
+        MediaId: Guid;
+        i: Integer;
+    begin
+        if (signerNumber = '') or (Base64Text = '') then
+            exit(false);
+        if not AppraisalHeader.Get(appraisalNumber) then
+            exit(false);
+
+        case role of
+            'appraisee':
+                begin
+                    if (signerNumber <> AppraisalHeader."Employee No") or (AppraisalHeader.Status <> AppraisalHeader.Status::Open) then
+                        exit(false);
+                    for i := AppraisalHeader."Appraisee Signature".Count downto 1 do begin
+                        MediaId := AppraisalHeader."Appraisee Signature".Item(i);
+                        AppraisalHeader."Appraisee Signature".Remove(MediaId);
+                    end;
+                    TempBlob.CreateOutStream(OutStr);
+                    Base64Convert.FromBase64(Base64Text, OutStr);
+                    TempBlob.CreateInStream(InStr);
+                    AppraisalHeader."Appraisee Signature".ImportStream(InStr, FileName, MimeType);
+                end;
+            'supervisor':
+                begin
+                    if (signerNumber <> AppraisalHeader."Appraisal Supervisor1") or (AppraisalHeader.Status <> AppraisalHeader.Status::"Pending Supervisor Approval") then
+                        exit(false);
+                    for i := AppraisalHeader."Supervisor Signature".Count downto 1 do begin
+                        MediaId := AppraisalHeader."Supervisor Signature".Item(i);
+                        AppraisalHeader."Supervisor Signature".Remove(MediaId);
+                    end;
+                    TempBlob.CreateOutStream(OutStr);
+                    Base64Convert.FromBase64(Base64Text, OutStr);
+                    TempBlob.CreateInStream(InStr);
+                    AppraisalHeader."Supervisor Signature".ImportStream(InStr, FileName, MimeType);
+                end;
+            else
+                exit(false);
+        end;
+        exit(AppraisalHeader.Modify());
+    end;
+
+    // Only the people involved in the appraisal can see its signatures.
+    local procedure LoadAppraisalSignature(requesterNumber: Code[50]; role: Text; appraisalNumber: Code[50]; var Base64Text: Text; var FileName: Text; var MimeType: Text): Boolean
+    var
+        InStr: InStream;
+        Base64Convert: Codeunit "Base64 Convert";
+        TenantMedia: Record "Tenant Media";
+        MediaId: Guid;
+    begin
+        if (requesterNumber = '') or not AppraisalHeader.Get(appraisalNumber) then
+            exit(false);
+        if (requesterNumber <> AppraisalHeader."Employee No") and (requesterNumber <> AppraisalHeader."Appraisal Supervisor1") and
+           (requesterNumber <> AppraisalHeader."Appraisal Supervisor2") and (requesterNumber <> AppraisalHeader."Appraisal Supervisor3") and
+           (requesterNumber <> AppraisalHeader."Appraisal Supervisor4") and (requesterNumber <> '0149')
+        then
+            exit(false);
+
+        case role of
+            'appraisee':
+                begin
+                    if AppraisalHeader."Appraisee Signature".Count = 0 then
+                        exit(false);
+                    MediaId := AppraisalHeader."Appraisee Signature".Item(AppraisalHeader."Appraisee Signature".Count);
+                end;
+            'supervisor':
+                begin
+                    if AppraisalHeader."Supervisor Signature".Count = 0 then
+                        exit(false);
+                    MediaId := AppraisalHeader."Supervisor Signature".Item(AppraisalHeader."Supervisor Signature".Count);
+                end;
+            else
+                exit(false);
+        end;
+
+        if not TenantMedia.Get(MediaId) then
+            exit(false);
+        TenantMedia.CalcFields(Content);
+        if not TenantMedia.Content.HasValue then
+            exit(false);
+        TenantMedia.Content.CreateInStream(InStr);
+        Base64Text := Base64Convert.ToBase64(InStr);
+        FileName := TenantMedia."File Name";
+        MimeType := TenantMedia."Mime Type";
+        exit(true);
+    end;
+
     procedure ExportImageToBase64(memberNumber: Code[50]; var Base64Text: Text; var FileName: Text; var MimeType: Text; ImageType: Text): Boolean
     var
         CustomerTable: Record Customer;
@@ -3224,17 +3366,26 @@ codeunit 50047 PortalEntry
         Base64Convert: Codeunit "Base64 Convert";
         TenantMedia: Record "Tenant Media";
         MediaId: Guid;
+        SignatureParts: List of [Text];
     begin
         Base64Text := '';
         FileName := '';
         MimeType := '';
+
+        // 'signature:<appraisee|supervisor>:<appraisal no>' reads the signature saved on that specific appraisal.
+        if ImageType.StartsWith('signature:') then begin
+            SignatureParts := ImageType.Split(':');
+            if SignatureParts.Count() <> 3 then
+                exit(false);
+            exit(LoadAppraisalSignature(memberNumber, SignatureParts.Get(2), CopyStr(SignatureParts.Get(3), 1, 50), Base64Text, FileName, MimeType));
+        end;
 
         if not EmployeeTable.Get(memberNumber) then
             exit(false);
 
         AppraisalHeader.Reset();
         AppraisalHeader.SetRange("Employee No", EmployeeTable."No.");
-        if AppraisalHeader.FindFirst() then begin
+        if AppraisalHeader.FindLast() then begin
             if (ImageType = 'signature') then begin
                 if AppraisalHeader."Appraisee Signature".Count = 0 then
                     exit(false);
@@ -4272,6 +4423,141 @@ codeunit 50047 PortalEntry
             exit(Format(AddResponseHead(outputjson, false)));
 
         end;
+    end;
+
+    local procedure GetLaptopRequestText(RequestJson: JsonObject; KeyName: Text): Text
+    var
+        jsontoken: JsonToken;
+    begin
+        if RequestJson.Get(KeyName, jsontoken) then
+            if not jsontoken.AsValue().IsNull then
+                exit(jsontoken.AsValue().AsText());
+        exit('');
+    end;
+
+    local procedure GetLaptopReplacementRequests(EmployeeID: Code[20]): Text
+    var
+        LaptopRequest: Record "Laptop Replacement Request";
+        Outputjson: JsonObject;
+        jsonobject: JsonObject;
+        jsonarray: JsonArray;
+    begin
+        Clear(Outputjson);
+        Clear(jsonarray);
+        LaptopRequest.SetCurrentKey("Employee No.");
+        LaptopRequest.SetRange("Employee No.", EmployeeID);
+        if LaptopRequest.FindSet() then begin
+            repeat
+                Clear(jsonobject);
+                jsonobject.Add('request_number', LaptopRequest."No.");
+                jsonobject.Add('employee_id', LaptopRequest."Employee No.");
+                jsonobject.Add('employee_name', LaptopRequest."Employee Name");
+                jsonobject.Add('department', LaptopRequest."Department Name");
+                jsonobject.Add('email_address', LaptopRequest."Email Address");
+                jsonobject.Add('request_date', LaptopRequest."Request Date");
+                jsonobject.Add('reason', LaptopRequest."Reason for Replacement");
+                jsonobject.Add('contacted_ict', Format(LaptopRequest."Contacted ICT"));
+                jsonobject.Add('assessed_by_ict', Format(LaptopRequest."Assessed by ICT"));
+                jsonobject.Add('assessment_feedback', LaptopRequest."Assessment Feedback");
+                jsonobject.Add('fixed_asset_no', LaptopRequest."Current Fixed Asset No.");
+                jsonobject.Add('laptop_tag_number', LaptopRequest."Current Laptop Tag No.");
+                jsonobject.Add('laptop_description', LaptopRequest."Current Laptop Description");
+                jsonobject.Add('resource_identified', Format(LaptopRequest."Resource Identified"));
+                jsonobject.Add('resource_details', LaptopRequest."Resource Details");
+                jsonobject.Add('additional_information', LaptopRequest."Additional Information");
+                jsonobject.Add('status', Format(LaptopRequest.Status));
+                jsonobject.Add('rejected_reason', LaptopRequest."Rejected Reason");
+                jsonobject.Add('new_laptop_description', LaptopRequest."New Laptop Description");
+                jsonarray.Add(jsonobject);
+            until LaptopRequest.Next() = 0;
+
+            Outputjson.Add('laptop_requests', jsonarray);
+            exit(Format(AddResponseHead(Outputjson, true)));
+        end;
+        exit(Format(AddResponseHead(Outputjson, false)));
+    end;
+
+    // Returns the employee's details plus the assets currently assigned to them, used to prefill the portal form.
+    local procedure GetAssignedLaptops(EmployeeID: Code[20]): Text
+    var
+        AssetAssignment: Record "Asset Assignment History";
+        FixedAsset: Record "Fixed Asset";
+        Outputjson: JsonObject;
+        jsonobject: JsonObject;
+        jsonarray: JsonArray;
+    begin
+        Clear(Outputjson);
+        Clear(jsonarray);
+        if not EmployeeTable.Get(EmployeeID) then
+            exit(Format(AddResponseHead(Outputjson, false)));
+
+        Outputjson.Add('employee_id', EmployeeTable."No.");
+        Outputjson.Add('employee_full_name', EmployeeTable.FullName());
+        Outputjson.Add('department', EmployeeTable."Department Name");
+        Outputjson.Add('email_address', EmployeeTable."E-Mail");
+
+        AssetAssignment.SetRange("Employee No.", EmployeeID);
+        AssetAssignment.SetRange(Status, AssetAssignment.Status::Assigned);
+        if AssetAssignment.FindSet() then
+            repeat
+                Clear(jsonobject);
+                jsonobject.Add('fixed_asset_no', AssetAssignment."Fixed Asset No.");
+                jsonobject.Add('description', AssetAssignment."Fixed Asset Description");
+                if FixedAsset.Get(AssetAssignment."Fixed Asset No.") then begin
+                    jsonobject.Add('tag_number', FixedAsset."Tag Number");
+                    jsonobject.Add('acquisition_date', Format(FixedAsset."Acquisition Date", 0, '<Day,2> <Month Text,3> <Year4>'));
+                end;
+                jsonarray.Add(jsonobject);
+            until AssetAssignment.Next() = 0;
+
+        Outputjson.Add('assigned_laptops', jsonarray);
+        exit(Format(AddResponseHead(Outputjson, true)));
+    end;
+
+    local procedure NewLaptopReplacementRequest(RequestJson: JsonObject): Text
+    var
+        LaptopRequest: Record "Laptop Replacement Request";
+        OpenRequest: Record "Laptop Replacement Request";
+        EmployeeID: Code[20];
+        FixedAssetNo: Code[20];
+        outputjson: JsonObject;
+    begin
+        Clear(outputjson);
+        EmployeeID := CopyStr(GetLaptopRequestText(RequestJson, 'employee_id'), 1, MaxStrLen(EmployeeID));
+        FixedAssetNo := CopyStr(GetLaptopRequestText(RequestJson, 'fixed_asset_no'), 1, MaxStrLen(FixedAssetNo));
+        if not EmployeeTable.Get(EmployeeID) then
+            exit(Format(AddResponseHead(outputjson, false)));
+
+        // Only one open request per laptop.
+        OpenRequest.SetRange("Current Fixed Asset No.", FixedAssetNo);
+        OpenRequest.SetFilter(Status, '%1|%2|%3', OpenRequest.Status::"Pending Review", OpenRequest.Status::"ICT Assessed", OpenRequest.Status::Approved);
+        if not OpenRequest.IsEmpty() then begin
+            outputjson.Add('response_message', 'There is already an open replacement request for this laptop.');
+            exit(Format(AddResponseHead(outputjson, false)));
+        end;
+
+        LaptopRequest.Init();
+        LaptopRequest.Validate("Employee No.", EmployeeID);
+        LaptopRequest.Validate("Current Fixed Asset No.", FixedAssetNo);
+        LaptopRequest."Reason for Replacement" := CopyStr(GetLaptopRequestText(RequestJson, 'reason'), 1, MaxStrLen(LaptopRequest."Reason for Replacement"));
+        if GetLaptopRequestText(RequestJson, 'contacted_ict') = 'Yes' then
+            LaptopRequest."Contacted ICT" := LaptopRequest."Contacted ICT"::Yes;
+        if GetLaptopRequestText(RequestJson, 'assessed_by_ict') = 'Yes' then begin
+            LaptopRequest."Assessed by ICT" := LaptopRequest."Assessed by ICT"::Assessed;
+            LaptopRequest."Assessment Feedback" := CopyStr(GetLaptopRequestText(RequestJson, 'assessment_feedback'), 1, MaxStrLen(LaptopRequest."Assessment Feedback"));
+        end;
+        if GetLaptopRequestText(RequestJson, 'resource_identified') = 'Yes' then begin
+            LaptopRequest."Resource Identified" := LaptopRequest."Resource Identified"::Yes;
+            LaptopRequest."Resource Details" := CopyStr(GetLaptopRequestText(RequestJson, 'resource_details'), 1, MaxStrLen(LaptopRequest."Resource Details"));
+        end;
+        LaptopRequest."Additional Information" := CopyStr(GetLaptopRequestText(RequestJson, 'additional_information'), 1, MaxStrLen(LaptopRequest."Additional Information"));
+        LaptopRequest."Submitted By" := CopyStr(EmployeeID, 1, MaxStrLen(LaptopRequest."Submitted By"));
+        LaptopRequest.Insert(true);
+        LaptopRequest.LogUpdate('Submitted via Staff Portal.');
+
+        outputjson.Add('ReturnNumber', LaptopRequest."No.");
+        outputjson.Add('employee_full_name', EmployeeTable.FullName());
+        exit(Format(AddResponseHead(outputjson, true)));
     end;
 
     local procedure GetMissionProposals(employeeid: Text; Identifier: Text): Text

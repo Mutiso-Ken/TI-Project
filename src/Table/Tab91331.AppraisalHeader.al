@@ -33,20 +33,8 @@ Table 91331 "Appraisal Header"
         {
             DataClassification = ToBeClassified;
             trigger OnValidate()
-            var
-                StartMonth: Text;
-                EndMonth: Text;
             begin
-                "Review Period" := '';
-                HRsetup.Get();
-                if HRsetup."Appraisal Sessions Active" then begin
-                    if (HRsetup."Review Start Date" <> 0D) and (HRsetup."Review End Date" <> 0D) then begin
-                        StartMonth := UpperCase(Format(HRsetup."Review Start Date", 0, '<Month Text,3> <Year4>'));
-                        EndMonth := UpperCase(Format(HRsetup."Review End Date", 0, '<Month Text,3> <Year4>'));
-                        "Review Period" := StrSubstNo('%1 - %2', StartMonth, EndMonth);
-                    end;
-                end else
-                    Error('The Appraisal period has not been activated at the moment! Kindly await for the appraisal period to be active!');
+                SetReviewPeriod();
             end;
 
         }
@@ -279,6 +267,11 @@ Table 91331 "Appraisal Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(42; "Supervisor Signature"; MediaSet)
+        {
+            Caption = 'Immediate Supervisor Signature';
+            DataClassification = ToBeClassified;
+        }
         // field(35; "HOD"; Code[50])
         // {
         //     DataClassification = ToBeClassified;
@@ -294,6 +287,9 @@ Table 91331 "Appraisal Header"
         key(Key1; "Appraisal Code")
         {
             Clustered = true;
+        }
+        key(EmployeePeriod; "Employee No", "Review Period")
+        {
         }
     }
 
@@ -313,6 +309,7 @@ Table 91331 "Appraisal Header"
         end;
         Validate("Employee No");
         Validate("Review Period");
+        CheckNoOtherAppraisalForPeriod();
         "Creation Date" := Today;
 
         AppraisalLinesSectionA.Reset();
@@ -384,7 +381,10 @@ Table 91331 "Appraisal Header"
     trigger OnModify()
     begin
         Validate("Overall Score");
-        Validate("Review Period");
+        // The review period is frozen when the appraisal is created. It is only stamped here for
+        // legacy records that have none, so approvals still work after the appraisal window closes.
+        if "Review Period" = '' then
+            Validate("Review Period");
         AppraisalLinesSectionC.Reset();
         AppraisalLinesSectionC.SetRange("Appraisal Code", Rec."Appraisal Code");
         if AppraisalLinesSectionC.FindSet() then
@@ -411,6 +411,57 @@ Table 91331 "Appraisal Header"
         AppraisalQuestions: record "Appraisal Questions";
         AppraisalApprovalsTracking: record "Appraisal Approvals Tracking";
         LineNo: Integer;
+
+    procedure GetActiveReviewPeriod(): Text[200]
+    begin
+        HRsetup.Get();
+        if not HRsetup."Appraisal Sessions Active" then
+            Error('The Appraisal period has not been activated at the moment! Kindly await for the appraisal period to be active!');
+        if (HRsetup."Review Start Date" = 0D) or (HRsetup."Review End Date" = 0D) then
+            exit('');
+        exit(StrSubstNo('%1 - %2',
+            UpperCase(Format(HRsetup."Review Start Date", 0, '<Month Text,3> <Year4>')),
+            UpperCase(Format(HRsetup."Review End Date", 0, '<Month Text,3> <Year4>'))));
+    end;
+
+    local procedure SetReviewPeriod()
+    begin
+        "Review Period" := GetActiveReviewPeriod();
+        if "Review Period" <> '' then begin
+            "Start Date" := HRsetup."Review Start Date";
+            "End Date" := HRsetup."Review End Date";
+        end;
+    end;
+
+    // Returns the code of an existing appraisal for the employee in the period (any status), or ''.
+    procedure FindAppraisalForPeriod(EmployeeNo: Code[10]; ReviewPeriod: Text[200]; ExcludeCode: Code[50]): Code[50]
+    var
+        OtherAppraisal: Record "Appraisal Header";
+    begin
+        OtherAppraisal.SetRange("Employee No", EmployeeNo);
+        OtherAppraisal.SetRange("Review Period", ReviewPeriod);
+        if ExcludeCode <> '' then
+            OtherAppraisal.SetFilter("Appraisal Code", '<>%1', ExcludeCode);
+        if OtherAppraisal.FindFirst() then
+            exit(OtherAppraisal."Appraisal Code");
+        exit('');
+    end;
+
+    // One appraisal per employee per review period, whatever its status.
+    procedure CheckNoOtherAppraisalForPeriod()
+    var
+        OtherAppraisal: Record "Appraisal Header";
+        ExistingCode: Code[50];
+    begin
+        TestField("Employee No");
+        if "Review Period" = '' then
+            Error('The review period for the appraisal could not be determined. Kindly set the Review Start and End Dates in HR Setup.');
+        OtherAppraisal.LockTable();
+        ExistingCode := FindAppraisalForPeriod("Employee No", "Review Period", "Appraisal Code");
+        if ExistingCode <> '' then
+            Error('Employee %1 already has appraisal %2 for the review period %3. Only one appraisal is allowed per employee for each appraisal period.',
+                "Employee No", ExistingCode, "Review Period");
+    end;
 
     procedure UpdateApprovalSteps()
     begin
@@ -662,12 +713,98 @@ Table 91331 "Appraisal Header"
         end;
     end;
 
+    procedure GetApproverRole(ApproverCode: Code[50]): Text[50]
+    begin
+        if ApproverCode = '' then
+            exit('');
+        case ApproverCode of
+            "Appraisal Supervisor1":
+                exit('Immediate Supervisor');
+            "Appraisal Supervisor2":
+                exit('General Appraiser');
+            "Appraisal Supervisor3":
+                exit('Head of Section/Programme');
+            "Appraisal Supervisor4":
+                exit('HR Supervisor');
+        end;
+        exit('Approver');
+    end;
+
+    // The comment the approver entered in their own comments field on the appraisal.
+    local procedure GetApproverComment(ApproverCode: Code[50]): Text[2048]
+    begin
+        case ApproverCode of
+            "Appraisal Supervisor1":
+                exit("Immediate Supervisor Comments");
+            "Appraisal Supervisor2":
+                exit("General Appraiser Comments");
+            "Appraisal Supervisor3":
+                exit("Head Comments");
+            "Appraisal Supervisor4":
+                exit("HR Comments");
+        end;
+        exit('');
+    end;
+
+    local procedure LogApprovalAction(ActionType: Option Submitted,Approved,Rejected; ApproverCode: Code[50]; Comment: Text[2048])
+    var
+        ApprovalLog: Record "Appraisal Approval Log";
+        Approver: Record "HR Employees";
+    begin
+        ApprovalLog.Init();
+        ApprovalLog."Appraisal Code" := "Appraisal Code";
+        ApprovalLog.Action := ActionType;
+        ApprovalLog."Approver Code" := ApproverCode;
+        if ActionType = ActionType::Submitted then begin
+            ApprovalLog."Approver Code" := "Employee No";
+            ApprovalLog."Approver Name" := "Employee Name";
+            ApprovalLog."Approver Role" := 'Appraisee';
+        end else begin
+            if Approver.Get(ApproverCode) then
+                ApprovalLog."Approver Name" := Approver.FullName();
+            ApprovalLog."Approver Role" := GetApproverRole(ApproverCode);
+        end;
+        ApprovalLog.Comment := Comment;
+        ApprovalLog."Action Date" := Today;
+        ApprovalLog."Action Time" := Time;
+        ApprovalLog."User ID" := CopyStr(UserId, 1, MaxStrLen(ApprovalLog."User ID"));
+        ApprovalLog.Insert();
+    end;
+
+    // Every approval step needs a person, otherwise the appraisal would get stuck with nobody able to action it.
+    local procedure CheckApproversAreSet()
+    begin
+        if "Appraisal Supervisor1" = '' then
+            Error('The Immediate Supervisor has not been set for employee %1. Update the HR Employee card before sending the appraisal for approval.', "Employee No");
+        case ApprovalSteps of
+            2:
+                if "Appraisal Supervisor4" = '' then
+                    Error('The HR Supervisor has not been set for employee %1.', "Employee No");
+            3:
+                if ("Appraisal Supervisor3" = '') or ("Appraisal Supervisor4" = '') then
+                    Error('The Head of Section/Programme and HR Supervisor must both be set for employee %1.', "Employee No");
+            4:
+                if ("Appraisal Supervisor2" = '') or ("Appraisal Supervisor3" = '') or ("Appraisal Supervisor4" = '') then
+                    Error('All four appraisal supervisors must be set for employee %1.', "Employee No");
+        end;
+    end;
+
+    local procedure CheckCanAction(ApproverCode: Code[50])
+    begin
+        if Rec.Status <> Rec.Status::"Pending Supervisor Approval" then
+            Error('Appraisal %1 is not pending approval.', "Appraisal Code");
+        if (ApproverCode = '') or (ApproverCode <> Rec."Immediate Supervisor") then
+            Error('Appraisal %1 is currently waiting for %2, not for you.', "Appraisal Code", "Supervisor Name");
+    end;
+
     procedure SendForApproval(): Boolean
     begin
         UpdateApprovalSteps();
         if Rec.Status = Status::Open then begin
+            CheckApproversAreSet();
             Rec.Status := Status::"Pending Supervisor Approval";
             Rec.Modify();
+            LogApprovalAction(0, '', '');
             ResetApprovalsWhenSending();
             // UpdateApprovalWorkflow();
             exit(true);
@@ -677,6 +814,8 @@ Table 91331 "Appraisal Header"
 
     procedure ApproveDocument(appoverCode: Code[50]): Text
     begin
+        CheckCanAction(appoverCode);
+        LogApprovalAction(1, appoverCode, GetApproverComment(appoverCode));
         AppraisalApprovalsTracking.Reset();
         AppraisalApprovalsTracking.SetRange("Appraisal Code", Rec."Appraisal Code");
         AppraisalApprovalsTracking.SetRange("Supervisor Code", Rec."Immediate Supervisor");
@@ -715,6 +854,10 @@ Table 91331 "Appraisal Header"
 
     procedure RejectDocument(appoverCode: Code[50]): Text
     begin
+        CheckCanAction(appoverCode);
+        if GetApproverComment(appoverCode) = '' then
+            Error('Enter your comments on the appraisal before rejecting it, so the appraisee knows what to correct.');
+        LogApprovalAction(2, appoverCode, GetApproverComment(appoverCode));
         AppraisalApprovalsTracking.Reset();
         AppraisalApprovalsTracking.SetRange("Appraisal Code", Rec."Appraisal Code");
         AppraisalApprovalsTracking.SetRange("Supervisor Code", Rec."Immediate Supervisor");

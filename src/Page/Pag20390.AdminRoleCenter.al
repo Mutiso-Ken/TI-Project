@@ -850,89 +850,89 @@ Page 50390 "Admin Role Center"
                         RunObject = page "Supplier Category";
                     }
                 }
-                group("Prospective Vendors")
+                // group("Prospective Vendors")
+                // {
+                //     Caption = 'Prospective Vendors';
+                action("Vendor Onboarding")
                 {
-                    Caption = 'Prospective Vendors';
-                    action("Vendor Onboarding")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Vendor Onboarding';
-                        ToolTip = 'Onboard a new vendor for e-Procurement portal access.';
-                        RunObject = page "Vendor Onboarding List";
-                        Image = NewCustomer;
-                    }
-                    action("Vendor Registration - Pending Review")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Vendor Registration - Pending Review';
-                        RunObject = page "Vendor Registration Review";
-                        RunPageView = where(Status = filter(New | "In Review"));
-                    }
-                    action("Vendor Registration - Approved")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Vendor Registration - Approved';
-                        RunObject = page "Vendor Registration Review";
-                        RunPageView = where(Status = filter(Approved));
-                    }
-                    action("Vendor Registration - Rejected")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Vendor Registration - Rejected';
-                        RunObject = page "Vendor Registration Review";
-                        RunPageView = where(Status = filter(Rejected));
-                    }
-                    action("Vendors")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Vendors';
-                        RunObject = page "Vendor List";
-                    }
+                    ApplicationArea = All;
+                    Caption = 'Vendor Onboarding';
+                    ToolTip = 'Onboard a new vendor for e-Procurement portal access.';
+                    RunObject = page "Vendor Onboarding List";
+                    Image = NewCustomer;
                 }
-                group("Procurement Plan")
-                {
-                    Caption = 'Procurement Plan';
-                    action("Open Procurement List")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Open Procurement List';
-                        Image = List;
-                        RunObject = page "Open Procurement Plan List";
-                    }
-                    action("Pending Procurement List")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Pending Procurement List';
-                        Image = List;
-                        RunObject = page "Pending Procurement Plan List";
-                    }
-                    action("Approved Procurement List")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Approved Procurement List';
-                        Image = List;
-                        RunObject = page "Approved Procurement Plan List";
-                    }
-                    action("Procurement Plans")
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Procurement Plans';
-                        Image = List;
-                        RunObject = page "Procurement Plan";
-                    }
-                }
+                // action("Vendor Registration - Pending Review")
+                // {
+                //     ApplicationArea = All;
+                //     Caption = 'Vendor Registration - Pending Review';
+                //     RunObject = page "Vendor Registration Review";
+                //     RunPageView = where(Status = filter(New | "In Review"));
+                // }
+                // action("Vendor Registration - Approved")
+                // {
+                //     ApplicationArea = All;
+                //     Caption = 'Vendor Registration - Approved';
+                //     RunObject = page "Vendor Registration Review";
+                //     RunPageView = where(Status = filter(Approved));
+                // }
+                // action("Vendor Registration - Rejected")
+                // {
+                //     ApplicationArea = All;
+                //     Caption = 'Vendor Registration - Rejected';
+                //     RunObject = page "Vendor Registration Review";
+                //     RunPageView = where(Status = filter(Rejected));
+                // }
+                // action("Vendors")
+                // {
+                //     ApplicationArea = All;
+                //     Caption = 'Vendors';
+                //     RunObject = page "Vendor List";
+                // }
+                // }
+                // group("Procurement Plan")
+                // {
+                //     Caption = 'Procurement Plan';
+                //     action("Open Procurement List")
+                //     {
+                //         ApplicationArea = All;
+                //         Caption = 'Open Procurement List';
+                //         Image = List;
+                //         RunObject = page "Open Procurement Plan List";
+                //     }
+                //     action("Pending Procurement List")
+                //     {
+                //         ApplicationArea = All;
+                //         Caption = 'Pending Procurement List';
+                //         Image = List;
+                //         RunObject = page "Pending Procurement Plan List";
+                //     }
+                //     action("Approved Procurement List")
+                //     {
+                //         ApplicationArea = All;
+                //         Caption = 'Approved Procurement List';
+                //         Image = List;
+                //         RunObject = page "Approved Procurement Plan List";
+                //     }
+                //     action("Procurement Plans")
+                //     {
+                //         ApplicationArea = All;
+                //         Caption = 'Procurement Plans';
+                //         Image = List;
+                //         RunObject = page "Procurement Plan";
+                //     }
+                // }
                 group("Purchase Requisitions")
                 {
 
                     Caption = 'Purchase Requisitions';
                     Image = Purchasing;
                     ToolTip = 'Raise, track, and approve purchase requisitions ahead of procurement.';
-                    action(Requisitions)
-                    {
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'New Purchase Requisition';
-                        RunObject = Page "Task Order";
-                    }
+                    // action(Requisitions)
+                    // {
+                    //     ApplicationArea = Basic, Suite;
+                    //     Caption = 'New Purchase Requisition';
+                    //     RunObject = Page "Task Order";
+                    // }
                     action("Pending Purchase Requisition")
                     {
                         ApplicationArea = Basic, Suite;
