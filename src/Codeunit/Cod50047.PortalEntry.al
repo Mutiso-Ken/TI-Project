@@ -725,7 +725,6 @@ codeunit 50047 PortalEntry
         NoSeriesManagement: Codeunit "No. Series";
         AppraisalQuestions: record "Appraisal Questions";
         LineNo: Integer;
-
     begin
 
         HRsetup.Get();
@@ -745,7 +744,10 @@ codeunit 50047 PortalEntry
                 AppraisalHeader.Reset();
                 AppraisalHeader.Init();
                 AppraisalHeader."Employee No" := jsontoken.AsValue().AsCode();
-
+                // RequestJson.Get('start_date', jsontoken);
+                // AppraisalHeader."Start Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
+                // RequestJson.Get('end_date', jsontoken);
+                // AppraisalHeader."End Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
                 HRsetup.Get();
                 HRsetup.TestField("Appraisal Nos.");
                 newAppCode := NoSeriesManagement.GetNextNo(HRsetup."Appraisal Nos.", 0D, true);
@@ -822,10 +824,9 @@ codeunit 50047 PortalEntry
                         until AppraisalApprovalsTracking.Next() = 0;
                     exit(Format(AddResponseHead(outputjson, true)));
                 end;
-                // end;
             end;
-            exit(Format(AddResponseHead(outputjson, false)));
         end;
+        exit(Format(AddResponseHead(outputjson, false)));
     end;
 
     local procedure AppraisalApprovalUpdates(RequestJson: JsonObject): Text

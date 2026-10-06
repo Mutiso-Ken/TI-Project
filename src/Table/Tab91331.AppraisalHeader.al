@@ -465,7 +465,7 @@ Table 91331 "Appraisal Header"
 
     procedure UpdateApprovalSteps()
     begin
-        if Rec.Status = Status::Open then begin
+        // if Rec.Status = Status::Open then begin
             Rec."Appraisal Supervisor1" := '';
             Rec."Appraisal Supervisor2" := '';
             Rec."Appraisal Supervisor3" := '';
@@ -506,7 +506,7 @@ Table 91331 "Appraisal Header"
                 Validate(Rec."Immediate Supervisor");
                 Rec.Modify();
             end;
-        end;
+        // end;
     end;
 
     procedure UpdateSupervisorApprovals()
