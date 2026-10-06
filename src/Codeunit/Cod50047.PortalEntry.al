@@ -722,12 +722,11 @@ codeunit 50047 PortalEntry
 
         HRsetup.Get();
         if HRsetup."Appraisal Sessions Active" then begin
-            if ((HRsetup."Review Start Date" < Today) and (HRsetup."Review End Date" > Today)) then begin
+            // if ((HRsetup."Review Start Date" < Today) and (HRsetup."Review End Date" > Today)) then begin
 
                 AppraisalHeader.Reset();
                 RequestJson.Get('employee_no', jsontoken);
                 AppraisalHeader.SetRange("Employee No", jsontoken.AsValue().AsCode());
-                // AppraisalHeader.SetRange(Status, AppraisalHeader.Status::Open);
                 if AppraisalHeader.FindSet() then
                     repeat
                         if not (AppraisalHeader.Status = AppraisalHeader.Status::Approved) then
@@ -737,10 +736,7 @@ codeunit 50047 PortalEntry
                 AppraisalHeader.Reset();
                 AppraisalHeader.Init();
                 AppraisalHeader."Employee No" := jsontoken.AsValue().AsCode();
-                // RequestJson.Get('start_date', jsontoken);
-                // AppraisalHeader."Start Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
-                // RequestJson.Get('end_date', jsontoken);
-                // AppraisalHeader."End Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
+                
                 HRsetup.Get();
                 HRsetup.TestField("Appraisal Nos.");
                 newAppCode := NoSeriesManagement.GetNextNo(HRsetup."Appraisal Nos.", 0D, true);
@@ -817,7 +813,7 @@ codeunit 50047 PortalEntry
                         until AppraisalApprovalsTracking.Next() = 0;
                     exit(Format(AddResponseHead(outputjson, true)));
                 end;
-            end;
+            // end;
         end;
         exit(Format(AddResponseHead(outputjson, false)));
     end;
