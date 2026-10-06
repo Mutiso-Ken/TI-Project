@@ -16,7 +16,8 @@ Report 50038 "Appraisal Report"
             column(Full_Name; "Appraisal Header"."Employee Name") { }
             column(Department; "Appraisal Header"."Employee Deparment") { }
             column(Job_Title; "Appraisal Header"."Job Title") { }
-            column(Supervisor_Name; "Appraisal Header"."Supervisor Name") { }
+            column(Supervisor_Name; ImmediateSupervisorName) { }
+            column(Review_Period; "Appraisal Header"."Review Period") { }
             column(Overall_Score; "Appraisal Header"."Overall Score") { }
             column(Part_A; "Appraisal Header"."Part A") { }
             column(Part_C; "Appraisal Header"."Part C") { }
@@ -24,10 +25,13 @@ Report 50038 "Appraisal Report"
             column(General_Appraiser_Comments; "Appraisal Header"."General Appraiser Comments") { }
             column(Employee_Comments; "Appraisal Header"."Employee Comments") { }
             column(Observer_Comments; "Appraisal Header"."General Appraiser Comments") { }
+            column(Immediate_Supervisor_Comments; "Appraisal Header"."Immediate Supervisor Comments") { }
             column(Head_Comments; "Appraisal Header"."Head Comments") { }
             column(ED_Comments; "Appraisal Header"."ED Comments") { }
             column(SignatureBase64; SignatureBase64) { }
             column(mimeType; mimeType) { }
+            column(SupervisorSignatureBase64; SupervisorSignatureBase64) { }
+            column(SupervisorMimeType; SupervisorMimeType) { }
             column(CompanyINfoName; CompanyINfo.Name) { }
             column(CompanyINfoAdd; CompanyINfo.Address) { }
             column(CompanyINfoPicture; CompanyINfo.Picture) { }
@@ -212,9 +216,28 @@ Report 50038 "Appraisal Report"
             begin
                 Clear(SignatureBase64);
                 Clear(mimeType);
+                Clear(SupervisorSignatureBase64);
+                Clear(SupervisorMimeType);
+
+                // The header's "Supervisor Name" follows the current approver; print the actual immediate supervisor.
+                ImmediateSupervisorName := "Appraisal SupervisorName1";
+                if ImmediateSupervisorName = '' then
+                    ImmediateSupervisorName := "Supervisor Name";
+
+                if "Supervisor Signature".Count > 0 then begin
+                    MediaId := "Supervisor Signature".Item("Supervisor Signature".Count);
+                    if TenantMedia.Get(MediaId) then begin
+                        TenantMedia.CalcFields(Content);
+                        if TenantMedia.Content.HasValue then begin
+                            TenantMedia.Content.CreateInStream(InStr);
+                            SupervisorSignatureBase64 := Base64Convert.ToBase64(InStr);
+                            SupervisorMimeType := TenantMedia."Mime Type";
+                        end;
+                    end;
+                end;
 
                 if "Appraisee Signature".Count > 0 then begin
-                    MediaId := "Appraisee Signature".Item(1);
+                    MediaId := "Appraisee Signature".Item("Appraisee Signature".Count);
                     if TenantMedia.Get(MediaId) then begin
                         TenantMedia.CalcFields(Content);
                         if TenantMedia.Content.HasValue then begin
@@ -243,6 +266,9 @@ Report 50038 "Appraisal Report"
         SignatureBase64: Text;
         mimeType: Text;
         AppraisalHeader2: Record "Appraisal Header";
+        ImmediateSupervisorName: Text;
+        SupervisorSignatureBase64: Text;
+        SupervisorMimeType: Text;
 
     trigger OnInitReport();
     begin

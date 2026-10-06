@@ -267,9 +267,8 @@ Page 50365 "Appraisal Card"
                     trigger OnAction()
                     begin
                         if Confirm('Are you sure you want to approve this appraisal?') then begin
-                            Rec.UpdateApprovalSteps();
+                            // ApproveDocument already moves the workflow on.
                             Rec.ApproveDocument(Rec."Immediate Supervisor");
-                            Rec.UpdateApprovalWorkflow();
                         end;
                     end;
                 }
@@ -288,9 +287,8 @@ Page 50365 "Appraisal Card"
                     trigger OnAction()
                     begin
                         if Confirm('Are you sure you want to reject this appraisal?') then begin
-                            Rec.UpdateApprovalSteps();
+                            // RejectDocument already moves the workflow on.
                             Rec.RejectDocument(Rec."Immediate Supervisor");
-                            Rec.UpdateApprovalWorkflow();
                         end;
                     end;
                 }
@@ -339,6 +337,16 @@ Page 50365 "Appraisal Card"
                     Promoted = true;
                     PromotedCategory = Process;
                     RunObject = page "Appraisal Approval Tracking";
+                    RunPageLink = "Appraisal Code" = field("Appraisal Code");
+                }
+                action("Approval History")
+                {
+                    ApplicationArea = Basic;
+                    Caption = 'Approval History';
+                    Image = History;
+                    Promoted = true;
+                    PromotedCategory = Process;
+                    RunObject = page "Appraisal Approval Log";
                     RunPageLink = "Appraisal Code" = field("Appraisal Code");
                 }
             }

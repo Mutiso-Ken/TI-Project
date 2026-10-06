@@ -412,7 +412,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!Start_Date.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!Review_Period.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Calibri</FontFamily>
                     </Style>
@@ -6909,8 +6909,66 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-        </ReportItems>
-        <Height>27.11334in</Height>
+          <Image Name="ImageSupervisorSignature">
+            <Source>Database</Source>
+            <Value>=System.Convert.FromBase64String(IIf(IsNothing(Fields!SupervisorSignatureBase64.Value), "", Fields!SupervisorSignatureBase64.Value))</Value>
+            <MIMEType>=IIf(Len(First(Fields!SupervisorMimeType.Value, "DataSet_Result")) = 0, "image/png", First(Fields!SupervisorMimeType.Value, "DataSet_Result"))</MIMEType>
+            <Sizing>FitProportional</Sizing>
+            <Top>25.84486in</Top>
+            <Left>5.11333in</Left>
+            <Height>0.97917in</Height>
+            <Width>2.84375in</Width>
+            <ZIndex>41</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Image>
+          <Textbox Name="TextboxImmediateSupervisorComments">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>IMMEDIATE SUPERVISOR’S COMMENTS:</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!Immediate_Supervisor_Comments.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>26.95in</Top>
+            <Left>0.62375in</Left>
+            <Height>0.8in</Height>
+            <Width>10.13542in</Width>
+            <ZIndex>42</ZIndex>
+            <Style>
+              <Border>
+                <Style>Solid</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>        </ReportItems>
+        <Height>28.0in</Height>
         <Style />
       </Body>
       <Width>11.65501in</Width>
@@ -7025,6 +7083,18 @@ End Function
         </Field>
         <Field Name="CompanyINfoPicture">
           <DataField>CompanyINfoPicture</DataField>
+        </Field>
+        <Field Name="Review_Period">
+          <DataField>Review_Period</DataField>
+        </Field>
+        <Field Name="Immediate_Supervisor_Comments">
+          <DataField>Immediate_Supervisor_Comments</DataField>
+        </Field>
+        <Field Name="SupervisorSignatureBase64">
+          <DataField>SupervisorSignatureBase64</DataField>
+        </Field>
+        <Field Name="SupervisorMimeType">
+          <DataField>SupervisorMimeType</DataField>
         </Field>
         <Field Name="RowType_SecA_PartA">
           <DataField>RowType_SecA_PartA</DataField>
