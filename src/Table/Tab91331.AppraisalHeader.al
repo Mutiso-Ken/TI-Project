@@ -498,7 +498,8 @@ Table 91331 "Appraisal Header"
                     Rec."Appraisal Supervisor3" := HREmployees."Appraisal Supervisor3";
                     Rec."Appraisal Supervisor4" := HREmployees."Appraisal Supervisor4";
                 end;
-                Rec."Immediate Supervisor" := HREmployees."Appraisal Supervisor1";
+                // An Open (new or returned) appraisal has no current approver. It is set when the appraisal is sent for approval.
+                Rec."Immediate Supervisor" := '';
                 Validate(Rec."Appraisal Supervisor1");
                 Validate(Rec."Appraisal Supervisor2");
                 Validate(Rec."Appraisal Supervisor3");
@@ -708,9 +709,34 @@ Table 91331 "Appraisal Header"
                     Rec."Immediate Supervisor" := '';
                 end;
             end;
+            // The current approving supervisor is only meaningful while the appraisal is pending approval.
+            // Clear it once the appraisal is returned to Open or is fully approved.
+            if Rec.Status <> Rec.Status::"Pending Supervisor Approval" then
+                Rec."Immediate Supervisor" := '';
             Rec.Validate("Immediate Supervisor");
             Rec.Modify();
         end;
+    end;
+
+    // One-off clean-up for appraisals that already existed: clears the current approving supervisor on every appraisal
+    // that is not pending approval (Open or Approved). Pending appraisals are not touched. Safe to run more than once.
+    procedure ClearStaleCurrentApprovers(): Integer
+    var
+        AppraisalHdr: Record "Appraisal Header";
+        Cleared: Integer;
+    begin
+        AppraisalHdr.SetFilter(Status, '<>%1', AppraisalHdr.Status::"Pending Supervisor Approval");
+        if AppraisalHdr.FindSet() then
+            repeat
+                if (AppraisalHdr."Immediate Supervisor" <> '') or (AppraisalHdr."Supervisor Name" <> '') then begin
+                    AppraisalHdr."Immediate Supervisor" := '';
+                    AppraisalHdr."Supervisor Name" := '';
+                    // No triggers: this only clears the approver and must not recalculate scores or touch the lines.
+                    AppraisalHdr.Modify(false);
+                    Cleared += 1;
+                end;
+            until AppraisalHdr.Next() = 0;
+        exit(Cleared);
     end;
 
     procedure GetApproverRole(ApproverCode: Code[50]): Text[50]
@@ -803,6 +829,9 @@ Table 91331 "Appraisal Header"
         if Rec.Status = Status::Open then begin
             CheckApproversAreSet();
             Rec.Status := Status::"Pending Supervisor Approval";
+            // The first approver becomes the current approving supervisor.
+            Rec."Immediate Supervisor" := Rec."Appraisal Supervisor1";
+            Rec.Validate("Immediate Supervisor");
             Rec.Modify();
             LogApprovalAction(0, '', '');
             ResetApprovalsWhenSending();
