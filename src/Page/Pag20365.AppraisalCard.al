@@ -389,6 +389,14 @@ Page 50365 "Appraisal Card"
             end;
         end;
 
+        // The appraisal's HR Supervisor can add their comments while it is pending approval.
+        if (Rec.Status = Rec.Status::"Pending Supervisor Approval") and (Rec."Appraisal Supervisor4" <> '') then begin
+            HREmployees.Reset();
+            if HREmployees.Get(Rec."Appraisal Supervisor4") then
+                if HREmployees."User ID" = UserId then
+                    HrViewingTrue := true;
+        end;
+
         if UserId = 'TIKENYA\AKANJA' then
             HrViewingTrue := true;
     end;

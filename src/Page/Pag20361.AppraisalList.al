@@ -46,6 +46,30 @@ Page 50361 "Appraisal List"
 
     actions
     {
+        area(Processing)
+        {
+            action(ClearStaleApprovers)
+            {
+                ApplicationArea = Basic;
+                Caption = 'Clear Current Approvers (Open/Approved)';
+                ToolTip = 'Clears the current approving supervisor on all appraisals that are open or approved. Appraisals pending approval are not changed.';
+                Image = ClearLog;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    AppraisalHdr: Record "Appraisal Header";
+                    Cleared: Integer;
+                begin
+                    if not Confirm('Clear the current approving supervisor on all appraisals that are open or approved? Appraisals pending approval will not be changed.') then
+                        exit;
+                    Cleared := AppraisalHdr.ClearStaleCurrentApprovers();
+                    CurrPage.Update(false);
+                    Message('%1 appraisal(s) updated.', Cleared);
+                end;
+            }
+        }
     }
 }
 
