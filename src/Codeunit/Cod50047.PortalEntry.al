@@ -5360,6 +5360,7 @@ codeunit 50047 PortalEntry
         RequestJson: JsonObject;
         OutputJson: JsonObject;
         JsonToken: JsonToken;
+        PettyCashJournalLine: Record "Gen. Journal Line";
 
         OptionType: code[10];
     begin
@@ -5406,6 +5407,22 @@ codeunit 50047 PortalEntry
                         exit(Format(AddResponseHead(OutputJson, true)));
                 end;
             end;
+        end;
+
+        // Petty cash line in the PAYMENTS journal: element_number = journal batch name.
+        if OptionType = '4' then begin
+            if RequestJson.Get('line_no', JsonToken) and not JsonToken.AsValue().IsNull then begin
+                PettyCashJournalLine.Reset();
+                PettyCashJournalLine.SetRange("Journal Template Name", 'PAYMENTS');
+                PettyCashJournalLine.SetRange("Line No.", JsonToken.AsValue().AsInteger());
+                if RequestJson.Get('element_number', JsonToken) and not JsonToken.AsValue().IsNull then
+                    PettyCashJournalLine.SetRange("Journal Batch Name", JsonToken.AsValue().AsText());
+                if PettyCashJournalLine.FindFirst() then begin
+                    PettyCashJournalLine.Delete(true);
+                    exit(Format(AddResponseHead(OutputJson, true)));
+                end;
+            end;
+            exit(PettyCashError('The line was not found. It may already have been posted or removed.'));
         end;
     end;
 
@@ -5594,81 +5611,106 @@ codeunit 50047 PortalEntry
     end;
 
 
+    // Creates (LineNo = 0) or updates (LineNo <> 0) a single petty cash line in the PAYMENTS journal.
+    // On failure the response carries response_code 404 and a response_message the portal can show.
     local procedure PettyCashInsertGLLine(EmployeeId: code[20]; RequestJson: JsonObject): Text
     var
-        usertemplate: Code[50];
-        lineno: Integer;
+        BatchName: Code[10];
+        LineNo: Integer;
         GenJournalLine: Record "Gen. Journal Line";
-        GenJournalLine2: Record "Gen. Journal Line";
+        LastJournalLine: Record "Gen. Journal Line";
         UserSetup: Record "User Setup";
-
         jsontoken: JsonToken;
-        DocumentNo: code[100];
+        DocumentNo: Code[20];
+        PayingBank: Code[20];
+        Amount: Decimal;
+        IsNewLine: Boolean;
         outputjson: jsonobject;
     begin
         EmployeeTable.Reset;
         EmployeeTable.SetRange("No.", EmployeeID);
-        if EmployeeTable.Find('-') then begin
+        if not EmployeeTable.FindFirst() then
+            exit(PettyCashError('Employee record was not found.'));
 
+        if UserSetup.Get(EmployeeTable."User ID") then
+            BatchName := UserSetup."Payments Batch"
+        else
+            BatchName := EmployeeTable."Payments Batch";
+        if RequestJson.Get('BatchCode', jsontoken) and not jsontoken.AsValue().IsNull then
+            BatchName := CopyStr(jsontoken.AsValue().AsText(), 1, MaxStrLen(BatchName));
+        if BatchName = '' then
+            exit(PettyCashError('No journal batch was selected.'));
 
-            if UserSetup.Get(EmployeeTable."User ID") then begin
-                usertemplate := UserSetup."Payments Batch";
-            end else begin
-                usertemplate := EmployeeTable."Payments Batch";
-            end;
-            //GenJournalLine2.
-            lineno := GenJournalLine2.Count() + 2000;
-            GenJournalLine.Init;
-            GenJournalLine."Line No." := lineno;
-            if RequestJson.Get('BatchCode', jsontoken) and not jsontoken.AsValue().IsNull then
-                usertemplate := jsontoken.AsValue().AsText();
-            GenJournalLine."Journal Batch Name" := usertemplate;
+        if RequestJson.Get('PayingBank', jsontoken) and not jsontoken.AsValue().IsNull then
+            PayingBank := CopyStr(jsontoken.AsValue().AsText(), 1, MaxStrLen(PayingBank));
+        if PayingBank = '' then
+            exit(PettyCashError('No paying bank was selected.'));
+
+        if RequestJson.Get('DocumentNo', jsontoken) and not jsontoken.AsValue().IsNull then
+            DocumentNo := CopyStr(jsontoken.AsValue().AsText(), 1, MaxStrLen(DocumentNo));
+        if DocumentNo = '' then
+            exit(PettyCashError('Document No. is required.'));
+
+        if RequestJson.Get('Amount', jsontoken) and not jsontoken.AsValue().IsNull then
+            Amount := jsontoken.AsValue().AsDecimal();
+        if Amount <= 0 then
+            exit(PettyCashError('Amount must be greater than zero.'));
+
+        if RequestJson.Get('LineNo', jsontoken) and not jsontoken.AsValue().IsNull then
+            LineNo := jsontoken.AsValue().AsInteger();
+
+        IsNewLine := LineNo = 0;
+        if IsNewLine then begin
+            // Next free line number within this template and batch only.
+            LastJournalLine.Reset();
+            LastJournalLine.SetRange("Journal Template Name", 'PAYMENTS');
+            LastJournalLine.SetRange("Journal Batch Name", BatchName);
+            if LastJournalLine.FindLast() then
+                LineNo := LastJournalLine."Line No." + 10000
+            else
+                LineNo := 10000;
+            GenJournalLine.Init();
             GenJournalLine."Journal Template Name" := 'PAYMENTS';
-            if RequestJson.Get('Description', jsontoken) and not jsontoken.AsValue().IsNull then
-                GenJournalLine.Description := jsontoken.AsValue().AsText();
-            if RequestJson.Get('Amount', jsontoken) and not jsontoken.AsValue().IsNull then
-                GenJournalLine.Amount := jsontoken.AsValue().AsDecimal();
-            if RequestJson.Get('GLAccount', jsontoken) and not jsontoken.AsValue().IsNull then
-                GenJournalLine."Account No." := jsontoken.AsValue().AsText();
-            if RequestJson.Get('Currency', jsontoken) and not jsontoken.AsValue().IsNull then
-                GenJournalLine."Currency Code" := jsontoken.AsValue().AsText();
-            // GenJournalLine.Validate("Currency Code");
-            if RequestJson.Get('FundCode', jsontoken) and not jsontoken.AsValue().IsNull then
-                GenJournalLine."Shortcut Dimension 1 Code" := jsontoken.AsValue().AsText();
-            if RequestJson.Get('DocumentNo', jsontoken) and not jsontoken.AsValue().IsNull then
-                DocumentNo := jsontoken.AsValue().AsText();
-            GenJournalLine."Document No." := DocumentNo;
-            GenJournalLine.Validate("Document No.");
-            GenJournalLine.Validate("Journal Template Name");
-            if RequestJson.Get('PostingDate', jsontoken) and not jsontoken.AsValue().IsNull then
-                GenJournalLine."Posting Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
-            // GenJournalLine.Validate("Posting Date");
-            GenJournalLine."Bal. Account Type" := GenJournalLine."bal. account type"::"Bank Account";
-            if RequestJson.Get('PayingBank', jsontoken) and not jsontoken.AsValue().IsNull then
-                GenJournalLine."Bal. Account No." := jsontoken.AsValue().AsText();
-            if RequestJson.Get('DocumentExt', jsontoken) and not jsontoken.AsValue().IsNull then
-                GenJournalLine."Message to Recipient" := jsontoken.AsValue().AsText().ToLower();
-            //GenJournalLine.VALIDATE("Bal. Account No.");
-            //GenJournalLine.VALIDATE("Bal. Account Type");
-            // GenJournalLine.Validate(Amount);
-            if GenJournalLine.Amount <> 0 then begin
-                GenJournalLine2.Reset;
-                GenJournalLine2.SetRange("Document No.", DocumentNo);
-                if not GenJournalLine2.Find('-') then begin
-                    // exit(Format(AddResponseHead(outputjson, false)))
-                    // outputjson.Add('response_message', (GenJournalLine2."Document No." + GenJournalLine2."Bal. Account No." + Format(GenJournalLine2.Amount) + GenJournalLine2."Journal Batch Name"))
-                    // else
-                    if GenJournalLine.Insert() then
-                        exit(Format(AddResponseHead(outputjson, true)));
-                end else begin
-                    if RequestJson.Get('DocumentExt', jsontoken) and not jsontoken.AsValue().IsNull then
-                        GenJournalLine2."Message to Recipient" := jsontoken.AsValue().AsText().ToLower();
-                    GenJournalLine2.Modify();
-                end;
+            GenJournalLine."Journal Batch Name" := BatchName;
+            GenJournalLine."Line No." := LineNo;
+        end else
+            if not GenJournalLine.Get('PAYMENTS', BatchName, LineNo) then
+                exit(PettyCashError('Line ' + Format(LineNo) + ' no longer exists in batch ' + BatchName + '. It may have been posted or removed. Reload the page.'));
 
-            end;
-        end;
+        if RequestJson.Get('PostingDate', jsontoken) and not jsontoken.AsValue().IsNull then
+            GenJournalLine.Validate("Posting Date", System.DT2Date(jsontoken.AsValue().AsDateTime()));
+        GenJournalLine.Validate("Document No.", DocumentNo);
+        GenJournalLine.Validate("Account Type", GenJournalLine."Account Type"::"G/L Account");
+        if RequestJson.Get('GLAccount', jsontoken) and not jsontoken.AsValue().IsNull then
+            GenJournalLine.Validate("Account No.", CopyStr(jsontoken.AsValue().AsText(), 1, MaxStrLen(GenJournalLine."Account No.")));
+        if RequestJson.Get('Description', jsontoken) and not jsontoken.AsValue().IsNull then
+            GenJournalLine.Validate(Description, CopyStr(jsontoken.AsValue().AsText(), 1, MaxStrLen(GenJournalLine.Description)));
+        if RequestJson.Get('Currency', jsontoken) and not jsontoken.AsValue().IsNull then
+            GenJournalLine.Validate("Currency Code", CopyStr(jsontoken.AsValue().AsText(), 1, MaxStrLen(GenJournalLine."Currency Code")));
+        GenJournalLine.Validate(Amount, Amount);
+        GenJournalLine.Validate("Bal. Account Type", GenJournalLine."Bal. Account Type"::"Bank Account");
+        GenJournalLine.Validate("Bal. Account No.", PayingBank);
+        if RequestJson.Get('FundCode', jsontoken) and not jsontoken.AsValue().IsNull then
+            GenJournalLine.Validate("Shortcut Dimension 1 Code", CopyStr(jsontoken.AsValue().AsText(), 1, MaxStrLen(GenJournalLine."Shortcut Dimension 1 Code")));
+        // Only replace the stored extension when a value was sent, so an existing attachment is not lost.
+        if RequestJson.Get('DocumentExt', jsontoken) and not jsontoken.AsValue().IsNull then
+            if jsontoken.AsValue().AsText() <> '' then
+                GenJournalLine."Message to Recipient" := CopyStr(jsontoken.AsValue().AsText().ToLower(), 1, MaxStrLen(GenJournalLine."Message to Recipient"));
 
+        if IsNewLine then
+            GenJournalLine.Insert(true)
+        else
+            GenJournalLine.Modify(true);
+
+        outputjson.Add('saved_line_no', GenJournalLine."Line No.");
+        exit(Format(AddResponseHead(outputjson, true)));
+    end;
+
+    local procedure PettyCashError(ErrorMessage: Text): Text
+    var
+        outputjson: JsonObject;
+    begin
+        outputjson.Add('response_message', ErrorMessage);
         exit(Format(AddResponseHead(outputjson, false)));
     end;
 
