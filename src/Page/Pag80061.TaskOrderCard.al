@@ -361,7 +361,7 @@ Page 80061 "Task Order Card"
                     Promoted = true;
                     PromotedCategory = Process;
                     PromotedIsBig = true;
-                    ToolTip = 'Send this approved requisition`s lines into Procurement (Tender/RFQ/Direct Procurement/RFP), grouped per line by their Procurement Method.';
+                    ToolTip = 'Create an RFQ or Direct Procurement from this approved requisition, based on its Procurement Method. Documents uploaded by staff are carried over so the procurement officer can choose which ones vendors may see.';
                     Visible = IsFullyApproved;
 
                     trigger OnAction();
@@ -369,35 +369,16 @@ Page 80061 "Task Order Card"
                         Rec.TESTFIELD(Status, Rec.Status::Released);
                         Rec.TESTFIELD("Process Initiated", FALSE);
 
-                        // Default an unselected Procurement Method to RFQ rather than blocking on it.
-                        if Rec."Procurement Method" = Rec."Procurement Method"::" " then begin
-                            Rec."Procurement Method" := Rec."Procurement Method"::RFQ;
-                            Rec.Modify(true);
-                        end;
+                        // Ask the user to choose RFQ or Direct Procurement when none is set.
+                        if not ProcurementProcessMgmt.EnsureProcurementMethod(Rec) then
+                            exit;
 
-                        PurchLineRFQ.RESET;
-                        PurchLineRFQ.SETRANGE("Document Type", Rec."Document Type");
-                        PurchLineRFQ.SETRANGE("Document No.", Rec."No.");
-                        IF PurchLineRFQ.FINDSET THEN
-                            REPEAT
-                                PurchLineRFQ.TESTFIELD(Amount);
-                                if PurchLineRFQ."Procurement Method" = PurchLineRFQ."Procurement Method"::" " then begin
-                                    PurchLineRFQ."Procurement Method" := PurchLineRFQ."Procurement Method"::RFQ;
-                                    PurchLineRFQ.Modify(true);
-                                end;
-                            UNTIL PurchLineRFQ.NEXT = 0;
-
-                        IF NOT CONFIRM('Are you sure you want to start procurement process?') THEN
+                        IF NOT CONFIRM('Create a %1 from requisition %2?', false, Rec."Procurement Method", Rec."No.") THEN
                             EXIT;
 
-                        ProcurementNo := ProcStoreManagement.IanInitiateProcurementProcess(Rec);
-                        IF ProcurementNo <> '' THEN BEGIN
-                            MESSAGE('Procurement No. [%1] has been created', ProcurementNo);
-                            Rec."Process Initiated" := TRUE;
-                            Rec.MODIFY(TRUE);
-                            OpenProcurementRequestCard(ProcurementNo);
-                        END ELSE
-                            MESSAGE('No lines had a Procurement Method set - nothing was sent to Procurement.');
+                        ProcurementNo := ProcurementProcessMgmt.InitiateProcurementProcess(Rec);
+                        MESSAGE('Procurement No. [%1] has been created. Remember to choose which attached documents vendors can see.', ProcurementNo);
+                        OpenProcurementRequestCard(ProcurementNo);
                         CurrPage.CLOSE();
                     end;
                 }
@@ -465,9 +446,8 @@ Page 80061 "Task Order Card"
         OpenApprovalEntriesExistCurrUser: Boolean;
         OpenApprovalEntriesExist: Boolean;
         IsFullyApproved: Boolean;
-        ProcStoreManagement: Codeunit "Proc & Store Management";
+        ProcurementProcessMgmt: Codeunit "Procurement Process Mgmt.";
         ProcurementNo: Code[50];
-        PurchLineRFQ: Record "Purchase Line";
         ApprovalEntry: Record "Approval Entry";
         LinkedPurchaseHeader: Record "Purchase Header";
         UserMgt: Codeunit "User Setup Management";

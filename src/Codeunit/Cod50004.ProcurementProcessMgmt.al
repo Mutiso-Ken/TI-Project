@@ -1,12 +1,108 @@
 codeunit 50004 "Procurement Process Mgmt."
 {
-    procedure InitiateProcurementProcess(TaskOrder: Record "Purchase Header"): Code[50]
+    procedure CheckSupportedMethod(Method: Option " ",Tender,RFQ,"Direct Procurement",RFP)
+    begin
+        if Method in [Method::Tender, Method::RFP] then
+            Error('Purchase requests can only be procured through RFQ or Direct Procurement.');
+    end;
+
+    // Makes sure the requisition has a usable Procurement Method, asking the user to pick one
+    // when it is blank. Returns false if the user cancels the selection.
+    procedure EnsureProcurementMethod(var TaskOrder: Record "Purchase Header"): Boolean
+    var
+        Choice: Integer;
+    begin
+        CheckSupportedMethod(TaskOrder."Procurement Method");
+        if TaskOrder."Procurement Method" <> TaskOrder."Procurement Method"::" " then
+            exit(true);
+
+        Choice := StrMenu('RFQ,Direct Procurement', 1, 'Procurement Method is not set. How should this request be procured?');
+        case Choice of
+            1:
+                TaskOrder.Validate("Procurement Method", TaskOrder."Procurement Method"::RFQ);
+            2:
+                TaskOrder.Validate("Procurement Method", TaskOrder."Procurement Method"::"Direct Procurement");
+            else
+                exit(false);
+        end;
+        TaskOrder.Modify(true);
+        exit(true);
+    end;
+
+    // Creates the RFQ or Direct Procurement for a released purchase request, carries the
+    // request's lines and staff-uploaded documents across, and marks the request as initiated.
+    procedure InitiateProcurementProcess(var TaskOrder: Record "Purchase Header"): Code[50]
     var
         ProcurementRequest: Record "Procurement Request";
     begin
+        ValidateInitiation(TaskOrder);
         CreateProcurementHeader(TaskOrder, ProcurementRequest);
         CopyProcurementLines(TaskOrder, ProcurementRequest."No.");
+        CopyRequisitionDocuments(TaskOrder."No.", ProcurementRequest."No.");
+        SyncLineMethods(TaskOrder);
+
+        TaskOrder."Process Initiated" := true;
+        TaskOrder.Modify(true);
         exit(ProcurementRequest."No.");
+    end;
+
+    local procedure ValidateInitiation(TaskOrder: Record "Purchase Header")
+    var
+        PurchLine: Record "Purchase Line";
+        ExistingRequest: Record "Procurement Request";
+    begin
+        TaskOrder.TestField(Status, TaskOrder.Status::Released);
+        TaskOrder.TestField("Process Initiated", false);
+        TaskOrder.TestField("Procurement Method");
+        CheckSupportedMethod(TaskOrder."Procurement Method");
+
+        ExistingRequest.SetRange("Requisiton No", TaskOrder."No.");
+        if not ExistingRequest.IsEmpty() then
+            Error('Procurement has already been initiated for requisition %1.', TaskOrder."No.");
+
+        PurchLine.SetRange("Document Type", TaskOrder."Document Type");
+        PurchLine.SetRange("Document No.", TaskOrder."No.");
+        if PurchLine.IsEmpty() then
+            Error('Requisition %1 has no lines.', TaskOrder."No.");
+        PurchLine.FindSet();
+        repeat
+            PurchLine.TestField(Amount);
+        until PurchLine.Next() = 0;
+    end;
+
+    // The header is the single source of truth for the method; keep the lines consistent with it.
+    local procedure SyncLineMethods(TaskOrder: Record "Purchase Header")
+    var
+        PurchLine: Record "Purchase Line";
+    begin
+        PurchLine.SetRange("Document Type", TaskOrder."Document Type");
+        PurchLine.SetRange("Document No.", TaskOrder."No.");
+        PurchLine.SetFilter("Procurement Method", '<>%1', TaskOrder."Procurement Method");
+        if PurchLine.FindSet() then
+            repeat
+                PurchLine."Procurement Method" := TaskOrder."Procurement Method";
+                PurchLine.Modify(false);
+            until PurchLine.Next() = 0;
+    end;
+
+    // Documents staff attached to the purchase request become documents on the RFQ / Direct
+    // Procurement. They start hidden from vendors; the procurement officer ticks the ones
+    // vendors may see (Shared With Vendors). Only the record is copied, not the file itself.
+    local procedure CopyRequisitionDocuments(RequisitionNo: Code[50]; ProcurementNo: Code[50])
+    var
+        SourceDoc: Record "Portal Documents";
+        NewDoc: Record "Portal Documents";
+    begin
+        SourceDoc.SetRange("Document Number", RequisitionNo);
+        if SourceDoc.FindSet() then
+            repeat
+                NewDoc.Init();
+                NewDoc.TransferFields(SourceDoc, false);
+                NewDoc."Document Number" := ProcurementNo;
+                NewDoc."Source Document No." := RequisitionNo;
+                NewDoc."Shared With Vendors" := false;
+                NewDoc.Insert(true);
+            until SourceDoc.Next() = 0;
     end;
 
     local procedure CreateProcurementHeader(TaskOrder: Record "Purchase Header"; var ProcurementRequest: Record "Procurement Request")

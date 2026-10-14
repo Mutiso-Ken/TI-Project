@@ -550,9 +550,15 @@ tableextension 50003 "Purchase Line3" extends "Purchase Line"
         field(90147; "Procurement Method"; Option)
         {
             DataClassification = ToBeClassified;
-            InitValue = "Direct Procurement";
             OptionCaption = '" ,Tender,RFQ,Direct Procurement,RFP"';
             OptionMembers = " ",Tender,RFQ,"Direct Procurement",RFP;
+
+            trigger OnValidate()
+            var
+                ProcurementProcessMgt: Codeunit "Procurement Process Mgmt.";
+            begin
+                ProcurementProcessMgt.CheckSupportedMethod("Procurement Method");
+            end;
         }
     }
     var

@@ -1543,6 +1543,10 @@ codeunit 90004 ProcurementEntry
         "Procurement List".Reset();
         "Procurement List".SetRange("No.", QuoteNo);
         if "Procurement List".Find('-') then begin
+            // Only the vendor this RFQ / Direct Procurement was issued to may open it.
+            if not IsVendorInvited("Procurement List", VendorID) then
+                exit(Format(AddResponseHead(Outputjson, false)));
+
             datajson.Add('RFQNo', "Procurement List"."No.");
             datajson.Add('Title', "Procurement List".Title);
             datajson.Add('Status', Format("Procurement List".Status));
@@ -1598,11 +1602,52 @@ codeunit 90004 ProcurementEntry
                     jsonarray.Add(jsonobject);
                 until SharePointTable.Next() = 0;
             datajson.Add('RFQfiles', jsonarray);
+            datajson.Add('SharedDocuments', GetSharedDocuments(QuoteNo));
 
             Outputjson.Add('RFQDetails', datajson);
             exit(Format(AddResponseHead(Outputjson, true)));
         end;
         exit(Format(AddResponseHead(Outputjson, false)));
+    end;
+
+    local procedure IsVendorInvited(ProcurementRequest: Record "Procurement Request"; VendorID: Code[50]): Boolean
+    var
+        QuotationBidders: Record "Quotation Bidders";
+    begin
+        case ProcurementRequest."Procurement Method" of
+            ProcurementRequest."Procurement Method"::"Direct Procurement":
+                exit(ProcurementRequest."Vendor No" = VendorID);
+            ProcurementRequest."Procurement Method"::RFQ:
+                begin
+                    QuotationBidders.SetRange("Reference No", ProcurementRequest."No.");
+                    QuotationBidders.SetRange("Vendor No.", VendorID);
+                    exit(not QuotationBidders.IsEmpty());
+                end;
+        end;
+        exit(false);
+    end;
+
+    // Specification / supporting documents the procurement officer chose to share with vendors
+    // (originally uploaded by staff on the purchase request). Not to be confused with the
+    // vendor's own bid attachments, which are returned as RFQfiles.
+    local procedure GetSharedDocuments(ProcurementNo: Code[50]): JsonArray
+    var
+        SharedDocs: Record "Portal Documents";
+        DocArray: JsonArray;
+        DocObject: JsonObject;
+    begin
+        SharedDocs.SetRange("Document Number", ProcurementNo);
+        SharedDocs.SetRange("Shared With Vendors", true);
+        if SharedDocs.FindSet() then
+            repeat
+                Clear(DocObject);
+                DocObject.Add('entry_no', SharedDocs."Line No");
+                DocObject.Add('FileName', SharedDocs."Original File Name");
+                DocObject.Add('FileType', SharedDocs."File Extension");
+                DocObject.Add('Url', SharedDocs."Local Url");
+                DocArray.Add(DocObject);
+            until SharedDocs.Next() = 0;
+        exit(DocArray);
     end;
 
     local procedure InsertDPRVendorBID(Requestjson: JsonObject; vendorNumber: code[50]): Text

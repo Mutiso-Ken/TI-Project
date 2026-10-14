@@ -283,6 +283,13 @@ tableextension 50000 "Purchase Header Ext" extends "Purchase Header"
             DataClassification = ToBeClassified;
             OptionCaption = '" ,Tender,RFQ,Direct Procurement,RFP"';
             OptionMembers = " ",Tender,RFQ,"Direct Procurement",RFP;
+
+            trigger OnValidate()
+            var
+                ProcurementProcessMgt: Codeunit "Procurement Process Mgmt.";
+            begin
+                ProcurementProcessMgt.CheckSupportedMethod("Procurement Method");
+            end;
         }
         field(90038; "Mission Total"; Decimal)
         {

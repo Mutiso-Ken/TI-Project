@@ -5436,7 +5436,7 @@ codeunit 50047 PortalEntry
         DocumentsTable."File Extension" := FileExtension;
         DocumentsTable."Original File Path" := SavedPath;
         DocumentsTable."Document Number" := ElementNumber;
-        DocumentsTable."Local Url" := FileExtension.Replace('C:\inetpub\wwwroot\StaffPortal\Portal\PortalDocuments', 'https://self-service.tikenya.org\PortalDocuments');
+        DocumentsTable."Local Url" := SavedPath.Replace('C:\inetpub\wwwroot\StaffPortal\Portal\PortalDocuments', 'https://self-service.tikenya.org\PortalDocuments');
         if DocumentsTable.Insert(true) then begin
             UpdateDocumentsWithPosition();
             exit(Format(AddResponseHead(outputjson, true)));
