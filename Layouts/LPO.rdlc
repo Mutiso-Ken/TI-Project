@@ -11,286 +11,6 @@
       <rd:DataSourceID>5542afe7-62b8-4df5-af84-c1cf549259e3</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="ReportForNavId_4458">
-          <DataField>ReportForNavId_4458</DataField>
-        </Field>
-        <Field Name="Purchase_Header_Document_Type">
-          <DataField>Purchase_Header_Document_Type</DataField>
-        </Field>
-        <Field Name="Purchase_Header_No_">
-          <DataField>Purchase_Header_No_</DataField>
-        </Field>
-        <Field Name="BuyfromVendorNo_PurchaseHeader">
-          <DataField>BuyfromVendorNo_PurchaseHeader</DataField>
-        </Field>
-        <Field Name="OrderDate_PurchaseHeader">
-          <DataField>OrderDate_PurchaseHeader</DataField>
-        </Field>
-        <Field Name="ApproverName1">
-          <DataField>ApproverName1</DataField>
-        </Field>
-        <Field Name="ApproverName2">
-          <DataField>ApproverName2</DataField>
-        </Field>
-        <Field Name="ApproverName3">
-          <DataField>ApproverName3</DataField>
-        </Field>
-        <Field Name="Signature1">
-          <DataField>Signature1</DataField>
-        </Field>
-        <Field Name="Signature2">
-          <DataField>Signature2</DataField>
-        </Field>
-        <Field Name="Signature3">
-          <DataField>Signature3</DataField>
-        </Field>
-        <Field Name="ApprovalDate1">
-          <DataField>ApprovalDate1</DataField>
-        </Field>
-        <Field Name="ApprovalDate2">
-          <DataField>ApprovalDate2</DataField>
-        </Field>
-        <Field Name="ApprovalDate3">
-          <DataField>ApprovalDate3</DataField>
-        </Field>
-        <Field Name="ReportForNavId_6547">
-          <DataField>ReportForNavId_6547</DataField>
-        </Field>
-        <Field Name="CompanyInfo_Picture">
-          <DataField>CompanyInfo_Picture</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Country_Region_Code_">
-          <DataField>CompanyInfo__Country_Region_Code_</DataField>
-        </Field>
-        <Field Name="CompanyInfo_City">
-          <DataField>CompanyInfo_City</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Address_2_">
-          <DataField>CompanyInfo__Address_2_</DataField>
-        </Field>
-        <Field Name="CompanyInfo_Address">
-          <DataField>CompanyInfo_Address</DataField>
-        </Field>
-        <Field Name="CompanyInfo_Name">
-          <DataField>CompanyInfo_Name</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Phone_No__">
-          <DataField>CompanyInfo__Phone_No__</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Fax_No__">
-          <DataField>CompanyInfo__Fax_No__</DataField>
-        </Field>
-        <Field Name="CompanyInfo__E_Mail_">
-          <DataField>CompanyInfo__E_Mail_</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Home_Page_">
-          <DataField>CompanyInfo__Home_Page_</DataField>
-        </Field>
-        <Field Name="Purchase_Header___No__">
-          <DataField>Purchase_Header___No__</DataField>
-        </Field>
-        <Field Name="FORMAT__Purchase_Line___Order_Date__0_4_">
-          <DataField>FORMAT__Purchase_Line___Order_Date__0_4_</DataField>
-        </Field>
-        <Field Name="Purchase_Header___Buy_from_Vendor_Name_">
-          <DataField>Purchase_Header___Buy_from_Vendor_Name_</DataField>
-        </Field>
-        <Field Name="VendorAddr">
-          <DataField>VendorAddr</DataField>
-        </Field>
-        <Field Name="VendorCity">
-          <DataField>VendorCity</DataField>
-        </Field>
-        <Field Name="VendorPostCod">
-          <DataField>VendorPostCod</DataField>
-        </Field>
-        <Field Name="VendorTel">
-          <DataField>VendorTel</DataField>
-        </Field>
-        <Field Name="Purchase_Line_Quantity">
-          <DataField>Purchase_Line_Quantity</DataField>
-        </Field>
-        <Field Name="Purchase_Line_QuantityFormat">
-          <DataField>Purchase_Line_QuantityFormat</DataField>
-        </Field>
-        <Field Name="Description2_PurchaseLine">
-          <DataField>Description2_PurchaseLine</DataField>
-        </Field>
-        <Field Name="Description_PurchaseLine">
-          <DataField>Description_PurchaseLine</DataField>
-        </Field>
-        <Field Name="Purchase_Line__Unit_Cost_">
-          <DataField>Purchase_Line__Unit_Cost_</DataField>
-        </Field>
-        <Field Name="Purchase_Line__Unit_Cost_Format">
-          <DataField>Purchase_Line__Unit_Cost_Format</DataField>
-        </Field>
-        <Field Name="Purchase_Line_Amount">
-          <DataField>Purchase_Line_Amount</DataField>
-        </Field>
-        <Field Name="Purchase_Line_AmountFormat">
-          <DataField>Purchase_Line_AmountFormat</DataField>
-        </Field>
-        <Field Name="Purchase_Line_Amount_Control1000000133">
-          <DataField>Purchase_Line_Amount_Control1000000133</DataField>
-        </Field>
-        <Field Name="Purchase_Line_Amount_Control1000000133Format">
-          <DataField>Purchase_Line_Amount_Control1000000133Format</DataField>
-        </Field>
-        <Field Name="CurrReport_PAGENO">
-          <DataField>CurrReport_PAGENO</DataField>
-        </Field>
-        <Field Name="Purchase_Header___Created_By_">
-          <DataField>Purchase_Header___Created_By_</DataField>
-        </Field>
-        <Field Name="Purchase_Header___Date_Created_">
-          <DataField>Purchase_Header___Date_Created_</DataField>
-        </Field>
-        <Field Name="Tel_Caption">
-          <DataField>Tel_Caption</DataField>
-        </Field>
-        <Field Name="Fax_Caption">
-          <DataField>Fax_Caption</DataField>
-        </Field>
-        <Field Name="Email_Caption">
-          <DataField>Email_Caption</DataField>
-        </Field>
-        <Field Name="Web_Caption">
-          <DataField>Web_Caption</DataField>
-        </Field>
-        <Field Name="PURCHASE_ORDERCaption">
-          <DataField>PURCHASE_ORDERCaption</DataField>
-        </Field>
-        <Field Name="Order_DateCaption">
-          <DataField>Order_DateCaption</DataField>
-        </Field>
-        <Field Name="Order_No_Caption">
-          <DataField>Order_No_Caption</DataField>
-        </Field>
-        <Field Name="SUPPLIER_Caption">
-          <DataField>SUPPLIER_Caption</DataField>
-        </Field>
-        <Field Name="QuantityCaption">
-          <DataField>QuantityCaption</DataField>
-        </Field>
-        <Field Name="Unit_CostCaption">
-          <DataField>Unit_CostCaption</DataField>
-        </Field>
-        <Field Name="Total_Unit_CostCaption">
-          <DataField>Total_Unit_CostCaption</DataField>
-        </Field>
-        <Field Name="DescriptionCaption">
-          <DataField>DescriptionCaption</DataField>
-        </Field>
-        <Field Name="TotalCaption">
-          <DataField>TotalCaption</DataField>
-        </Field>
-        <Field Name="CurrReport_PAGENOCaption">
-          <DataField>CurrReport_PAGENOCaption</DataField>
-        </Field>
-        <Field Name="TERMS_AND_CONDITIONSCaption">
-          <DataField>TERMS_AND_CONDITIONSCaption</DataField>
-        </Field>
-        <Field Name="V1__This_LPO_is_valid_for_30_daysCaption">
-          <DataField>V1__This_LPO_is_valid_for_30_daysCaption</DataField>
-        </Field>
-        <Field Name="V3__TI_Kenya_reserves_the_right_to_return_all_the_goods_which_may_be_found_defective_during_consumptionCaption">
-          <DataField>V3__TI_Kenya_reserves_the_right_to_return_all_the_goods_which_may_be_found_defective_during_consumptionCaption</DataField>
-        </Field>
-        <Field Name="V2__All_the_goods_services_supplied_MUST_be_as_per_order_and_MUST_meet_all_the_specified_conditionsCaption">
-          <DataField>V2__All_the_goods_services_supplied_MUST_be_as_per_order_and_MUST_meet_all_the_specified_conditionsCaption</DataField>
-        </Field>
-        <Field Name="V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_Caption">
-          <DataField>V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_Caption</DataField>
-        </Field>
-        <Field Name="V4__Goods_services_are_received_subject_to_verification_in_due_courseCaption">
-          <DataField>V4__Goods_services_are_received_subject_to_verification_in_due_courseCaption</DataField>
-        </Field>
-        <Field Name="where_such_conditions_could_not_be_verified_or_established_during_receipt_of_the_goods_Caption">
-          <DataField>where_such_conditions_could_not_be_verified_or_established_during_receipt_of_the_goods_Caption</DataField>
-        </Field>
-        <Field Name="V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaption">
-          <DataField>V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaption</DataField>
-        </Field>
-        <Field Name="CorrruptionFreeorgLabel">
-          <DataField>CorrruptionFreeorgLabel</DataField>
-        </Field>
-        <Field Name="EtimsCompliantLabel">
-          <DataField>EtimsCompliantLabel</DataField>
-        </Field>
-        <Field Name="Date_Caption">
-          <DataField>Date_Caption</DataField>
-        </Field>
-        <Field Name="Date_Caption_Control1000000025">
-          <DataField>Date_Caption_Control1000000025</DataField>
-        </Field>
-        <Field Name="Date_Caption_Control1000000027">
-          <DataField>Date_Caption_Control1000000027</DataField>
-        </Field>
-        <Field Name="Signature_Caption">
-          <DataField>Signature_Caption</DataField>
-        </Field>
-        <Field Name="Signature_Caption_Control1000000030">
-          <DataField>Signature_Caption_Control1000000030</DataField>
-        </Field>
-        <Field Name="Signature_Caption_Control1000000031">
-          <DataField>Signature_Caption_Control1000000031</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption">
-          <DataField>EmptyStringCaption</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000034">
-          <DataField>EmptyStringCaption_Control1000000034</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000035">
-          <DataField>EmptyStringCaption_Control1000000035</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000037">
-          <DataField>EmptyStringCaption_Control1000000037</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000038">
-          <DataField>EmptyStringCaption_Control1000000038</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000039">
-          <DataField>EmptyStringCaption_Control1000000039</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption_Control1000000040">
-          <DataField>EmptyStringCaption_Control1000000040</DataField>
-        </Field>
-        <Field Name="V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption">
-          <DataField>V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption</DataField>
-        </Field>
-        <Field Name="Prepared_By_Finance_Officer__Caption">
-          <DataField>Prepared_By_Finance_Officer__Caption</DataField>
-        </Field>
-        <Field Name="Checked_By_Head_of_Finance__Caption">
-          <DataField>Checked_By_Head_of_Finance__Caption</DataField>
-        </Field>
-        <Field Name="Authorised_By_Executive_Director_Caption">
-          <DataField>Authorised_By_Executive_Director_Caption</DataField>
-        </Field>
-        <Field Name="Purchase_Line_Document_Type">
-          <DataField>Purchase_Line_Document_Type</DataField>
-        </Field>
-        <Field Name="Purchase_Line_Document_No_">
-          <DataField>Purchase_Line_Document_No_</DataField>
-        </Field>
-        <Field Name="Purchase_Line_Line_No_">
-          <DataField>Purchase_Line_Line_No_</DataField>
-        </Field>
-        <Field Name="FUND">
-          <DataField>FUND</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -2625,12 +2345,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -2670,4 +2384,284 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>11e9d112-2f62-453f-815d-e1042a8b5db5</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="ReportForNavId_4458">
+          <DataField>ReportForNavId_4458</DataField>
+        </Field>
+        <Field Name="Purchase_Header_Document_Type">
+          <DataField>Purchase_Header_Document_Type</DataField>
+        </Field>
+        <Field Name="Purchase_Header_No_">
+          <DataField>Purchase_Header_No_</DataField>
+        </Field>
+        <Field Name="BuyfromVendorNo_PurchaseHeader">
+          <DataField>BuyfromVendorNo_PurchaseHeader</DataField>
+        </Field>
+        <Field Name="OrderDate_PurchaseHeader">
+          <DataField>OrderDate_PurchaseHeader</DataField>
+        </Field>
+        <Field Name="ApproverName1">
+          <DataField>ApproverName1</DataField>
+        </Field>
+        <Field Name="ApproverName2">
+          <DataField>ApproverName2</DataField>
+        </Field>
+        <Field Name="ApproverName3">
+          <DataField>ApproverName3</DataField>
+        </Field>
+        <Field Name="Signature1">
+          <DataField>Signature1</DataField>
+        </Field>
+        <Field Name="Signature2">
+          <DataField>Signature2</DataField>
+        </Field>
+        <Field Name="Signature3">
+          <DataField>Signature3</DataField>
+        </Field>
+        <Field Name="ApprovalDate1">
+          <DataField>ApprovalDate1</DataField>
+        </Field>
+        <Field Name="ApprovalDate2">
+          <DataField>ApprovalDate2</DataField>
+        </Field>
+        <Field Name="ApprovalDate3">
+          <DataField>ApprovalDate3</DataField>
+        </Field>
+        <Field Name="ReportForNavId_6547">
+          <DataField>ReportForNavId_6547</DataField>
+        </Field>
+        <Field Name="CompanyInfo_Picture">
+          <DataField>CompanyInfo_Picture</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Country_Region_Code_">
+          <DataField>CompanyInfo__Country_Region_Code_</DataField>
+        </Field>
+        <Field Name="CompanyInfo_City">
+          <DataField>CompanyInfo_City</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Address_2_">
+          <DataField>CompanyInfo__Address_2_</DataField>
+        </Field>
+        <Field Name="CompanyInfo_Address">
+          <DataField>CompanyInfo_Address</DataField>
+        </Field>
+        <Field Name="CompanyInfo_Name">
+          <DataField>CompanyInfo_Name</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Phone_No__">
+          <DataField>CompanyInfo__Phone_No__</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Fax_No__">
+          <DataField>CompanyInfo__Fax_No__</DataField>
+        </Field>
+        <Field Name="CompanyInfo__E_Mail_">
+          <DataField>CompanyInfo__E_Mail_</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Home_Page_">
+          <DataField>CompanyInfo__Home_Page_</DataField>
+        </Field>
+        <Field Name="Purchase_Header___No__">
+          <DataField>Purchase_Header___No__</DataField>
+        </Field>
+        <Field Name="FORMAT__Purchase_Line___Order_Date__0_4_">
+          <DataField>FORMAT__Purchase_Line___Order_Date__0_4_</DataField>
+        </Field>
+        <Field Name="Purchase_Header___Buy_from_Vendor_Name_">
+          <DataField>Purchase_Header___Buy_from_Vendor_Name_</DataField>
+        </Field>
+        <Field Name="VendorAddr">
+          <DataField>VendorAddr</DataField>
+        </Field>
+        <Field Name="VendorCity">
+          <DataField>VendorCity</DataField>
+        </Field>
+        <Field Name="VendorPostCod">
+          <DataField>VendorPostCod</DataField>
+        </Field>
+        <Field Name="VendorTel">
+          <DataField>VendorTel</DataField>
+        </Field>
+        <Field Name="Purchase_Line_Quantity">
+          <DataField>Purchase_Line_Quantity</DataField>
+        </Field>
+        <Field Name="Purchase_Line_QuantityFormat">
+          <DataField>Purchase_Line_QuantityFormat</DataField>
+        </Field>
+        <Field Name="Description2_PurchaseLine">
+          <DataField>Description2_PurchaseLine</DataField>
+        </Field>
+        <Field Name="Description_PurchaseLine">
+          <DataField>Description_PurchaseLine</DataField>
+        </Field>
+        <Field Name="Purchase_Line__Unit_Cost_">
+          <DataField>Purchase_Line__Unit_Cost_</DataField>
+        </Field>
+        <Field Name="Purchase_Line__Unit_Cost_Format">
+          <DataField>Purchase_Line__Unit_Cost_Format</DataField>
+        </Field>
+        <Field Name="Purchase_Line_Amount">
+          <DataField>Purchase_Line_Amount</DataField>
+        </Field>
+        <Field Name="Purchase_Line_AmountFormat">
+          <DataField>Purchase_Line_AmountFormat</DataField>
+        </Field>
+        <Field Name="Purchase_Line_Amount_Control1000000133">
+          <DataField>Purchase_Line_Amount_Control1000000133</DataField>
+        </Field>
+        <Field Name="Purchase_Line_Amount_Control1000000133Format">
+          <DataField>Purchase_Line_Amount_Control1000000133Format</DataField>
+        </Field>
+        <Field Name="CurrReport_PAGENO">
+          <DataField>CurrReport_PAGENO</DataField>
+        </Field>
+        <Field Name="Purchase_Header___Created_By_">
+          <DataField>Purchase_Header___Created_By_</DataField>
+        </Field>
+        <Field Name="Purchase_Header___Date_Created_">
+          <DataField>Purchase_Header___Date_Created_</DataField>
+        </Field>
+        <Field Name="Tel_Caption">
+          <DataField>Tel_Caption</DataField>
+        </Field>
+        <Field Name="Fax_Caption">
+          <DataField>Fax_Caption</DataField>
+        </Field>
+        <Field Name="Email_Caption">
+          <DataField>Email_Caption</DataField>
+        </Field>
+        <Field Name="Web_Caption">
+          <DataField>Web_Caption</DataField>
+        </Field>
+        <Field Name="PURCHASE_ORDERCaption">
+          <DataField>PURCHASE_ORDERCaption</DataField>
+        </Field>
+        <Field Name="Order_DateCaption">
+          <DataField>Order_DateCaption</DataField>
+        </Field>
+        <Field Name="Order_No_Caption">
+          <DataField>Order_No_Caption</DataField>
+        </Field>
+        <Field Name="SUPPLIER_Caption">
+          <DataField>SUPPLIER_Caption</DataField>
+        </Field>
+        <Field Name="QuantityCaption">
+          <DataField>QuantityCaption</DataField>
+        </Field>
+        <Field Name="Unit_CostCaption">
+          <DataField>Unit_CostCaption</DataField>
+        </Field>
+        <Field Name="Total_Unit_CostCaption">
+          <DataField>Total_Unit_CostCaption</DataField>
+        </Field>
+        <Field Name="DescriptionCaption">
+          <DataField>DescriptionCaption</DataField>
+        </Field>
+        <Field Name="TotalCaption">
+          <DataField>TotalCaption</DataField>
+        </Field>
+        <Field Name="CurrReport_PAGENOCaption">
+          <DataField>CurrReport_PAGENOCaption</DataField>
+        </Field>
+        <Field Name="TERMS_AND_CONDITIONSCaption">
+          <DataField>TERMS_AND_CONDITIONSCaption</DataField>
+        </Field>
+        <Field Name="V1__This_LPO_is_valid_for_30_daysCaption">
+          <DataField>V1__This_LPO_is_valid_for_30_daysCaption</DataField>
+        </Field>
+        <Field Name="V3__TI_Kenya_reserves_the_right_to_return_all_the_goods_which_may_be_found_defective_during_consumptionCaption">
+          <DataField>V3__TI_Kenya_reserves_the_right_to_return_all_the_goods_which_may_be_found_defective_during_consumptionCaption</DataField>
+        </Field>
+        <Field Name="V2__All_the_goods_services_supplied_MUST_be_as_per_order_and_MUST_meet_all_the_specified_conditionsCaption">
+          <DataField>V2__All_the_goods_services_supplied_MUST_be_as_per_order_and_MUST_meet_all_the_specified_conditionsCaption</DataField>
+        </Field>
+        <Field Name="V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_Caption">
+          <DataField>V5__All_payment_will_be_by_crossed_cheques_issued_by_TI_Kenya_and_in_line_with_stated_terms_Caption</DataField>
+        </Field>
+        <Field Name="V4__Goods_services_are_received_subject_to_verification_in_due_courseCaption">
+          <DataField>V4__Goods_services_are_received_subject_to_verification_in_due_courseCaption</DataField>
+        </Field>
+        <Field Name="where_such_conditions_could_not_be_verified_or_established_during_receipt_of_the_goods_Caption">
+          <DataField>where_such_conditions_could_not_be_verified_or_established_during_receipt_of_the_goods_Caption</DataField>
+        </Field>
+        <Field Name="V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaption">
+          <DataField>V6__The_prices_on_the_LPO_include_delivery_costs_to_the_specified_delivery_receiving_pointCaption</DataField>
+        </Field>
+        <Field Name="CorrruptionFreeorgLabel">
+          <DataField>CorrruptionFreeorgLabel</DataField>
+        </Field>
+        <Field Name="EtimsCompliantLabel">
+          <DataField>EtimsCompliantLabel</DataField>
+        </Field>
+        <Field Name="Date_Caption">
+          <DataField>Date_Caption</DataField>
+        </Field>
+        <Field Name="Date_Caption_Control1000000025">
+          <DataField>Date_Caption_Control1000000025</DataField>
+        </Field>
+        <Field Name="Date_Caption_Control1000000027">
+          <DataField>Date_Caption_Control1000000027</DataField>
+        </Field>
+        <Field Name="Signature_Caption">
+          <DataField>Signature_Caption</DataField>
+        </Field>
+        <Field Name="Signature_Caption_Control1000000030">
+          <DataField>Signature_Caption_Control1000000030</DataField>
+        </Field>
+        <Field Name="Signature_Caption_Control1000000031">
+          <DataField>Signature_Caption_Control1000000031</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption">
+          <DataField>EmptyStringCaption</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000034">
+          <DataField>EmptyStringCaption_Control1000000034</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000035">
+          <DataField>EmptyStringCaption_Control1000000035</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000037">
+          <DataField>EmptyStringCaption_Control1000000037</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000038">
+          <DataField>EmptyStringCaption_Control1000000038</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000039">
+          <DataField>EmptyStringCaption_Control1000000039</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption_Control1000000040">
+          <DataField>EmptyStringCaption_Control1000000040</DataField>
+        </Field>
+        <Field Name="V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption">
+          <DataField>V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption</DataField>
+        </Field>
+        <Field Name="Prepared_By_Finance_Officer__Caption">
+          <DataField>Prepared_By_Finance_Officer__Caption</DataField>
+        </Field>
+        <Field Name="Checked_By_Head_of_Finance__Caption">
+          <DataField>Checked_By_Head_of_Finance__Caption</DataField>
+        </Field>
+        <Field Name="Authorised_By_Executive_Director_Caption">
+          <DataField>Authorised_By_Executive_Director_Caption</DataField>
+        </Field>
+        <Field Name="Purchase_Line_Document_Type">
+          <DataField>Purchase_Line_Document_Type</DataField>
+        </Field>
+        <Field Name="Purchase_Line_Document_No_">
+          <DataField>Purchase_Line_Document_No_</DataField>
+        </Field>
+        <Field Name="Purchase_Line_Line_No_">
+          <DataField>Purchase_Line_Line_No_</DataField>
+        </Field>
+        <Field Name="FUND">
+          <DataField>FUND</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>
