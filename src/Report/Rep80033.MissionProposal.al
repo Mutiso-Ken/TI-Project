@@ -79,6 +79,15 @@ Report 80033 "Mission Proposal"
             column(ApproverName3; ApproverName3)
             {
             }
+            column(ApproverTitle1; Approver1Emp."Job Title")
+            {
+            }
+            column(ApproverTitle2; Approver2Emp."Job Title")
+            {
+            }
+            column(ApproverTitle3; Approver3Emp."Job Title")
+            {
+            }
             column(Signature1; Approver1Emp.Signature)
             {
             }
@@ -331,6 +340,7 @@ Report 80033 "Mission Proposal"
         Clear(ApproverEmp);
 
         ApprovalEntry.Reset();
+        ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
         ApprovalEntry.SetRange("Document No.", DocumentNo);
         ApprovalEntry.SetRange("Sequence No.", SequenceNo);
         ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
