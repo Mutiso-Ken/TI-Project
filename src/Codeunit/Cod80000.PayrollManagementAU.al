@@ -607,6 +607,8 @@ Codeunit 80000 "Payroll Management_AU"
                                 DaysWorked := GetDaysWorked("Joining Date", 0D, false, "Employee No");
                                 currentAmount := CalculateProratedAmount("Employee No", currentAmount, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                                 "currentAmount(LCY)" := CalculateProratedAmount("Employee No", "currentAmount(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
+                            end else begin
+                                
                             end;
 
                         //If Terminated on this Payroll Period then Prorate Amount
