@@ -591,35 +591,35 @@ Codeunit 80000 "Payroll Management_AU"
                         currentAmount := EmployeeTransactions.Amount;
                         "currentAmount(LCY)" := EmployeeTransactions."Amount(LCY)";
                     end;
-                    //If Based on Timesheet then Prorate
+                    //Prorate only when Not Prorate is not ticked on the transaction, otherwise pay the full amount
                     PayrollGenSetup.Get;
-                    if BasedOnTimesheet then begin
-                        DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
-                        DaysWorked := GetDaysWorkedTimesheet("Employee No", "Payroll Period");
-                        currentAmount := CalculateProratedAmount("Employee No", currentAmount, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
-                        "currentAmount(LCY)" := CalculateProratedAmount("Employee No", "currentAmount(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
-                        //End Based on Timesheet
-                    end else begin
-                        //If Employed on this Payroll Period then Prorate Amount
-                        if EmployeeTransactions."Not Prorate" = false then
+                    if not EmployeeTransactions."Not Prorate" then begin
+                        //If Based on Timesheet then Prorate
+                        if BasedOnTimesheet then begin
+                            DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
+                            DaysWorked := GetDaysWorkedTimesheet("Employee No", "Payroll Period");
+                            currentAmount := CalculateProratedAmount("Employee No", currentAmount, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
+                            "currentAmount(LCY)" := CalculateProratedAmount("Employee No", "currentAmount(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
+                            //End Based on Timesheet
+                        end else begin
+                            //If Employed on this Payroll Period then Prorate Amount
                             if (Date2dmy("Joining Date", 2) = Date2dmy("Payroll Period", 2)) and (Date2dmy("Joining Date", 3) = Date2dmy("Payroll Period", 3)) then begin
                                 DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
                                 DaysWorked := GetDaysWorked("Joining Date", 0D, false, "Employee No");
                                 currentAmount := CalculateProratedAmount("Employee No", currentAmount, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
                                 "currentAmount(LCY)" := CalculateProratedAmount("Employee No", "currentAmount(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
-                            end else begin
-                                
                             end;
 
-                        //If Terminated on this Payroll Period then Prorate Amount
-                        if "Leaving Date" <> 0D then
-                            if (Date2dmy("Leaving Date", 2) = Date2dmy("Payroll Period", 2)) and (Date2dmy("Leaving Date", 3) = Date2dmy("Payroll Period", 3)) then begin
-                                DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
-                                DaysWorked := GetDaysWorked("Joining Date", "Leaving Date", true, "Employee No");
+                            //If Terminated on this Payroll Period then Prorate Amount
+                            if "Leaving Date" <> 0D then
+                                if (Date2dmy("Leaving Date", 2) = Date2dmy("Payroll Period", 2)) and (Date2dmy("Leaving Date", 3) = Date2dmy("Payroll Period", 3)) then begin
+                                    DaysInMonth := GetDaysInMonth("Payroll Period", "Employee No");
+                                    DaysWorked := GetDaysWorked("Joining Date", "Leaving Date", true, "Employee No");
 
-                                currentAmount := CalculateProratedAmount("Employee No", currentAmount, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
-                                "currentAmount(LCY)" := CalculateProratedAmount("Employee No", "currentAmount(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
-                            end;
+                                    currentAmount := CalculateProratedAmount("Employee No", currentAmount, Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
+                                    "currentAmount(LCY)" := CalculateProratedAmount("Employee No", "currentAmount(LCY)", Date2dmy("Payroll Period", 2), Date2dmy("Payroll Period", 3), DaysInMonth, DaysWorked);
+                                end;
+                        end;
                     end;
                     //Calculate Transaction Balances
                     if PayrollTransactions."Balance Type" = PayrollTransactions."balance type"::None then begin  //Balance Type None
