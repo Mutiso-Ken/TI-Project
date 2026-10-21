@@ -81,6 +81,9 @@ Report 80016 "Payroll Detailed Summary_AU"
             column(RECOVERY; RECOVERY)
             {
             }
+            column(NOTICE; NOTICE)
+            {
+            }
             trigger OnPreDataItem();
             begin
                 if CompanyInfo.Get() then
@@ -158,6 +161,7 @@ Report 80016 "Payroll Detailed Summary_AU"
                 "EXTRA MILE." := 0;
                 HL := 0;
                 RECOVERY := 0;
+                NOTICE := 0;
 
                 PayrollMonthly.Reset;
                 PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
@@ -286,6 +290,13 @@ Report 80016 "Payroll Detailed Summary_AU"
                 PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'RECOVERY');
                 if PayrollMonthly.Find('-') then begin
                     RECOVERY := PayrollMonthly.Amount;
+                end;
+                PayrollMonthly.Reset;
+                PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
+                PayrollMonthly.SetRange(PayrollMonthly."Payroll Period", Period);
+                PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'NOTICE');
+                if PayrollMonthly.Find('-') then begin
+                    NOTICE := PayrollMonthly.Amount;
                 end;
                 PayrollMonthly.Reset;
                 PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
@@ -530,6 +541,7 @@ Report 80016 "Payroll Detailed Summary_AU"
         "EXTRA MILE.": Decimal;
         HL: Decimal;
         RECOVERY: Decimal;
+        NOTICE: Decimal;
 
     trigger OnInitReport();
     begin
