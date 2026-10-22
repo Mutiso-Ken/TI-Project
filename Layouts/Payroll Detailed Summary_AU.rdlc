@@ -50,6 +50,9 @@
                   <Width>0.76185in</Width>
                 </TablixColumn>
                 <TablixColumn>
+                  <Width>0.7in</Width>
+                </TablixColumn>
+                <TablixColumn>
                   <Width>1in</Width>
                 </TablixColumn>
                 <TablixColumn>
@@ -313,6 +316,46 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>Excess Pension</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="LEAVEHdr">
+                          <rd:DefaultName>LEAVEHdr</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Leave</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1213,6 +1256,44 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="LEAVE">
+                          <rd:DefaultName>LEAVE</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!LEAVE.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,0.00;(#,0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Basic2">
                           <rd:DefaultName>Basic</rd:DefaultName>
                           <CanGrow>true</CanGrow>
@@ -2034,6 +2115,45 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="LEAVETotal">
+                          <rd:DefaultName>LEAVETotal</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=SUM(Fields!LEAVE.Value)</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Format>#,0.00;(#,0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Textbox15">
                           <rd:DefaultName>Textbox15</rd:DefaultName>
                           <CanGrow>true</CanGrow>
@@ -2711,7 +2831,7 @@
             <Top>1.7722in</Top>
             <Left>0.21073in</Left>
             <Height>0.89583in</Height>
-            <Width>17.15539in</Width>
+            <Width>17.85539in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2955,7 +3075,7 @@
         <Height>4.17409in</Height>
         <Style />
       </Body>
-      <Width>17.3899in</Width>
+      <Width>18.0899in</Width>
       <Page>
         <PageHeader>
           <Height>0.28125in</Height>
@@ -3160,6 +3280,12 @@ End Function
         </Field>
         <Field Name="RECOVERYFormat">
           <DataField>RECOVERYFormat</DataField>
+        </Field>
+        <Field Name="LEAVE">
+          <DataField>LEAVE</DataField>
+        </Field>
+        <Field Name="LEAVEFormat">
+          <DataField>LEAVEFormat</DataField>
         </Field>
         <Field Name="NOTICE">
           <DataField>NOTICE</DataField>

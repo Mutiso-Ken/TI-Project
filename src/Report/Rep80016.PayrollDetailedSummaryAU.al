@@ -81,6 +81,9 @@ Report 80016 "Payroll Detailed Summary_AU"
             column(RECOVERY; RECOVERY)
             {
             }
+            column(LEAVE; LEAVE)
+            {
+            }
             column(NOTICE; NOTICE)
             {
             }
@@ -162,6 +165,7 @@ Report 80016 "Payroll Detailed Summary_AU"
                 HL := 0;
                 RECOVERY := 0;
                 NOTICE := 0;
+                LEAVE := 0;
 
                 PayrollMonthly.Reset;
                 PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
@@ -297,6 +301,13 @@ Report 80016 "Payroll Detailed Summary_AU"
                 PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'NOTICE');
                 if PayrollMonthly.Find('-') then begin
                     NOTICE := PayrollMonthly.Amount;
+                end;
+                PayrollMonthly.Reset;
+                PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
+                PayrollMonthly.SetRange(PayrollMonthly."Payroll Period", Period);
+                PayrollMonthly.SetRange(PayrollMonthly."Transaction Code", 'LEAVE');
+                if PayrollMonthly.Find('-') then begin
+                    LEAVE := PayrollMonthly.Amount;
                 end;
                 PayrollMonthly.Reset;
                 PayrollMonthly.SetRange(PayrollMonthly."No.", "Payroll Employee_AU"."No.");
@@ -542,6 +553,7 @@ Report 80016 "Payroll Detailed Summary_AU"
         HL: Decimal;
         RECOVERY: Decimal;
         NOTICE: Decimal;
+        LEAVE: Decimal;
 
     trigger OnInitReport();
     begin
