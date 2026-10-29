@@ -186,7 +186,7 @@ Table 91331 "Appraisal Header"
             trigger OnValidate()
             begin
                 CalculateScores();
-                "Overall Score" := Round("Part A Score" + "Part C Score" + "Part D Score", 1);
+                "Overall Score" := "Part A Score" + "Part C Score" + "Part D Score";
             end;
         }
         field(24; "Part A"; Integer)
@@ -273,23 +273,20 @@ Table 91331 "Appraisal Header"
             DataClassification = ToBeClassified;
         }
         // Weighted scores, out of 50 / 25 / 25. Calculated by CalculateScores(); not stored reliably, so always call it before reading.
-        field(43; "Part A Score"; Decimal)
+        field(43; "Part A Score"; Integer)
         {
             Caption = 'Part A Score (out of 50)';
             Editable = false;
-            DecimalPlaces = 0 : 2;
         }
-        field(44; "Part C Score"; Decimal)
+        field(44; "Part C Score"; Integer)
         {
             Caption = 'Part C Score (out of 25)';
             Editable = false;
-            DecimalPlaces = 0 : 2;
         }
-        field(45; "Part D Score"; Decimal)
+        field(45; "Part D Score"; Integer)
         {
             Caption = 'Part D Score (out of 25)';
             Editable = false;
-            DecimalPlaces = 0 : 2;
         }
         // field(35; "HOD"; Code[50])
         // {
@@ -433,7 +430,8 @@ Table 91331 "Appraisal Header"
 
     // Section A is the sum of the supervisor's ratings (0-10 each), capped at 50.
     // Sections C and D are scored as a percentage of the marks available for the questions actually asked
-    // (rating out of 5 per question), scaled to a weight of 25 each. Maximum overall score is 100.
+    // (rating out of 5 per question), scaled to a weight of 25 each and rounded to a whole number.
+    // The overall score is the sum of the rounded parts, so the printed parts always add up. Maximum is 100.
     procedure CalculateScores()
     var
         LineC: Record "Appraisal Lines Section C";
@@ -468,11 +466,11 @@ Table 91331 "Appraisal Header"
         "Part D Score" := ScaleScore(SumD, CountD, 5, 25);
     end;
 
-    local procedure ScaleScore(RatingSum: Integer; QuestionCount: Integer; MaxRating: Integer; Weight: Integer): Decimal
+    local procedure ScaleScore(RatingSum: Integer; QuestionCount: Integer; MaxRating: Integer; Weight: Integer): Integer
     begin
         if QuestionCount = 0 then
             exit(0);
-        exit(Round(RatingSum / (QuestionCount * MaxRating) * Weight, 0.01));
+        exit(Round(RatingSum / (QuestionCount * MaxRating) * Weight, 1));
     end;
 
     procedure GetActiveReviewPeriod(): Text[200]

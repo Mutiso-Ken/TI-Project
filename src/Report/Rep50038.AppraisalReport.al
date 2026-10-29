@@ -271,7 +271,7 @@ Report 50038 "Appraisal Report"
         mimeType: Text;
         AppraisalHeader2: Record "Appraisal Header";
         ImmediateSupervisorName: Text;
-        OverallScore: Decimal;
+        OverallScore: Integer;
         SupervisorSignatureBase64: Text;
         SupervisorMimeType: Text;
 
