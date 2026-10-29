@@ -981,7 +981,7 @@ codeunit 50047 PortalEntry
                             end;
                             if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
-                                    AppraisalLinesSectionA."Supervisor Rating" := jsontoken.AsValue().AsInteger();
+                                    AppraisalLinesSectionA.Validate("Supervisor Rating", jsontoken.AsValue().AsInteger());
                             end;
                             AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part A";
 
@@ -1004,7 +1004,7 @@ codeunit 50047 PortalEntry
                             end;
                             if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
-                                    AppraisalLinesSectionA."Supervisor Rating" := jsontoken.AsValue().AsInteger();
+                                    AppraisalLinesSectionA.Validate("Supervisor Rating", jsontoken.AsValue().AsInteger());
                             end;
                             AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part A";
                             AppraisalLinesSectionA.Insert(true);

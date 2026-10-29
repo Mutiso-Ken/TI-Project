@@ -185,15 +185,15 @@ Table 91331 "Appraisal Header"
             Editable = false;
             trigger OnValidate()
             begin
-                CalcFields("Part A", "Part C", "Part D");
-                "Overall Score" := "Part A" + "Part C" + "Part D";
+                CalculateScores();
+                "Overall Score" := Round("Part A Score" + "Part C Score" + "Part D Score", 1);
             end;
         }
         field(24; "Part A"; Integer)
         {
             MaxValue = 50;
             FieldClass = FlowField;
-            CalcFormula = sum("Appraisal Lines Section A"."Supervisor Rating" where("Appraisal Code" = field("Appraisal Code")));
+            CalcFormula = sum("Appraisal Lines Section A"."Supervisor Rating" where("Appraisal Code" = field("Appraisal Code"), Section = const("Part A")));
         }
         field(25; "Part C"; Integer)
         {
@@ -271,6 +271,25 @@ Table 91331 "Appraisal Header"
         {
             Caption = 'Immediate Supervisor Signature';
             DataClassification = ToBeClassified;
+        }
+        // Weighted scores, out of 50 / 25 / 25. Calculated by CalculateScores(); not stored reliably, so always call it before reading.
+        field(43; "Part A Score"; Decimal)
+        {
+            Caption = 'Part A Score (out of 50)';
+            Editable = false;
+            DecimalPlaces = 0 : 2;
+        }
+        field(44; "Part C Score"; Decimal)
+        {
+            Caption = 'Part C Score (out of 25)';
+            Editable = false;
+            DecimalPlaces = 0 : 2;
+        }
+        field(45; "Part D Score"; Decimal)
+        {
+            Caption = 'Part D Score (out of 25)';
+            Editable = false;
+            DecimalPlaces = 0 : 2;
         }
         // field(35; "HOD"; Code[50])
         // {
@@ -411,6 +430,50 @@ Table 91331 "Appraisal Header"
         AppraisalQuestions: record "Appraisal Questions";
         AppraisalApprovalsTracking: record "Appraisal Approvals Tracking";
         LineNo: Integer;
+
+    // Section A is the sum of the supervisor's ratings (0-10 each), capped at 50.
+    // Sections C and D are scored as a percentage of the marks available for the questions actually asked
+    // (rating out of 5 per question), scaled to a weight of 25 each. Maximum overall score is 100.
+    procedure CalculateScores()
+    var
+        LineC: Record "Appraisal Lines Section C";
+        LineD: Record "Appraisal Lines Section D";
+        SumC: Integer;
+        CountC: Integer;
+        SumD: Integer;
+        CountD: Integer;
+        Rating: Integer;
+    begin
+        CalcFields("Part A");
+        "Part A Score" := "Part A";
+        if "Part A Score" > 50 then
+            "Part A Score" := 50;
+
+        LineC.SetRange("Appraisal Code", "Appraisal Code");
+        if LineC.FindSet() then
+            repeat
+                CountC += 1;
+                Rating := LineC."Supervisor Rating";
+                SumC += Rating;
+            until LineC.Next() = 0;
+        "Part C Score" := ScaleScore(SumC, CountC, 5, 25);
+
+        LineD.SetRange("Appraisal Code", "Appraisal Code");
+        if LineD.FindSet() then
+            repeat
+                CountD += 1;
+                Rating := LineD."Supervisor Rating";
+                SumD += Rating;
+            until LineD.Next() = 0;
+        "Part D Score" := ScaleScore(SumD, CountD, 5, 25);
+    end;
+
+    local procedure ScaleScore(RatingSum: Integer; QuestionCount: Integer; MaxRating: Integer; Weight: Integer): Decimal
+    begin
+        if QuestionCount = 0 then
+            exit(0);
+        exit(Round(RatingSum / (QuestionCount * MaxRating) * Weight, 0.01));
+    end;
 
     procedure GetActiveReviewPeriod(): Text[200]
     begin
