@@ -42,6 +42,8 @@ table 91335 "Appraisal Lines Section A"
         field(8; "Supervisor Rating"; Integer)
         {
             Caption = 'Rating by supervisor based on evidence (Out of 10 Marks)';
+            MinValue = 0;
+            MaxValue = 10;
         }
         field(9; "Capacity Needed"; text[2048])
         {

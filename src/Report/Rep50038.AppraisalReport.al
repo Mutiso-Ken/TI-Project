@@ -18,10 +18,10 @@ Report 50038 "Appraisal Report"
             column(Job_Title; "Appraisal Header"."Job Title") { }
             column(Supervisor_Name; ImmediateSupervisorName) { }
             column(Review_Period; "Appraisal Header"."Review Period") { }
-            column(Overall_Score; "Appraisal Header"."Overall Score") { }
-            column(Part_A; "Appraisal Header"."Part A") { }
-            column(Part_C; "Appraisal Header"."Part C") { }
-            column(Part_D; "Appraisal Header"."Part D") { }
+            column(Overall_Score; OverallScore) { }
+            column(Part_A; "Appraisal Header"."Part A Score") { }
+            column(Part_C; "Appraisal Header"."Part C Score") { }
+            column(Part_D; "Appraisal Header"."Part D Score") { }
             column(General_Appraiser_Comments; "Appraisal Header"."General Appraiser Comments") { }
             column(Employee_Comments; "Appraisal Header"."Employee Comments") { }
             column(Observer_Comments; "Appraisal Header"."General Appraiser Comments") { }
@@ -214,6 +214,10 @@ Report 50038 "Appraisal Report"
                 MediaId: Guid;
                 InStr: InStream;
             begin
+                // Always recalculate so the printed parts and total agree, whatever was last stored.
+                CalculateScores();
+                OverallScore := "Part A Score" + "Part C Score" + "Part D Score";
+
                 Clear(SignatureBase64);
                 Clear(mimeType);
                 Clear(SupervisorSignatureBase64);
@@ -267,6 +271,7 @@ Report 50038 "Appraisal Report"
         mimeType: Text;
         AppraisalHeader2: Record "Appraisal Header";
         ImmediateSupervisorName: Text;
+        OverallScore: Decimal;
         SupervisorSignatureBase64: Text;
         SupervisorMimeType: Text;
 
