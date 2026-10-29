@@ -2094,6 +2094,8 @@ codeunit 50047 PortalEntry
     BEGIN
         Clear(jarray);
         AccountsTable.RESET;
+        AccountsTable.SetRange("Income/Balance", AccountsTable."Income/Balance"::"Income Statement");
+        AccountsTable.SetRange("Direct Posting", true);
         AccountsTable.SETCURRENTKEY("No.");
         AccountsTable.ASCENDING(TRUE);
         IF AccountsTable.FINDFIRST THEN
