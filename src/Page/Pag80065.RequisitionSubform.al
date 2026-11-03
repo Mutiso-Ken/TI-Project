@@ -124,7 +124,7 @@ Page 80065 "Requisition Subform"
 
                     trigger OnValidate()
                     begin
-                        Rec."Total Amount" := Rec.Quantity * Rec."Direct Unit Cost";
+                        UpdateLineAmounts();
                         Rec.Modify();
                     end;
                 }
@@ -135,8 +135,7 @@ Page 80065 "Requisition Subform"
 
                     trigger OnValidate()
                     begin
-                        Rec.Amount := Rec."Direct Unit Cost" * Rec.Quantity;
-                        Rec."Total Amount" := Rec.Quantity * Rec."Direct Unit Cost";
+                        UpdateLineAmounts();
                         Rec.Modify();
                     end;
                 }
@@ -601,6 +600,7 @@ Page 80065 "Requisition Subform"
     begin
         Rec.ShowShortcutDimCode(ShortcutDimCode);
         Clear(DocumentTotals);
+        FillEmptyAmounts();
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -690,6 +690,27 @@ Page 80065 "Requisition Subform"
     procedure UpdateForm(SetSaveRecord: Boolean)
     begin
         CurrPage.Update(SetSaveRecord);
+    end;
+
+    local procedure UpdateLineAmounts()
+    begin
+        Rec.Amount := Rec.Quantity * Rec."Direct Unit Cost";
+        Rec."Total Amount" := Rec.Quantity * Rec."Direct Unit Cost";
+    end;
+
+    local procedure FillEmptyAmounts()
+    begin
+        // Backfill lines (including old ones) whose Amount/Total Amount were never calculated
+        if (Rec.Quantity * Rec."Direct Unit Cost") = 0 then
+            exit;
+        if (Rec.Amount <> 0) and (Rec."Total Amount" <> 0) then
+            exit;
+
+        if Rec.Amount = 0 then
+            Rec.Amount := Rec.Quantity * Rec."Direct Unit Cost";
+        if Rec."Total Amount" = 0 then
+            Rec."Total Amount" := Rec.Quantity * Rec."Direct Unit Cost";
+        if Rec.Modify(false) then;
     end;
 
     local procedure NoOnAfterValidate()
