@@ -1,13 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:am="http://schemas.microsoft.com/sqlserver/reporting/authoringmetadata">
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>11e9d112-2f62-453f-815d-e1042a8b5db5</rd:ReportID>
+  <am:AuthoringMetadata>
+    <am:CreatedBy>
+      <am:Name>MSRB</am:Name>
+      <am:Version>15.1.30001.02</am:Version>
+    </am:CreatedBy>
+    <am:UpdatedBy>
+      <am:Name>MSRB</am:Name>
+      <am:Version>15.1.30001.02</am:Version>
+    </am:UpdatedBy>
+    <am:LastModifiedTimestamp>2026-11-02T09:45:04.5985436Z</am:LastModifiedTimestamp>
+  </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource">
+      <rd:SecurityType>None</rd:SecurityType>
       <ConnectionProperties>
         <DataProvider>SQL</DataProvider>
         <ConnectString />
       </ConnectionProperties>
-      <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>5542afe7-62b8-4df5-af84-c1cf549259e3</rd:DataSourceID>
     </DataSource>
   </DataSources>
@@ -41,6 +54,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox37">
+                          <rd:DefaultName>Textbox37</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -59,7 +73,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox37</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -108,6 +121,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox5">
+                          <rd:DefaultName>Textbox5</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -124,7 +138,6 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox5</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -214,6 +227,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Purchase_Line_Quantity">
+                          <rd:DefaultName>Purchase_Line_Quantity</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -231,7 +245,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Purchase_Line_Quantity</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -281,6 +294,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="FUND">
+                          <rd:DefaultName>FUND</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -298,7 +312,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>FUND</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -386,6 +399,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox39">
+                          <rd:DefaultName>Textbox39</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -399,7 +413,6 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox39</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -444,6 +457,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox7">
+                          <rd:DefaultName>Textbox7</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -457,7 +471,6 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox7</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -544,6 +557,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox1">
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -562,7 +576,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox1</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>0.45cm</PaddingLeft>
@@ -576,6 +589,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox2">
+                          <rd:DefaultName>Textbox2</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -594,7 +608,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox2</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>0.45cm</PaddingLeft>
@@ -608,6 +621,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox3">
+                          <rd:DefaultName>Textbox3</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -626,7 +640,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox3</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>0.45cm</PaddingLeft>
@@ -640,6 +653,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox4">
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -658,7 +672,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox4</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>0.45cm</PaddingLeft>
@@ -672,6 +685,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox6">
+                          <rd:DefaultName>Textbox6</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -690,7 +704,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox6</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>0.45cm</PaddingLeft>
@@ -1069,6 +1082,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="CorrruptionFreeorgLabel">
+                          <rd:DefaultName>CorrruptionFreeorgLabel</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -1087,7 +1101,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>CorrruptionFreeorgLabel</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>0.45cm</PaddingLeft>
@@ -1111,6 +1124,7 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="EtimsCompliantLabel">
+                          <rd:DefaultName>EtimsCompliantLabel</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -1129,7 +1143,6 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>EtimsCompliantLabel</rd:DefaultName>
                           <Style>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>0.45cm</PaddingLeft>
@@ -1790,9 +1803,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>13.6103cm</Top>
-            <Left>5.53111cm</Left>
+            <Left>3.20116cm</Left>
             <Height>0.423cm</Height>
-            <Width>3.2976cm</Width>
+            <Width>4.79877cm</Width>
             <ZIndex>21</ZIndex>
             <Style>
               <Border>
@@ -1828,9 +1841,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>14.3776cm</Top>
-            <Left>5.53111cm</Left>
+            <Left>3.20116cm</Left>
             <Height>0.423cm</Height>
-            <Width>3.2976cm</Width>
+            <Width>4.79877cm</Width>
             <ZIndex>22</ZIndex>
             <Style>
               <Border>
@@ -1864,9 +1877,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>15.14488cm</Top>
-            <Left>5.53111cm</Left>
+            <Left>3.20116cm</Left>
             <Height>0.423cm</Height>
-            <Width>3.2976cm</Width>
+            <Width>4.79877cm</Width>
             <ZIndex>23</ZIndex>
             <Style>
               <Border>
@@ -1901,9 +1914,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>13.6103cm</Top>
-            <Left>8.89927cm</Left>
+            <Left>8.31719cm</Left>
             <Height>0.423cm</Height>
-            <Width>2.17823cm</Width>
+            <Width>2.76031cm</Width>
             <ZIndex>24</ZIndex>
             <Style>
               <VerticalAlign>Middle</VerticalAlign>
@@ -1932,9 +1945,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>14.3776cm</Top>
-            <Left>8.89927cm</Left>
+            <Left>8.31719cm</Left>
             <Height>0.423cm</Height>
-            <Width>2.17823cm</Width>
+            <Width>2.76031cm</Width>
             <ZIndex>25</ZIndex>
             <Style>
               <VerticalAlign>Middle</VerticalAlign>
@@ -1963,9 +1976,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>15.14488cm</Top>
-            <Left>8.89927cm</Left>
+            <Left>8.31719cm</Left>
             <Height>0.423cm</Height>
-            <Width>2.17823cm</Width>
+            <Width>2.76031cm</Width>
             <ZIndex>26</ZIndex>
             <Style>
               <VerticalAlign>Middle</VerticalAlign>
@@ -2236,7 +2249,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Prepared By Procurement Officer:</Value>
+                    <Value>Prepared By:</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
                       <FontWeight>Bold</FontWeight>
@@ -2249,9 +2262,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>13.6103cm</Top>
-            <Left>0.21094cm</Left>
+            <Left>0.28222cm</Left>
             <Height>0.423cm</Height>
-            <Width>5.17744cm</Width>
+            <Width>2.74255cm</Width>
             <ZIndex>36</ZIndex>
             <Style>
               <Border>
@@ -2270,7 +2283,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Checked By Head of Finance:</Value>
+                    <Value>Checked By:</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
                       <FontWeight>Bold</FontWeight>
@@ -2283,9 +2296,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>14.3776cm</Top>
-            <Left>0.21094cm</Left>
+            <Left>0.28222cm</Left>
             <Height>0.423cm</Height>
-            <Width>5.17744cm</Width>
+            <Width>2.74255cm</Width>
             <ZIndex>37</ZIndex>
             <Style>
               <Border>
@@ -2304,7 +2317,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Authorised By: Executive Director:</Value>
+                    <Value>Authorised By:</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
                       <FontWeight>Bold</FontWeight>
@@ -2319,7 +2332,7 @@
             <Top>15.14488cm</Top>
             <Left>0.28222cm</Left>
             <Height>0.423cm</Height>
-            <Width>5.17672cm</Width>
+            <Width>2.74255cm</Width>
             <ZIndex>38</ZIndex>
             <Style>
               <Border>
@@ -2382,8 +2395,6 @@ End Function
 </Code>
   <Language>=User!Language</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
-  <rd:ReportUnitType>Cm</rd:ReportUnitType>
-  <rd:ReportID>11e9d112-2f62-453f-815d-e1042a8b5db5</rd:ReportID>
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>

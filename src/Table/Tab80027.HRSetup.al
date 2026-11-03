@@ -233,6 +233,10 @@ Table 80027 "HR Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series".Code;
         }
+        field(50028; "Temporary Appraisal Creation"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys

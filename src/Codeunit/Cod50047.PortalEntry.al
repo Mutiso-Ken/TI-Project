@@ -717,116 +717,124 @@ codeunit 50047 PortalEntry
 
     local procedure CreateAppraisal(RequestJson: JsonObject): Text
     var
-        jsontoken: JsonToken;
         outputjson: JsonObject;
-        newAppCode: Code[50];
-        existingAppCode: Code[50];
         HRsetup: Record "HR Setup";
-        NoSeriesManagement: Codeunit "No. Series";
-        AppraisalQuestions: record "Appraisal Questions";
-        LineNo: Integer;
+
     begin
 
         HRsetup.Get();
         if HRsetup."Appraisal Sessions Active" then begin
             if ((HRsetup."Review Start Date" <= Today) and (HRsetup."Review End Date" >= Today)) then begin
-
-                // One appraisal per employee per review period: never delete or duplicate an existing one.
-                RequestJson.Get('employee_no', jsontoken);
-                AppraisalHeader.Reset();
-                existingAppCode := AppraisalHeader.FindAppraisalForPeriod(jsontoken.AsValue().AsCode(), AppraisalHeader.GetActiveReviewPeriod(), '');
-                if existingAppCode <> '' then begin
-                    outputjson.Add('message', StrSubstNo('You already have appraisal %1 for this appraisal period.', existingAppCode));
-                    outputjson.Add('existing_appraisal_number', existingAppCode);
-                    exit(Format(AddResponseHead(outputjson, false)));
-                end;
-
-                AppraisalHeader.Reset();
-                AppraisalHeader.Init();
-                AppraisalHeader."Employee No" := jsontoken.AsValue().AsCode();
-                // RequestJson.Get('start_date', jsontoken);
-                // AppraisalHeader."Start Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
-                // RequestJson.Get('end_date', jsontoken);
-                // AppraisalHeader."End Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
-                HRsetup.Get();
-                HRsetup.TestField("Appraisal Nos.");
-                newAppCode := NoSeriesManagement.GetNextNo(HRsetup."Appraisal Nos.", 0D, true);
-                AppraisalHeader."Appraisal Code" := newAppCode;
-                AppraisalHeader."Creation Date" := Today;
-                if AppraisalHeader.Insert() then begin
-
-                    AppraisalHeader.Validate("Employee No");
-                    AppraisalHeader.Validate("Review Period");
-                    AppraisalHeader.Modify();
-                    AppraisalLinesSectionA.Reset();
-                    AppraisalLinesSectionA.SetRange("Appraisal Code", newAppCode);
-                    if AppraisalLinesSectionA.FindSet() then
-                        repeat
-                            AppraisalLinesSectionA.Delete();
-                        until AppraisalLinesSectionA.Next() = 0;
-
-                    AppraisalLinesSectionB.Reset();
-                    AppraisalLinesSectionB.SetRange("Appraisal Code", newAppCode);
-                    if AppraisalLinesSectionB.FindSet() then
-                        repeat
-                            AppraisalLinesSectionB.Delete();
-                        until AppraisalLinesSectionB.Next() = 0;
-
-                    AppraisalLinesSectionC.Reset();
-                    AppraisalLinesSectionC.SetRange("Appraisal Code", newAppCode);
-                    if AppraisalLinesSectionC.FindSet() then
-                        repeat
-                            AppraisalLinesSectionC.Delete();
-                        until AppraisalLinesSectionC.Next() = 0;
-
-                    AppraisalLinesSectionC.Reset();
-                    LineNo := AppraisalLinesSectionC.Count();
-                    AppraisalQuestions.Reset();
-                    AppraisalQuestions.SetRange(Section, AppraisalQuestions.Section::"Section C");
-                    if AppraisalQuestions.FindSet() then
-                        repeat
-                            LineNo += 1;
-                            AppraisalLinesSectionC.Init();
-                            AppraisalLinesSectionC."Line No." := LineNo;
-                            AppraisalLinesSectionC."Appraisal Code" := newAppCode;
-                            AppraisalLinesSectionC.Question := AppraisalQuestions.Description;
-                            AppraisalLinesSectionC.Part := AppraisalQuestions.Part;
-                            AppraisalLinesSectionC.Insert();
-                        until AppraisalQuestions.Next() = 0;
-
-                    AppraisalLinesSectionD.Reset();
-                    AppraisalLinesSectionD.SetRange("Appraisal Code", newAppCode);
-                    if AppraisalLinesSectionD.FindSet() then
-                        repeat
-                            AppraisalLinesSectionD.Delete();
-                        until AppraisalLinesSectionD.Next() = 0;
-
-                    AppraisalLinesSectionD.Reset();
-                    LineNo := AppraisalLinesSectionD.Count();
-                    AppraisalQuestions.Reset();
-                    AppraisalQuestions.SetRange(Section, AppraisalQuestions.Section::"Section D");
-                    if AppraisalQuestions.FindSet() then
-                        repeat
-                            LineNo += 1;
-                            AppraisalLinesSectionD.Init();
-                            AppraisalLinesSectionD."Line No." := LineNo;
-                            AppraisalLinesSectionD."Appraisal Code" := newAppCode;
-                            AppraisalLinesSectionD.Question := AppraisalQuestions.Description;
-                            AppraisalLinesSectionD.Part := AppraisalQuestions.Part;
-                            AppraisalLinesSectionD.Insert();
-                        until AppraisalQuestions.Next() = 0;
-
-                    AppraisalApprovalsTracking.Reset();
-                    AppraisalApprovalsTracking.SetRange("Appraisal Code", newAppCode);
-                    if AppraisalApprovalsTracking.FindSet() then
-                        repeat
-                            AppraisalApprovalsTracking.Delete();
-                        until AppraisalApprovalsTracking.Next() = 0;
-                    exit(Format(AddResponseHead(outputjson, true)));
-                end;
-            end;
+                exit(StartAppraisalforemployee(RequestJson));
+            end else if (HrSetUp."Temporary Appraisal Creation") then
+                    exit(StartAppraisalforemployee(RequestJson));
         end;
         exit(Format(AddResponseHead(outputjson, false)));
+    end;
+
+    local procedure StartAppraisalforemployee(RequestJson: jsonobject): Text
+    var
+        jsontoken: JsonToken;
+        outputjson: JsonObject;
+        newAppCode: Code[50];
+        existingAppCode: Code[50];
+        NoSeriesManagement: Codeunit "No. Series";
+        AppraisalQuestions: record "Appraisal Questions";
+        LineNo: Integer;
+        HRsetup: Record "HR Setup";
+    begin
+        RequestJson.Get('employee_no', jsontoken);
+        AppraisalHeader.Reset();
+        existingAppCode := AppraisalHeader.FindAppraisalForPeriod(jsontoken.AsValue().AsCode(), AppraisalHeader.GetActiveReviewPeriod(), '');
+        if existingAppCode <> '' then begin
+            outputjson.Add('message', StrSubstNo('You already have appraisal %1 for this appraisal period.', existingAppCode));
+            outputjson.Add('existing_appraisal_number', existingAppCode);
+            exit(Format(AddResponseHead(outputjson, false)));
+        end;
+
+        AppraisalHeader.Reset();
+        AppraisalHeader.Init();
+        AppraisalHeader."Employee No" := jsontoken.AsValue().AsCode();
+        // RequestJson.Get('start_date', jsontoken);
+        // AppraisalHeader."Start Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
+        // RequestJson.Get('end_date', jsontoken);
+        // AppraisalHeader."End Date" := System.DT2Date(jsontoken.AsValue().AsDateTime());
+        HRsetup.Get();
+        HRsetup.TestField("Appraisal Nos.");
+        newAppCode := NoSeriesManagement.GetNextNo(HRsetup."Appraisal Nos.", 0D, true);
+        AppraisalHeader."Appraisal Code" := newAppCode;
+        AppraisalHeader."Creation Date" := Today;
+        if AppraisalHeader.Insert() then begin
+
+            AppraisalHeader.Validate("Employee No");
+            AppraisalHeader.Validate("Review Period");
+            AppraisalHeader.Modify();
+            AppraisalLinesSectionA.Reset();
+            AppraisalLinesSectionA.SetRange("Appraisal Code", newAppCode);
+            if AppraisalLinesSectionA.FindSet() then
+                repeat
+                    AppraisalLinesSectionA.Delete();
+                until AppraisalLinesSectionA.Next() = 0;
+
+            AppraisalLinesSectionB.Reset();
+            AppraisalLinesSectionB.SetRange("Appraisal Code", newAppCode);
+            if AppraisalLinesSectionB.FindSet() then
+                repeat
+                    AppraisalLinesSectionB.Delete();
+                until AppraisalLinesSectionB.Next() = 0;
+
+            AppraisalLinesSectionC.Reset();
+            AppraisalLinesSectionC.SetRange("Appraisal Code", newAppCode);
+            if AppraisalLinesSectionC.FindSet() then
+                repeat
+                    AppraisalLinesSectionC.Delete();
+                until AppraisalLinesSectionC.Next() = 0;
+
+            AppraisalLinesSectionC.Reset();
+            LineNo := AppraisalLinesSectionC.Count();
+            AppraisalQuestions.Reset();
+            AppraisalQuestions.SetRange(Section, AppraisalQuestions.Section::"Section C");
+            if AppraisalQuestions.FindSet() then
+                repeat
+                    LineNo += 1;
+                    AppraisalLinesSectionC.Init();
+                    AppraisalLinesSectionC."Line No." := LineNo;
+                    AppraisalLinesSectionC."Appraisal Code" := newAppCode;
+                    AppraisalLinesSectionC.Question := AppraisalQuestions.Description;
+                    AppraisalLinesSectionC.Part := AppraisalQuestions.Part;
+                    AppraisalLinesSectionC.Insert();
+                until AppraisalQuestions.Next() = 0;
+
+            AppraisalLinesSectionD.Reset();
+            AppraisalLinesSectionD.SetRange("Appraisal Code", newAppCode);
+            if AppraisalLinesSectionD.FindSet() then
+                repeat
+                    AppraisalLinesSectionD.Delete();
+                until AppraisalLinesSectionD.Next() = 0;
+
+            AppraisalLinesSectionD.Reset();
+            LineNo := AppraisalLinesSectionD.Count();
+            AppraisalQuestions.Reset();
+            AppraisalQuestions.SetRange(Section, AppraisalQuestions.Section::"Section D");
+            if AppraisalQuestions.FindSet() then
+                repeat
+                    LineNo += 1;
+                    AppraisalLinesSectionD.Init();
+                    AppraisalLinesSectionD."Line No." := LineNo;
+                    AppraisalLinesSectionD."Appraisal Code" := newAppCode;
+                    AppraisalLinesSectionD.Question := AppraisalQuestions.Description;
+                    AppraisalLinesSectionD.Part := AppraisalQuestions.Part;
+                    AppraisalLinesSectionD.Insert();
+                until AppraisalQuestions.Next() = 0;
+
+            AppraisalApprovalsTracking.Reset();
+            AppraisalApprovalsTracking.SetRange("Appraisal Code", newAppCode);
+            if AppraisalApprovalsTracking.FindSet() then
+                repeat
+                    AppraisalApprovalsTracking.Delete();
+                until AppraisalApprovalsTracking.Next() = 0;
+            exit(Format(AddResponseHead(outputjson, true)));
+        end;
     end;
 
     local procedure AppraisalApprovalUpdates(RequestJson: JsonObject): Text
@@ -981,7 +989,7 @@ codeunit 50047 PortalEntry
                             end;
                             if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
-                                    AppraisalLinesSectionA.Validate("Supervisor Rating", jsontoken.AsValue().AsInteger());
+                                    AppraisalLinesSectionA."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                             end;
                             AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part A";
 
@@ -1004,7 +1012,7 @@ codeunit 50047 PortalEntry
                             end;
                             if ((AppraisalHeader.Status = AppraisalHeader.Status::"Pending Supervisor Approval") and (updatingUser = AppraisalHeader."Appraisal Supervisor1")) then begin
                                 if line.Get('supervisor_rating', jsontoken) and not jsontoken.AsValue().IsNull then
-                                    AppraisalLinesSectionA.Validate("Supervisor Rating", jsontoken.AsValue().AsInteger());
+                                    AppraisalLinesSectionA."Supervisor Rating" := jsontoken.AsValue().AsInteger();
                             end;
                             AppraisalLinesSectionA.Section := AppraisalLinesSectionA.Section::"Part A";
                             AppraisalLinesSectionA.Insert(true);

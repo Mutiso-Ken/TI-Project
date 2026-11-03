@@ -195,6 +195,10 @@ Page 80027 "HR Setup"
                 {
                     ApplicationArea = Basic;
                 }
+                field("Temporary Appraisal Creation"; Rec."Temporary Appraisal Creation")
+                {
+                    ApplicationArea = Basic;
+                }
             }
         }
     }
