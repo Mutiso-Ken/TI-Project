@@ -55,9 +55,17 @@ Report 50038 "Appraisal Report"
                 DataItemTableView = where(Section = const("Part B"));
 
                 column(RowType_SecA_PartB; 'SEC_A_PART_B') { }
-                column(Capacity_Needed; "Appraisal Lines Section A Part B"."Capacity Needed") { }
+                column(Capacity_Needed; CapacityNeededText) { }
                 column(Why_Prioritize; "Appraisal Lines Section A Part B"."Why Prioritize") { }
                 column(Comments_by_the_supervisor; "Appraisal Lines Section A Part B"."Comments by the supervisor") { }
+
+                trigger OnAfterGetRecord()
+                begin
+                    // Lines saved earlier from the portal kept the capacity text in "What was Achieved?".
+                    CapacityNeededText := "Appraisal Lines Section A Part B"."Capacity Needed";
+                    if CapacityNeededText = '' then
+                        CapacityNeededText := "Appraisal Lines Section A Part B"."What was Achieved?";
+                end;
             }
             dataitem("Appraisal Lines Section B Part 1"; "Appraisal Lines Section B")
             {
@@ -271,6 +279,7 @@ Report 50038 "Appraisal Report"
         mimeType: Text;
         AppraisalHeader2: Record "Appraisal Header";
         ImmediateSupervisorName: Text;
+        CapacityNeededText: Text;
         OverallScore: Integer;
         SupervisorSignatureBase64: Text;
         SupervisorMimeType: Text;
