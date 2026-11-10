@@ -131,7 +131,7 @@ table 95021 "The Procurement Plan"
         }
         field(24; "Plan No."; Code[20])
         {
-            TableRelation = "RCK Procurement Plan Header"."No.";
+            TableRelation = "TI Procurement Plan Header"."No.";
         }
         field(25; "Partner Code"; Code[20])
         {

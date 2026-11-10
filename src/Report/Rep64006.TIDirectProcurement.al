@@ -1,24 +1,23 @@
-#pragma warning disable AA0005, AA0008, AA0018, AA0021, AA0072, AA0137, AA0201, AA0204, AA0206, AA0218, AA0228, AL0254, AL0424, AS0011, AW0006
-report 64008 "RCK Request for Quotation"
+report 64006 "TI Direct Procurement"
 {
-
+    // version PROC
 
     DefaultLayout = RDLC;
-    RDLCLayout = './Layouts/RCK Request for Quotation.rdlc';
+    RDLCLayout = './layouts/TI Direct Procurement.rdlc';
     ApplicationArea = All;
 
     dataset
     {
-        dataitem("Quotation Bidders"; "Quotation Bidders")
+        dataitem("Procurement Request"; "Procurement Request")
         {
-            RequestFilterFields = "Vendor No.";
-            column(Supplier_Selection1_Reference_No_; "Reference No")
+            RequestFilterFields = "Vendor No";
+            column(Supplier_Selection1_Reference_No_; "No.")
             {
             }
             column(Supplier_Selection1_Supplier_Name; "Vendor Name")
             {
             }
-            column(VendorNo_QuotationBidders; "Quotation Bidders"."Vendor No.")
+            column(VendorNo_QuotationBidders; "Vendor No")
             {
             }
             column(title; title)
@@ -138,36 +137,9 @@ report 64008 "RCK Request for Quotation"
             column(RFQDeadlineDate; RFQDeadlineDate)
             {
             }
-            column(ApproverName1; ApproverName1)
-            {
-            }
-            column(ApproverDate1; ApproverDate1)
-            {
-            }
-            column(Signature1; Approver1Emp.Signature)
-            {
-            }
-            column(ApproverName2; ApproverName2)
-            {
-            }
-            column(ApproverDate2; ApproverDate2)
-            {
-            }
-            column(Signature2; Approver2Emp.Signature)
-            {
-            }
-            column(ApproverName3; ApproverName3)
-            {
-            }
-            column(ApproverDate3; ApproverDate3)
-            {
-            }
-            column(Signature3; Approver3Emp.Signature)
-            {
-            }
             dataitem("Procurement Request Lines"; "Procurement Request Lines")
             {
-                DataItemLink = "Procurement No" = FIELD("Reference No");
+                DataItemLink = "Procurement No" = FIELD("No.");
                 DataItemTableView = SORTING("Procurement No", "Line No.");
                 column(Procurement_Request_Lines1__Procurement_Request_Lines1__No; "Procurement Request Lines".No)
                 {
@@ -306,11 +278,15 @@ report 64008 "RCK Request for Quotation"
             }
 
             trigger OnAfterGetRecord();
+            var
+                reqheader: Record "Purchase Header";
             begin
                 CompInfo.CALCFIELDS(Picture);
 
+                // MESSAGE('%1',"Supplier Selection1"."Supplier Name");
+
                 ProcurementRequest.RESET;
-                ProcurementRequest.SETRANGE(ProcurementRequest."No.", "Quotation Bidders"."Reference No");
+                ProcurementRequest.SETRANGE(ProcurementRequest."No.", "Procurement Request"."No.");
                 IF ProcurementRequest.FIND('-') THEN BEGIN
                     DocNumber := ProcurementRequest."No.";
                     ReturnDate := ProcurementRequest."Return Date";
@@ -318,12 +294,15 @@ report 64008 "RCK Request for Quotation"
                     ExpectedDeliveryDate := ProcurementRequest."Expected Delivery Date";
                     RFQDeadlineTime := ProcurementRequest."RFQ Deadline Time";
                     RFQDeadlineDate := ProcurementRequest."RFQ Deadlne Date";
-                    title := ProcurementRequest.Title;
                 END;
 
-                SetApprover(ProcurementRequest."No.", 1, ApproverName1, ApproverDate1, Approver1Emp);
-                SetApprover(ProcurementRequest."No.", 2, ApproverName2, ApproverDate2, Approver2Emp);
-                SetApprover(ProcurementRequest."No.", 3, ApproverName3, ApproverDate3, Approver3Emp);
+
+                //================================================================
+                reqheader.RESET;
+                IF reqheader.GET("Procurement Request"."No.") THEN BEGIN
+                    title := reqheader.Title;
+                END;
+                //================================================================
             end;
         }
     }
@@ -364,9 +343,11 @@ report 64008 "RCK Request for Quotation"
         CurrMonth: Code[10];
         CurrYR: Code[10];
         BudgDate: Text[30];
+        ReqHeader: Record "Purchase Header";
         BudgetDate: Date;
         YrBudget: Decimal;
         "BudgetB/F": Decimal;
+        RequisitionLine: Record "Purchase Line";
         BudgetGL: Code[20];
         ThisLNAmt: Decimal;
         PeriodTo: Date;
@@ -448,44 +429,6 @@ report 64008 "RCK Request for Quotation"
         ExpectedDeliveryDate: Date;
         RFQDeadlineTime: Time;
         RFQDeadlineDate: Date;
-        ApproverName1: Text[100];
-        ApproverDate1: Text[30];
-        Approver1Emp: Record "HR Employees";
-        ApproverName2: Text[100];
-        ApproverDate2: Text[30];
-        Approver2Emp: Record "HR Employees";
-        ApproverName3: Text[100];
-        ApproverDate3: Text[30];
-        Approver3Emp: Record "HR Employees";
-
-    // For every approval sequence (1, 2, 3) on the Procurement Request behind this RFQ, resolves
-    // the approver's name, approval date and signature via HR Employees, matched on "User ID" =
-    // "Approver ID" - the same lookup already used for the Mission Proposal and Purchase
-    // Requisition Document reports.
-    local procedure SetApprover(DocumentNo: Code[20]; SequenceNo: Integer; var ApproverName: Text[100]; var ApprovalDate: Text[30]; var ApproverEmp: Record "HR Employees")
-    var
-        AppEntry: Record "Approval Entry";
-    begin
-        ApproverName := '';
-        ApprovalDate := '';
-        Clear(ApproverEmp);
-
-        AppEntry.Reset();
-        AppEntry.SetRange("Document No.", DocumentNo);
-        AppEntry.SetRange("Table ID", Database::"Procurement Request");
-        AppEntry.SetRange("Sequence No.", SequenceNo);
-        AppEntry.SetRange(Status, AppEntry.Status::Approved);
-        if AppEntry.FindFirst() then begin
-            ApprovalDate := Format(AppEntry."Last Date-Time Modified");
-
-            ApproverEmp.Reset();
-            ApproverEmp.SetRange("User ID", AppEntry."Approver ID");
-            if ApproverEmp.FindFirst() then begin
-                ApproverEmp.CalcFields(Signature);
-                ApproverName := ApproverEmp.FullName;
-            end;
-        end;
-    end;
 
     procedure GetMonthlyTot(var Periodfrom: Date; var Dept: Code[20]) TotMonthReq: Decimal;
     begin
@@ -495,3 +438,4 @@ report 64008 "RCK Request for Quotation"
     begin
     end;
 }
+

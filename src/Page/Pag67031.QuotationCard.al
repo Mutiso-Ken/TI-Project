@@ -690,7 +690,7 @@ page 67031 "Quotation Card"
         Recepient: Text;
         Body: Text;
         Subject: Text;
-        RCKRequestforQuotation: Report "RCK Request for Quotation";
+        TIRequestforQuotation: Report "TI Request for Quotation";
         Fpath: Text[255];
         FileManagement: Codeunit "File Management";
         FileName: Text[255];
@@ -713,7 +713,7 @@ page 67031 "Quotation Card"
             FileManagement.ServerCreateDirectory(Text001);
         Fpath := Text001 + ' ' + QuotationBiddersII."Reference No" + ' ' + QuotationBiddersII."Vendor No." + ' ' + QuotationBiddersII."Vendor Name" + '.PDF';
         FileName := QuotationBiddersII."Reference No" + ' ' + QuotationBiddersII."Vendor No." + ' ' + QuotationBiddersII."Vendor Name" + ' ' + 'Quote' + '.pdf';
-        CLEAR(RCKRequestforQuotation);
+        CLEAR(TIRequestforQuotation);
         QuotationBiddersCopy.RESET;
         QuotationBiddersCopy.SETRANGE("Reference No", QuotationBiddersII."Reference No");
         QuotationBiddersCopy.SETRANGE("Vendor No.", QuotationBiddersII."Vendor No.");

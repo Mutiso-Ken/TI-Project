@@ -95,11 +95,11 @@ page 67036 "Quotation Bidders"
                     //      FileManagement.ServerCreateDirectory(Text001);
                     //      Fpath := Text001+' '+ QuotationBiddersII."Reference No"+' '+QuotationBiddersII."Vendor No."+' '+QuotationBiddersII."Vendor Name"+'.PDF';
                     //      FileName := QuotationBiddersII."Reference No"+' '+QuotationBiddersII."Vendor No."+' '+QuotationBiddersII."Vendor Name"+' '+'Quote'+'.pdf';
-                    //      CLEAR(RCKRequestforQuotation);
-                    //      RCKRequestforQuotation.SETTABLEVIEW(QuotationBiddersII);
-                    //      RCKRequestforQuotation.Header(QuotationBiddersII);
-                    //      RCKRequestforQuotation.SAVEASPDF(Fpath);
-                    //      REPORT.SAVEASPDF(REPORT::"RCK Request for Quotation",FileName,QuotationBiddersII);
+                    //      CLEAR(TIRequestforQuotation);
+                    //      TIRequestforQuotation.SETTABLEVIEW(QuotationBiddersII);
+                    //      TIRequestforQuotation.Header(QuotationBiddersII);
+                    //      TIRequestforQuotation.SAVEASPDF(Fpath);
+                    //      REPORT.SAVEASPDF(REPORT::"TI Request for Quotation",FileName,QuotationBiddersII);
                     //      SMTPMailSetup.GET;
                     //      SenderAddress:=SMTPMailSetup."User ID";
                     //      SenderName:=SMTPMailSetup."Send As";
@@ -107,9 +107,9 @@ page 67036 "Quotation Bidders"
                     //      Recepient := QuotationBiddersII."E-mail Address";
                     //      CCRecepient := 'procurement@rckkenya.org';
                     //      Body:='Dear '+ FORMAT(QuotationBiddersII."Vendor Name")+','+
-                    //       '<br> You have been invited for a quotation at RCK.'+
+                    //       '<br> You have been invited for a quotation at TI.'+
                     //       ' Please fill in the attached form and submit your quote <br>'+
-                    //       '<Br>Regards,'+'<br>Procurement,'+'<br>RCK Kenya.';
+                    //       '<Br>Regards,'+'<br>Procurement,'+'<br>TI Kenya.';
                     //       IF (SenderName<>'') AND (SenderAddress<>'') AND (Recepient<>'') AND (Subject<>'') AND (Body<>'') THEN
                     //            BEGIN
                     //            SMTPMail.CreateMessage(SenderName,SenderAddress,Recepient,Subject,Body,TRUE);
@@ -270,7 +270,7 @@ page 67036 "Quotation Bidders"
         Recepient: Text;
         Body: Text;
         Subject: Text;
-        RCKRequestforQuotation: Report "RCK Request for Quotation";
+        TIRequestforQuotation: Report "TI Request for Quotation";
         Fpath: Text[255];
         FileManagement: Codeunit "File Management";
         FileName: Text[255];
@@ -291,18 +291,18 @@ page 67036 "Quotation Bidders"
             FileManagement.ServerCreateDirectory(Text001);
         Fpath := Text001 + ' ' + QuotationBiddersII."Reference No" + ' ' + QuotationBiddersII."Vendor No." + ' ' + QuotationBiddersII."Vendor Name" + '.PDF';
         FileName := QuotationBiddersII."Reference No" + ' ' + QuotationBiddersII."Vendor No." + ' ' + QuotationBiddersII."Vendor Name" + ' ' + 'Quote' + '.pdf';
-        CLEAR(RCKRequestforQuotation);
+        CLEAR(TIRequestforQuotation);
         QuotationBiddersCopy.RESET;
         QuotationBiddersCopy.SETRANGE("Reference No", QuotationBiddersII."Reference No");
         QuotationBiddersCopy.SETRANGE("Vendor No.", QuotationBiddersII."Vendor No.");
         QuotationBiddersCopy.FINDFIRST;
-        //RCKRequestforQuotation.SETTABLEVIEW(QuotationBiddersCopy);
-        //RCKRequestforQuotation.Header(QuotationBiddersII);
-        //RCKRequestforQuotation.SAVEASPDF(Fpath);
+        //TIRequestforQuotation.SETTABLEVIEW(QuotationBiddersCopy);
+        //TIRequestforQuotation.Header(QuotationBiddersII);
+        //TIRequestforQuotation.SAVEASPDF(Fpath);
         AttachmentTempBlob.CreateOutStream(AttachmentOutStream);
         SORecordReference.GetTable(QuotationBiddersCopy);
         REPORT.SAVEAS(64008, '', ReportFormat::Pdf, AttachmentOutStream, SORecordReference);
-        //REPORT.SAVEASPDF(REPORT::"RCK Request for Quotation", FileName, QuotationBiddersCopy);
+        //REPORT.SAVEASPDF(REPORT::"TI Request for Quotation", FileName, QuotationBiddersCopy);
         // SMTPMailSetup.GET;
         // SenderAddress := SMTPMailSetup."User ID";
         // SenderName := SMTPMailSetup."Send As";

@@ -6,5 +6,10 @@ tableextension 50065 "Payment Method Ext Grants" extends "Payment Method"
         {
             DataClassification = ToBeClassified;
         }
+        field(50066; "Is Check"; Boolean)
+        {
+            Caption = 'Is Check';
+            DataClassification = ToBeClassified;
+        }
     }
 }

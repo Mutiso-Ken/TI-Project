@@ -586,9 +586,9 @@ codeunit 90004 ProcurementEntry
             jsonobject.Add('Doc_RegulatoryCertificates', VendorRegistrationDetailsTable."Doc Regulatory Certificates");
             jsonobject.Add('RegulatoryCertificatesPath', VendorRegistrationDetailsTable."Regulatory Certificates Path");
             jsonobject.Add('RegulatoryCertificatesName', VendorRegistrationDetailsTable."Regulatory Certificates Name");
-            jsonobject.Add('Doc_RCKPaymentReceipt', VendorRegistrationDetailsTable."Doc RCK Payment Receipt");
-            jsonobject.Add('RCKPaymentReceiptPath', VendorRegistrationDetailsTable."RCK Payment Receipt Path");
-            jsonobject.Add('RCKPaymentReceiptName', VendorRegistrationDetailsTable."RCK Payment Receipt Name");
+            jsonobject.Add('Doc_RCKPaymentReceipt', VendorRegistrationDetailsTable."Doc TI Payment Receipt");
+            jsonobject.Add('RCKPaymentReceiptPath', VendorRegistrationDetailsTable."TI Payment Receipt Path");
+            jsonobject.Add('RCKPaymentReceiptName', VendorRegistrationDetailsTable."TI Payment Receipt Name");
             jsonobject.Add('Doc_OrganizationalChart', VendorRegistrationDetailsTable."Doc Organizational Chart");
             jsonobject.Add('OrganizationalChartPath', VendorRegistrationDetailsTable."Organizational Chart Path");
             jsonobject.Add('OrganizationalChartName', VendorRegistrationDetailsTable."Organizational Chart Name");
@@ -889,11 +889,11 @@ codeunit 90004 ProcurementEntry
                             VendorRegistrationDetailsTable."Regulatory Certificates Name" := JsonToken.AsValue().AsText();
                     end;
                     if ((jsonobject.Get('Doc_RCKPaymentReceipt', JsonToken)) and (JsonToken.AsValue().AsBoolean() = true)) then begin
-                        VendorRegistrationDetailsTable."Doc RCK Payment Receipt" := JsonToken.AsValue().AsBoolean();
+                        VendorRegistrationDetailsTable."Doc TI Payment Receipt" := JsonToken.AsValue().AsBoolean();
                         if jsonobject.Get('RCKPaymentReceiptPath', JsonToken) and not JsonToken.AsValue().IsNull() then
-                            VendorRegistrationDetailsTable."RCK Payment Receipt Path" := JsonToken.AsValue().AsText();
+                            VendorRegistrationDetailsTable."TI Payment Receipt Path" := JsonToken.AsValue().AsText();
                         if jsonobject.Get('RCKPaymentReceiptName', JsonToken) and not JsonToken.AsValue().IsNull() then
-                            VendorRegistrationDetailsTable."RCK Payment Receipt Name" := JsonToken.AsValue().AsText();
+                            VendorRegistrationDetailsTable."TI Payment Receipt Name" := JsonToken.AsValue().AsText();
                     end;
                     if ((jsonobject.Get('Doc_OrganizationalChart', JsonToken)) and (JsonToken.AsValue().AsBoolean() = true)) then begin
                         VendorRegistrationDetailsTable."Doc Organizational Chart" := JsonToken.AsValue().AsBoolean();
@@ -1000,11 +1000,11 @@ codeunit 90004 ProcurementEntry
                             VendorRegistrationDetailsTable."Regulatory Certificates Name" := JsonToken.AsValue().AsText();
                     end;
                     if ((jsonobject.Get('Doc_RCKPaymentReceipt', JsonToken)) and (JsonToken.AsValue().AsBoolean() = true)) then begin
-                        VendorRegistrationDetailsTable."Doc RCK Payment Receipt" := JsonToken.AsValue().AsBoolean();
+                        VendorRegistrationDetailsTable."Doc TI Payment Receipt" := JsonToken.AsValue().AsBoolean();
                         if jsonobject.Get('RCKPaymentReceiptPath', JsonToken) and not JsonToken.AsValue().IsNull() then
-                            VendorRegistrationDetailsTable."RCK Payment Receipt Path" := JsonToken.AsValue().AsText();
+                            VendorRegistrationDetailsTable."TI Payment Receipt Path" := JsonToken.AsValue().AsText();
                         if jsonobject.Get('RCKPaymentReceiptName', JsonToken) and not JsonToken.AsValue().IsNull() then
-                            VendorRegistrationDetailsTable."RCK Payment Receipt Name" := JsonToken.AsValue().AsText();
+                            VendorRegistrationDetailsTable."TI Payment Receipt Name" := JsonToken.AsValue().AsText();
                     end;
                     if ((jsonobject.Get('Doc_OrganizationalChart', JsonToken)) and (JsonToken.AsValue().AsBoolean() = true)) then begin
                         VendorRegistrationDetailsTable."Doc Organizational Chart" := JsonToken.AsValue().AsBoolean();

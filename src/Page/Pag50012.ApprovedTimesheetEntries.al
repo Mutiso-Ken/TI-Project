@@ -71,7 +71,7 @@ Page 50012 "Approved Timesheet Entries"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                //RunObject = Report "BD RCK RB";
+                //RunObject = Report "BD TI RB";
             }
         }
     }

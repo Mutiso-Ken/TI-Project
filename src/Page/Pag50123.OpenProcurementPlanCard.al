@@ -2,7 +2,7 @@
 page 50123 "Open Procurement Plan Card"
 {
     PageType = Card;
-    SourceTable = "RCK Procurement Plan Header";
+    SourceTable = "TI Procurement Plan Header";
     ApplicationArea = All;
 
     layout

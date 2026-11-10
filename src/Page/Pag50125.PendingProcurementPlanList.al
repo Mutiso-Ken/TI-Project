@@ -2,7 +2,7 @@
 page 50125 "Pending Procurement Plan List"
 {
     PageType = List;
-    SourceTable = "RCK Procurement Plan Header";
+    SourceTable = "TI Procurement Plan Header";
     SourceTableView = where(Status = filter(Pending));
     CardPageId = "Pending Procurement Plan Card";
     Editable = false;

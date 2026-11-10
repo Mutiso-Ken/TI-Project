@@ -90,7 +90,7 @@ Page 80105 "Pending Timesheet Entries"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                //RunObject = Report "BD RCK RB";
+                //RunObject = Report "BD TI RB";
             }
         }
     }

@@ -141,14 +141,14 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
                             CASE ProcurementRequest."Procurement Method" OF
                                 ProcurementRequest."Procurement Method"::"Direct Procurement":
                                     BEGIN
-                                        REPORT.RUNMODAL(REPORT::"RCK Direct Procurement", TRUE, FALSE, ProcurementRequest);
+                                        REPORT.RUNMODAL(REPORT::"TI Direct Procurement", TRUE, FALSE, ProcurementRequest);
                                     END;
                                 ProcurementRequest."Procurement Method"::RFQ:
                                     BEGIN
                                         QuotationBidders.RESET;
                                         QuotationBidders.SETRANGE("Reference No", ProcurementRequest."No.");
                                         IF QuotationBidders.FINDFIRST THEN BEGIN
-                                            REPORT.RUNMODAL(REPORT::"RCK Request for Quotation", TRUE, FALSE, QuotationBidders);
+                                            REPORT.RUNMODAL(REPORT::"TI Request for Quotation", TRUE, FALSE, QuotationBidders);
                                         END;
                                     END;
                                 ProcurementRequest."Procurement Method"::RFP, ProcurementRequest."Procurement Method"::Tender:

@@ -274,15 +274,15 @@ table 90029 "Vendor Registration Details"
         {
             Caption = 'Regulatory Certificates Name';
         }
-        field(68; "Doc RCK Payment Receipt"; Boolean)
+        field(68; "Doc TI Payment Receipt"; Boolean)
         {
             Caption = 'Doc Payment Receipt';
         }
-        field(69; "RCK Payment Receipt Path"; Text[2048])
+        field(69; "TI Payment Receipt Path"; Text[2048])
         {
             Caption = 'Payment Receipt Path';
         }
-        field(70; "RCK Payment Receipt Name"; Text[255])
+        field(70; "TI Payment Receipt Name"; Text[255])
         {
             Caption = 'Payment Receipt Name';
         }

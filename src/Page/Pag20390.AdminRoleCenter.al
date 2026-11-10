@@ -1462,6 +1462,42 @@ Page 50390 "Admin Role Center"
                     RunObject = Page "Completed Payment Memos";
                 }
             }
+            group(PaymentVouchersGroup)
+            {
+                Caption = 'Payments';
+                Image = Journals;
+                ToolTip = 'Create, approve and post payment vouchers.';
+                action(PaymentVouchersNew)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Payment Vouchers';
+                    RunObject = Page "Payment Vouchers";
+                }
+                action(PaymentVouchersPending)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Payment Vouchers Pending Approval';
+                    RunObject = Page "Payment Voucher Pending App";
+                }
+                action(PaymentVouchersApproved)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Approved Payment Vouchers';
+                    RunObject = Page "Approved Payment Voucher";
+                }
+                action(PaymentVouchersRejected)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Rejected Payment Vouchers';
+                    RunObject = Page "Rejected Payment Voucher";
+                }
+                action(PaymentVouchersPosted)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Posted Payment Vouchers';
+                    RunObject = Page "Posted Payment Voucher";
+                }
+            }
             group("Timesheets")
             {
                 action("Time sheets")

@@ -146,6 +146,10 @@ Codeunit 80008 "Custom Approvals Codeunit"
             //Procurement Request
             Database::"Procurement Request":
                 exit(CheckApprovalsWorkflowEnabledCode(Variant, RunWorkflowOnSendProcurementReqForApprovalCode));
+
+            //Payment Voucher
+            Database::"Payment Voucher":
+                exit(CheckApprovalsWorkflowEnabledCode(Variant, RunWorkflowOnSendPaymentDocuemntForApprovalCode));
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end;
@@ -203,6 +207,12 @@ Codeunit 80008 "Custom Approvals Codeunit"
         RunWorkflowOnSendProcurementReqForApprovalCode, Database::"Procurement Request", OnSendProcurementReqApprovalRequestTxt, 0, false);
         WorkFlowEventHandling.AddEventToLibrary(
         RunWorkflowOnCancelProcurementReqForApprovalCode, Database::"Procurement Request", OnCancelProcurementReqApprovalRequestTxt, 0, false);
+
+        //Payment Voucher
+        WorkFlowEventHandling.AddEventToLibrary(
+        RunWorkflowOnSendPaymentDocuemntForApprovalCode, Database::"Payment Voucher", OnSendPaymentDocumentApprovalRequestTxt, 0, false);
+        WorkFlowEventHandling.AddEventToLibrary(
+        RunWorkflowOnCancelPaymentDocumentForApprovalCode, Database::"Payment Voucher", OnCancelPaymentDocumentApprovalRequestTxt, 0, false);
     end;
 
     local procedure RunWorkflowOnSendApprovalRequestCode(): Code[128]
@@ -232,6 +242,10 @@ Codeunit 80008 "Custom Approvals Codeunit"
             //Procurement Request
             Database::"Procurement Request":
                 WorkflowManagement.HandleEvent(RunWorkflowOnSendProcurementReqForApprovalCode, Variant);
+
+            //Payment Voucher
+            Database::"Payment Voucher":
+                WorkflowManagement.HandleEvent(RunWorkflowOnSendPaymentDocuemntForApprovalCode, Variant);
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end;
@@ -260,6 +274,10 @@ Codeunit 80008 "Custom Approvals Codeunit"
             //Procurement Request
             Database::"Procurement Request":
                 WorkflowManagement.HandleEvent(RunWorkflowOnCancelProcurementReqForApprovalCode, Variant);
+
+            //Payment Voucher
+            Database::"Payment Voucher":
+                WorkflowManagement.HandleEvent(RunWorkflowOnCancelPaymentDocumentForApprovalCode, Variant);
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end;
@@ -274,6 +292,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
         TrainingRequests: Record "Training Requests";
         TimeLines: Record TimesheetLines;
         ProcurementRequest: Record "Procurement Request";
+        PaymentVoucher: Record "Payment Voucher";
     begin
         case RecRef.Number of
 
@@ -314,6 +333,15 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     Handled := true;
                 end;
 
+            //Payment Voucher
+            Database::"Payment Voucher":
+                begin
+                    RecRef.SetTable(PaymentVoucher);
+                    PaymentVoucher.Validate(Status, PaymentVoucher.Status::New);
+                    PaymentVoucher.Modify();
+                    Handled := true;
+                end;
+
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end
@@ -331,6 +359,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
         Factory: Codeunit GeneralFunctionsFactory;
         TimeLines: Record TimesheetLines;
         ProcurementRequest: Record "Procurement Request";
+        PaymentVoucher: Record "Payment Voucher";
     begin
         case RecRef.Number of
             //Training Application
@@ -370,6 +399,15 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     Handled := true;
                 end;
 
+            //Payment Voucher
+            Database::"Payment Voucher":
+                begin
+                    RecRef.SetTable(PaymentVoucher);
+                    PaymentVoucher.Validate(Status, PaymentVoucher.Status::Approved);
+                    PaymentVoucher.Modify();
+                    Handled := true;
+                end;
+
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
         end
@@ -388,6 +426,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
         TrainingRequests: Record "Training Requests";
         TimeLines: record TimesheetLines;
         ProcurementRequest: Record "Procurement Request";
+        PaymentVoucher: Record "Payment Voucher";
     begin
         case RecRef.Number of
             //Training Application
@@ -430,6 +469,16 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     IsHandled := true;
                 end;
 
+            //Payment Voucher
+            Database::"Payment Voucher":
+                begin
+                    RecRef.SetTable(PaymentVoucher);
+                    PaymentVoucher.Validate(Status, PaymentVoucher.Status::"Pending Approval");
+                    PaymentVoucher.Modify();
+                    Variant := PaymentVoucher;
+                    IsHandled := true;
+                end;
+
 
             else
                 Error(UnsupportedRecordTypeErr, RecRef.Caption);
@@ -461,6 +510,8 @@ Codeunit 80008 "Custom Approvals Codeunit"
         PurchasRequisition: Page "Task Order Card";
         ProcurementRequest: Record "Procurement Request";
         ProcurementRequestCard: Page "Procurement Request Card";
+        PaymentVoucher: Record "Payment Voucher";
+        PaymentVoucherCard: Page "Payment Voucher Card";
     begin
         // Prevent standard BC logic
         IsHandled := true;
@@ -516,6 +567,14 @@ Codeunit 80008 "Custom Approvals Codeunit"
                     exit;
                 end;
 
+            Database::"Payment Voucher":
+                begin
+                    RecRef.SetTable(PaymentVoucher);
+                    PaymentVoucherCard.SetRecord(PaymentVoucher);
+                    PaymentVoucherCard.Run();
+                    exit;
+                end;
+
             else
                 PageManagement.PageRun(RecRef);
         end;
@@ -542,6 +601,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
     var
         Hrleave: Record "HR Leave Application";
         ProcurementRequest: Record "Procurement Request";
+        PaymentVoucher: Record "Payment Voucher";
 
 
     begin
@@ -556,6 +616,15 @@ Codeunit 80008 "Custom Approvals Codeunit"
                 begin
                     RecRef.SetTable(ProcurementRequest);
                     ApprovalEntryArgument."Document No." := ProcurementRequest."No.";
+                end;
+            DATABASE::"Payment Voucher":
+                begin
+                    RecRef.SetTable(PaymentVoucher);
+                    PaymentVoucher.CalcFields("Net Amount", "Net Amount(LCY)");
+                    ApprovalEntryArgument."Document No." := PaymentVoucher."No.";
+                    ApprovalEntryArgument.Amount := PaymentVoucher."Net Amount";
+                    ApprovalEntryArgument."Amount (LCY)" := PaymentVoucher."Net Amount(LCY)";
+                    ApprovalEntryArgument."Currency Code" := PaymentVoucher."Currency Code";
                 end;
 
         end;
@@ -586,6 +655,7 @@ Codeunit 80008 "Custom Approvals Codeunit"
         comments: Text;
         commentnumber: Integer;
         ProcurementRequest: Record "Procurement Request";
+        PaymentVoucher: Record "Payment Voucher";
     begin
 
 
@@ -686,6 +756,12 @@ Codeunit 80008 "Custom Approvals Codeunit"
                         EmailSubject := 'REJECTED DOCUMENT ' + ProcurementRequest."No.";
                         Notifications.fnSendemail(HRemployees."First Name" + '' + HRemployees."Last Name", EmailSubject, EmailBody, HRemployees."E-Mail", '', '', false, '', '', '', Enum::"Email Scenario"::Reminder);
                     end;
+                end;
+            Database::"Payment Voucher":
+                begin
+                    RecRef.SetTable(PaymentVoucher);
+                    PaymentVoucher.Validate(Status, PaymentVoucher.Status::Rejected);
+                    PaymentVoucher.Modify(true);
                 end;
         end;
     end;

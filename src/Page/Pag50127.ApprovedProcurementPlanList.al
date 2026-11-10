@@ -2,7 +2,7 @@
 page 50127 "Approved Procurement Plan List"
 {
     PageType = List;
-    SourceTable = "RCK Procurement Plan Header";
+    SourceTable = "TI Procurement Plan Header";
     SourceTableView = where(Status = filter(Approved));
     CardPageId = "Approved Procurement Plan Card";
     Editable = false;

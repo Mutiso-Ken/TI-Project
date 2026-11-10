@@ -69,7 +69,7 @@ Page 50014 "New Timesheet Entries"
                 PromotedCategory = "Report";
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                //RunObject = Report "BD RCK RB";
+                //RunObject = Report "BD TI RB";
             }
             action("TimeSheet Report Portal")
             {

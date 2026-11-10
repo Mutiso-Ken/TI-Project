@@ -2,7 +2,7 @@
 page 50128 "Approved Procurement Plan Card"
 {
     PageType = Card;
-    SourceTable = "RCK Procurement Plan Header";
+    SourceTable = "TI Procurement Plan Header";
     Editable = false;
     ApplicationArea = All;
 

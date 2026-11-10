@@ -554,7 +554,7 @@ codeunit 51155 "Proc & Store Management"
         Recepient: Text;
         Body: Text;
         Subject: Text;
-        RCKRequestforQuotation: Report "RCK Request for Quotation";
+        TIRequestforQuotation: Report "TI Request for Quotation";
         Fpath: Text[255];
         FileManagement: Codeunit "File Management";
         FileName: Text[255];

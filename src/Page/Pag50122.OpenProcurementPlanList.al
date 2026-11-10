@@ -2,7 +2,7 @@
 page 50122 "Open Procurement Plan List"
 {
     PageType = List;
-    SourceTable = "RCK Procurement Plan Header";
+    SourceTable = "TI Procurement Plan Header";
     SourceTableView = where(Status = filter(Open));
     CardPageId = "Open Procurement Plan Card";
     ApplicationArea = All;
