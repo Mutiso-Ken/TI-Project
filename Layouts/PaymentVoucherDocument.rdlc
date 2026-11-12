@@ -3586,6 +3586,9 @@ End Function
         <Field Name="PaymentFor_PaymentVoucher">
           <DataField>PaymentFor_PaymentVoucher</DataField>
         </Field>
+        <Field Name="Payee_PaymentVoucher">
+          <DataField>Payee_PaymentVoucher</DataField>
+        </Field>
         <Field Name="GrossAmount_PaymentVoucher">
           <DataField>GrossAmount_PaymentVoucher</DataField>
         </Field>
