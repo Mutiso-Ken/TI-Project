@@ -1249,6 +1249,15 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
+            <Filters>
+              <Filter>
+                <FilterExpression>=CInt(IIF(IsNothing(Fields!ApprovalLineNo.Value), 0, Fields!ApprovalLineNo.Value))</FilterExpression>
+                <Operator>Equal</Operator>
+                <FilterValues>
+                  <FilterValue DataType="Integer">0</FilterValue>
+                </FilterValues>
+              </Filter>
+            </Filters>
             <Top>5.90021cm</Top>
             <Left>0.28222cm</Left>
             <Height>7.4581cm</Height>
@@ -1785,566 +1794,280 @@
               <VerticalAlign>Bottom</VerticalAlign>
             </Style>
           </Textbox>
-          <Textbox Name="Purchase_Header___Created_By_2">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ApproverName1.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
+          <Tablix Name="ApprovalsTable">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>2.91894cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>5.11603cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.83086cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.24331cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.82055cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.09195cm</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.7673cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Appr_Caption">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ApprovalCaption.Value</Value>
+                                  <Style>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>0.45cm</PaddingLeft>
+                            <PaddingRight>0.225cm</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Appr_ApproverName">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ApprovalApproverName.Value</Value>
+                                  <Style>
+                                    <FontSize>7pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>0.45cm</PaddingLeft>
+                            <PaddingRight>0.45cm</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Appr_SignatureCaption">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=First(Fields!Signature_Caption.Value, "DataSet_Result")</Value>
+                                  <Style>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>0.45cm</PaddingLeft>
+                            <PaddingRight>0.225cm</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Image Name="Appr_Signature">
+                          <Source>Database</Source>
+                          <Value>=Fields!ApprovalSignature.Value</Value>
+                          <MIMEType>image/jpeg</MIMEType>
+                          <Sizing>FitProportional</Sizing>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                          </Style>
+                        </Image>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Appr_DateCaption">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=First(Fields!Date_Caption.Value, "DataSet_Result")</Value>
+                                  <Style>
+                                    <FontSize>7pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Appr_Date">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ApprovalDate.Value</Value>
+                                  <Style>
+                                    <FontSize>7pt</FontSize>
+                                    <Format>dd/MM/yy</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <VerticalAlign>Bottom</VerticalAlign>
+                            <PaddingLeft>0.45cm</PaddingLeft>
+                            <PaddingRight>0.45cm</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="ApprovalsTable_Details_Group">
+                    <DataElementName>Detail</DataElementName>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!ApprovalLineNo.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixMembers>
+                    <TablixMember />
+                  </TablixMembers>
+                  <DataElementName>Detail_Collection</DataElementName>
+                  <DataElementOutput>Output</DataElementOutput>
+                  <KeepTogether>true</KeepTogether>
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>DataSet_Result</DataSetName>
+            <Filters>
+              <Filter>
+                <FilterExpression>=CInt(IIF(IsNothing(Fields!ApprovalLineNo.Value), 0, Fields!ApprovalLineNo.Value))</FilterExpression>
+                <Operator>GreaterThan</Operator>
+                <FilterValues>
+                  <FilterValue DataType="Integer">0</FilterValue>
+                </FilterValues>
+              </Filter>
+            </Filters>
             <Top>13.6103cm</Top>
-            <Left>3.20116cm</Left>
-            <Height>0.423cm</Height>
-            <Width>4.79877cm</Width>
+            <Left>0.28222cm</Left>
+            <Height>0.7673cm</Height>
+            <Width>17.02164cm</Width>
             <ZIndex>21</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
-              <BottomBorder>
-                <Color>Black</Color>
-                <Style>Solid</Style>
-                <Width>1pt</Width>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
             </Style>
-          </Textbox>
-          <Textbox Name="EmptyStringCaption2">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ApproverName2.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>14.3776cm</Top>
-            <Left>3.20116cm</Left>
-            <Height>0.423cm</Height>
-            <Width>4.79877cm</Width>
-            <ZIndex>22</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="EmptyStringCaption3">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ApproverName3.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>15.14488cm</Top>
-            <Left>3.20116cm</Left>
-            <Height>0.423cm</Height>
-            <Width>4.79877cm</Width>
-            <ZIndex>23</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Signature_Caption2">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!Signature_Caption.Value)</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>13.6103cm</Top>
-            <Left>8.31719cm</Left>
-            <Height>0.423cm</Height>
-            <Width>2.76031cm</Width>
-            <ZIndex>24</ZIndex>
-            <Style>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.225cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Signature_Caption3">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!Signature_Caption.Value)</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>14.3776cm</Top>
-            <Left>8.31719cm</Left>
-            <Height>0.423cm</Height>
-            <Width>2.76031cm</Width>
-            <ZIndex>25</ZIndex>
-            <Style>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.225cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Signature_Caption4">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!Signature_Caption.Value)</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>15.14488cm</Top>
-            <Left>8.31719cm</Left>
-            <Height>0.423cm</Height>
-            <Width>2.76031cm</Width>
-            <ZIndex>26</ZIndex>
-            <Style>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.225cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Image Name="ApproverSignature1">
-            <Source>Database</Source>
-            <Value>=First(Fields!Signature1.Value, "DataSet_Result")</Value>
-            <MIMEType>image/jpeg</MIMEType>
-            <Sizing>FitProportional</Sizing>
-            <Top>13.6103cm</Top>
-            <Left>11.14805cm</Left>
-            <Height>0.423cm</Height>
-            <Width>3.10219cm</Width>
-            <ZIndex>27</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-            </Style>
-          </Image>
-          <Image Name="ApproverSignature2">
-            <Source>Database</Source>
-            <Value>=First(Fields!Signature2.Value, "DataSet_Result")</Value>
-            <MIMEType>image/jpeg</MIMEType>
-            <Sizing>FitProportional</Sizing>
-            <Top>14.3776cm</Top>
-            <Left>11.11277cm</Left>
-            <Height>0.423cm</Height>
-            <Width>3.13747cm</Width>
-            <ZIndex>28</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-            </Style>
-          </Image>
-          <Image Name="ApproverSignature3">
-            <Source>Database</Source>
-            <Value>=First(Fields!Signature3.Value, "DataSet_Result")</Value>
-            <MIMEType>image/jpeg</MIMEType>
-            <Sizing>FitProportional</Sizing>
-            <Top>15.14488cm</Top>
-            <Left>11.14805cm</Left>
-            <Height>0.423cm</Height>
-            <Width>3.10219cm</Width>
-            <ZIndex>29</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-            </Style>
-          </Image>
-          <Textbox Name="Date_Caption2">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!Date_Caption.Value)</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>13.6103cm</Top>
-            <Left>14.39136cm</Left>
-            <Height>0.423cm</Height>
-            <Width>0.75cm</Width>
-            <ZIndex>30</ZIndex>
-            <Style>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Date_Caption3">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!Date_Caption.Value)</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>14.3776cm</Top>
-            <Left>14.35608cm</Left>
-            <Height>0.423cm</Height>
-            <Width>0.75cm</Width>
-            <ZIndex>31</ZIndex>
-            <Style>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Date_Caption4">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!Date_Caption.Value)</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>15.14488cm</Top>
-            <Left>14.39136cm</Left>
-            <Height>0.423cm</Height>
-            <Width>0.75cm</Width>
-            <ZIndex>32</ZIndex>
-            <Style>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="EmptyStringCaption7">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ApprovalDate1.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <Format>dd/MM/yy</Format>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>13.6103cm</Top>
-            <Left>15.21191cm</Left>
-            <Height>0.423cm</Height>
-            <Width>2.09195cm</Width>
-            <ZIndex>33</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="EmptyStringCaption8">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ApprovalDate2.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <Format>dd/MM/yy</Format>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>14.3776cm</Top>
-            <Left>15.21191cm</Left>
-            <Height>0.423cm</Height>
-            <Width>2.09195cm</Width>
-            <ZIndex>34</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="EmptyStringCaption9">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!ApprovalDate3.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <Format>dd/MM/yy</Format>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>15.14488cm</Top>
-            <Left>15.21191cm</Left>
-            <Height>0.423cm</Height>
-            <Width>2.09195cm</Width>
-            <ZIndex>35</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Purchase_Header___Created_By_3">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Prepared By:</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>13.6103cm</Top>
-            <Left>0.28222cm</Left>
-            <Height>0.423cm</Height>
-            <Width>2.74255cm</Width>
-            <ZIndex>36</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Purchase_Header___Created_By_4">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Checked By:</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>14.3776cm</Top>
-            <Left>0.28222cm</Left>
-            <Height>0.423cm</Height>
-            <Width>2.74255cm</Width>
-            <ZIndex>37</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Purchase_Header___Created_By_5">
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Authorised By:</Value>
-                    <Style>
-                      <FontSize>7pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Left</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <Top>15.14488cm</Top>
-            <Left>0.28222cm</Left>
-            <Height>0.423cm</Height>
-            <Width>2.74255cm</Width>
-            <ZIndex>38</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>0.45cm</PaddingLeft>
-              <PaddingRight>0.45cm</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
+          </Tablix>
         </ReportItems>
         <Height>16.45175cm</Height>
         <Style />
@@ -2413,32 +2136,20 @@ End Function
         <Field Name="OrderDate_PurchaseHeader">
           <DataField>OrderDate_PurchaseHeader</DataField>
         </Field>
-        <Field Name="ApproverName1">
-          <DataField>ApproverName1</DataField>
+        <Field Name="ApprovalLineNo">
+          <DataField>ApprovalLineNo</DataField>
         </Field>
-        <Field Name="ApproverName2">
-          <DataField>ApproverName2</DataField>
+        <Field Name="ApprovalCaption">
+          <DataField>ApprovalCaption</DataField>
         </Field>
-        <Field Name="ApproverName3">
-          <DataField>ApproverName3</DataField>
+        <Field Name="ApprovalApproverName">
+          <DataField>ApprovalApproverName</DataField>
         </Field>
-        <Field Name="Signature1">
-          <DataField>Signature1</DataField>
+        <Field Name="ApprovalSignature">
+          <DataField>ApprovalSignature</DataField>
         </Field>
-        <Field Name="Signature2">
-          <DataField>Signature2</DataField>
-        </Field>
-        <Field Name="Signature3">
-          <DataField>Signature3</DataField>
-        </Field>
-        <Field Name="ApprovalDate1">
-          <DataField>ApprovalDate1</DataField>
-        </Field>
-        <Field Name="ApprovalDate2">
-          <DataField>ApprovalDate2</DataField>
-        </Field>
-        <Field Name="ApprovalDate3">
-          <DataField>ApprovalDate3</DataField>
+        <Field Name="ApprovalDate">
+          <DataField>ApprovalDate</DataField>
         </Field>
         <Field Name="ReportForNavId_6547">
           <DataField>ReportForNavId_6547</DataField>
@@ -2646,15 +2357,6 @@ End Function
         </Field>
         <Field Name="V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption">
           <DataField>V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption</DataField>
-        </Field>
-        <Field Name="Prepared_By_Finance_Officer__Caption">
-          <DataField>Prepared_By_Finance_Officer__Caption</DataField>
-        </Field>
-        <Field Name="Checked_By_Head_of_Finance__Caption">
-          <DataField>Checked_By_Head_of_Finance__Caption</DataField>
-        </Field>
-        <Field Name="Authorised_By_Executive_Director_Caption">
-          <DataField>Authorised_By_Executive_Director_Caption</DataField>
         </Field>
         <Field Name="Purchase_Line_Document_Type">
           <DataField>Purchase_Line_Document_Type</DataField>

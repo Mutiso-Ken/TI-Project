@@ -26,33 +26,6 @@ Report 80025 LPO
             column(OrderDate_PurchaseHeader; "Purchase Header"."Order Date")
             {
             }
-            column(ApproverName1; ApproverName1)
-            {
-            }
-            column(ApproverName2; ApproverName2)
-            {
-            }
-            column(ApproverName3; ApproverName3)
-            {
-            }
-            column(Signature1; Approver1Emp.Signature)
-            {
-            }
-            column(Signature2; Approver2Emp.Signature)
-            {
-            }
-            column(Signature3; Approver3Emp.Signature)
-            {
-            }
-            column(ApprovalDate1; ApprovalDate1)
-            {
-            }
-            column(ApprovalDate2; ApprovalDate2)
-            {
-            }
-            column(ApprovalDate3; ApprovalDate3)
-            {
-            }
 
             dataitem("Purchase Line"; "Purchase Line")
         {
@@ -249,15 +222,6 @@ Report 80025 LPO
             column(V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaption; V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaptionLbl)
             {
             }
-            column(Prepared_By_Finance_Officer__Caption; Prepared_By_Finance_Officer__CaptionLbl)
-            {
-            }
-            column(Checked_By_Head_of_Finance__Caption; Checked_By_Head_of_Finance__CaptionLbl)
-            {
-            }
-            column(Authorised_By_Executive_Director_Caption; Authorised_By_Executive_Director_CaptionLbl)
-            {
-            }
             column(Purchase_Line_Document_Type; "Document Type")
             {
             }
@@ -293,15 +257,69 @@ Report 80025 LPO
             end;
         }
 
+            // One row per approved entry on the order, in approval sequence. Entries 1-3 are
+            // captioned Prepared / Checked / Authorised By; any further ones Approved By.
+            dataitem(ApprovalEntry; "Approval Entry")
+            {
+                DataItemLink = "Document No." = field("No.");
+                DataItemTableView = sorting("Table ID", "Document Type", "Document No.", "Sequence No.") where("Table ID" = const(38), "Document Type" = const(Order), Status = const(Approved));
+
+                column(ApprovalLineNo; ApprovalLineNo)
+                {
+                }
+                column(ApprovalCaption; ApprovalCaption)
+                {
+                }
+                column(ApprovalApproverName; ApprovalApproverName)
+                {
+                }
+                column(ApprovalSignature; ApprovalEmp.Signature)
+                {
+                }
+                column(ApprovalDate; ApprovalEntry."Last Date-Time Modified")
+                {
+                }
+
+                trigger OnAfterGetRecord()
+                var
+                    LaterApproval: Record "Approval Entry";
+                begin
+                    // If the order was re-sent, only keep the latest approval for each sequence.
+                    LaterApproval.SetRange("Table ID", ApprovalEntry."Table ID");
+                    LaterApproval.SetRange("Document Type", ApprovalEntry."Document Type");
+                    LaterApproval.SetRange("Document No.", ApprovalEntry."Document No.");
+                    LaterApproval.SetRange("Sequence No.", ApprovalEntry."Sequence No.");
+                    LaterApproval.SetRange(Status, LaterApproval.Status::Approved);
+                    LaterApproval.SetFilter("Entry No.", '>%1', ApprovalEntry."Entry No.");
+                    if not LaterApproval.IsEmpty() then
+                        CurrReport.Skip();
+
+                    ApprovalLineNo += 1;
+                    case ApprovalLineNo of
+                        1:
+                            ApprovalCaption := PreparedByCaptionLbl;
+                        2:
+                            ApprovalCaption := CheckedByCaptionLbl;
+                        3:
+                            ApprovalCaption := AuthorisedByCaptionLbl;
+                        else
+                            ApprovalCaption := ApprovedByCaptionLbl;
+                    end;
+
+                    Clear(ApprovalEmp);
+                    ApprovalApproverName := ApprovalEntry."Approver ID";
+                    ApprovalEmp.SetRange("User ID", ApprovalEntry."Approver ID");
+                    if ApprovalEmp.FindFirst() then begin
+                        ApprovalEmp.CalcFields(Signature);
+                        if ApprovalEmp.FullName <> '' then
+                            ApprovalApproverName := ApprovalEmp.FullName;
+                    end;
+                end;
+            }
+
             trigger OnAfterGetRecord()
             begin
-                // Prepared By Finance Officer / Checked By Head of Finance / Authorised By
-                // Executive Director: one HR Employee (matched to the approver via User ID) per
-                // approval sequence, same lookup as Mission Proposal and the Approval Entries
-                // With Sign factbox.
-                SetApprover("Purchase Header"."No.", 1, ApproverName1, ApprovalDate1, Approver1Emp);
-                SetApprover("Purchase Header"."No.", 2, ApproverName2, ApprovalDate2, Approver2Emp);
-                SetApprover("Purchase Header"."No.", 3, ApproverName3, ApprovalDate3, Approver3Emp);
+                ApprovalLineNo := 0;
             end;
     }
 }
@@ -328,32 +346,6 @@ Report 80025 LPO
         CompanyInfo.CalcFields(Picture);
     end;
 
-    // Looks up the Approved entry at this approval sequence for DocumentNo and, if found,
-    // resolves the approver's name/signature via HR Employees.
-    local procedure SetApprover(DocumentNo: Code[20]; SequenceNo: Integer; var ApproverName: Text[100]; var ApprovalDate: DateTime; var ApproverEmp: Record "HR Employees")
-    var
-        ApprovalEntry: Record "Approval Entry";
-    begin
-        ApproverName := '';
-        ApprovalDate := 0DT;
-        Clear(ApproverEmp);
-
-        ApprovalEntry.Reset();
-        ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
-        ApprovalEntry.SetRange("Document No.", DocumentNo);
-        ApprovalEntry.SetRange("Sequence No.", SequenceNo);
-        ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-        if ApprovalEntry.FindFirst() then begin
-            ApprovalDate := ApprovalEntry."Last Date-Time Modified";
-
-            ApproverEmp.Reset();
-            ApproverEmp.SetRange("User ID", ApprovalEntry."Approver ID");
-            if ApproverEmp.FindFirst() then begin
-                ApproverEmp.CalcFields(Signature);
-                ApproverName := ApproverEmp.FullName;
-            end;
-        end;
-    end;
     var
             DescriptionText: Text;
         LastFieldNo: Integer;
@@ -366,15 +358,10 @@ Report 80025 LPO
         VendorTel: Text;
         BankAccount: Code[10];
         PurchLine: Record "Purchase Line";
-        ApproverName1: Text[100];
-        ApproverName2: Text[100];
-        ApproverName3: Text[100];
-        Approver1Emp: Record "HR Employees";
-        Approver2Emp: Record "HR Employees";
-        Approver3Emp: Record "HR Employees";
-        ApprovalDate1: DateTime;
-        ApprovalDate2: DateTime;
-        ApprovalDate3: DateTime;
+        ApprovalLineNo: Integer;
+        ApprovalCaption: Text[50];
+        ApprovalApproverName: Text[100];
+        ApprovalEmp: Record "HR Employees";
         Tel_CaptionLbl: label 'Tel:';
         Fax_CaptionLbl: label 'Fax:';
         Email_CaptionLbl: label 'Email:';
@@ -413,8 +400,9 @@ Report 80025 LPO
         V7__Payment_Terms__Payment_shall_be_made_30_days_after_the_invoice_dateCaptionLbl: label '7. Payment Terms: Payment shall be made 30 days after the invoice date';
         CorrruptionFreeorgLabel: label '8 . TI Kenya is a Corruption free organisation.';
         EtimsCompliantLabel: label '9. An eTIMS-compliant invoice must be shared in accordance with KRA requirements';
-        Prepared_By_Finance_Officer__CaptionLbl: label 'Prepared By Finance Officer: ';
-        Checked_By_Head_of_Finance__CaptionLbl: label 'Checked By Head of Finance: ';
-        Authorised_By_Executive_Director_CaptionLbl: label 'Authorised By Executive Director:';
+        PreparedByCaptionLbl: label 'Prepared By:';
+        CheckedByCaptionLbl: label 'Checked By:';
+        AuthorisedByCaptionLbl: label 'Authorised By:';
+        ApprovedByCaptionLbl: label 'Approved By:';
 }
 
