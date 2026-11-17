@@ -172,23 +172,21 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
                 PromotedIsBig = true;
                 Caption = 'Approvals';
                 Image = Approvals;
-                ToolTip = 'View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.';
+                ToolTip = 'View every approval entry for this order, whatever stage it is at and whoever the approver is.';
                 ApplicationArea = All;
 
                 trigger OnAction()
                 var
-
                     AppEntry: Record "Approval Entry";
-                    AppEntryPage: page "Approval Entries";
-                    ApprovalsMgmt: Codeunit "Approvals Mgmt.";
                 begin
-                    AppEntry.reset;
-                    AppEntry.setrange("Document No.", Rec."No.");
-                    if AppEntry.find('-') then begin
-                        AppEntryPage.SetTableView(AppEntry);
-                        AppEntryPage.Run();
-                    end;
+                    AppEntry.Reset();
+                    AppEntry.SetRange("Table ID", Database::"Purchase Header");
+                    AppEntry.SetRange("Document Type", AppEntry."Document Type"::Order);
+                    AppEntry.SetRange("Document No.", Rec."No.");
+                    if AppEntry.IsEmpty() then
+                        Error('There are no approval entries for order %1. Send it for approval first.', Rec."No.");
 
+                    Page.Run(Page::"Document Approval Entries", AppEntry);
                 end;
             }
         }
