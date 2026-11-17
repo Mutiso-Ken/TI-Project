@@ -906,8 +906,14 @@ Page 50366 "Main Role Center"
                 action("Imprest Request")
                 {
                     ApplicationArea = Basic, Suite;
-                    Caption = 'Imprest Request';
+                    Caption = 'Imprest Requests';
                     RunObject = Page "Imprest Request";
+                }
+                action("Approved Imprest Request")
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Approved Imprest Requests';
+                    RunObject = Page ApprovedImprests;
                 }
                 action("Posted Imprests")
                 {

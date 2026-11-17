@@ -2136,21 +2136,6 @@ End Function
         <Field Name="OrderDate_PurchaseHeader">
           <DataField>OrderDate_PurchaseHeader</DataField>
         </Field>
-        <Field Name="ApprovalLineNo">
-          <DataField>ApprovalLineNo</DataField>
-        </Field>
-        <Field Name="ApprovalCaption">
-          <DataField>ApprovalCaption</DataField>
-        </Field>
-        <Field Name="ApprovalApproverName">
-          <DataField>ApprovalApproverName</DataField>
-        </Field>
-        <Field Name="ApprovalSignature">
-          <DataField>ApprovalSignature</DataField>
-        </Field>
-        <Field Name="ApprovalDate">
-          <DataField>ApprovalDate</DataField>
-        </Field>
         <Field Name="ReportForNavId_6547">
           <DataField>ReportForNavId_6547</DataField>
         </Field>
@@ -2369,6 +2354,21 @@ End Function
         </Field>
         <Field Name="FUND">
           <DataField>FUND</DataField>
+        </Field>
+        <Field Name="ApprovalLineNo">
+          <DataField>ApprovalLineNo</DataField>
+        </Field>
+        <Field Name="ApprovalCaption">
+          <DataField>ApprovalCaption</DataField>
+        </Field>
+        <Field Name="ApprovalApproverName">
+          <DataField>ApprovalApproverName</DataField>
+        </Field>
+        <Field Name="ApprovalSignature">
+          <DataField>ApprovalSignature</DataField>
+        </Field>
+        <Field Name="ApprovalDate">
+          <DataField>ApprovalDate</DataField>
         </Field>
       </Fields>
       <Query>

@@ -875,6 +875,12 @@ Page 50000 "Business Manager Role Center2"
                     Caption = 'Imprest Request';
                     RunObject = Page "Imprest Request";
                 }
+                action("Approved Imprest Request")
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Approved Imprest Requests';
+                    RunObject = Page ApprovedImprests;
+                }
                 action("Posted Imprests")
                 {
                     ApplicationArea = Basic, Suite;
