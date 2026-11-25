@@ -68,6 +68,7 @@ pageextension 60179 "UserSetupExtension" extends "User Setup"
             field("Reject Loan"; Rec."Reject Loan") { }
             field("Excempt OTP"; Rec."Excempt OTP") { }
             field("Edit Branch"; Rec."Edit Branch") { }
+            field("Procurement Officer"; Rec."Procurement Officer") { ApplicationArea = all; }
 
             field("BulkSms User"; Rec."BulkSms User")
             {
