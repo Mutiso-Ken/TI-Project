@@ -219,8 +219,10 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
-                ToolTip = 'Reopen the order so it can be edited and sent for approval again. A pending approval request is canceled first.';
-                Enabled = Rec.Status <> Rec.Status::Open;
+                ToolTip = 'Reopen the order so it can be edited and sent for approval again. Any pending or leftover approval request is canceled first, so Send Approval Request becomes available.';
+                // Also enabled on an Open order that still has an Open approval entry: that leftover entry
+                // is what keeps the standard Send Approval Request greyed out.
+                Enabled = (Rec.Status <> Rec.Status::Open) or HasOpenApprovals;
 
                 trigger OnAction()
                 var
@@ -230,15 +232,18 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
                 begin
                     if not UserSetup.Get(UserId) or not UserSetup."Procurement Officer" then
                         Error('You have not been granted the rights to perform this function');
-                    if Rec.Status = Rec.Status::Open then
+                    if (Rec.Status = Rec.Status::Open) and not ApprovalsMgmt.HasOpenApprovalEntries(Rec.RecordId) then
                         exit;
-                    if not Confirm('Reopen order %1? Any pending approval request will be canceled.', false, Rec."No.") then
+                    if not Confirm('Reopen order %1? Any pending or leftover approval request will be canceled.', false, Rec."No.") then
                         exit;
 
                     if Rec.Status = Rec.Status::"Pending Approval" then begin
                         ApprovalsMgmt.OnCancelPurchaseApprovalRequest(Rec);
                         Rec.Find();
                     end;
+
+                    CancelLeftoverApprovalEntries();
+                    Rec.Find();
 
                     if Rec.Status <> Rec.Status::Open then
                         ReleasePurchDoc.Reopen(Rec);
@@ -291,12 +296,68 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
         }
     }
 
+    trigger OnAfterGetCurrRecord()
+    var
+        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+    begin
+        HasOpenApprovals := ApprovalsMgmt.HasOpenApprovalEntries(Rec.RecordId);
+    end;
+
+    // Cancels (never deletes) every Created/Open approval entry still attached to this order.
+    // Entries tied to a live workflow instance are canceled through Approvals Mgmt. and the instance is
+    // archived, so it can't react to later approve/cancel events. Copied or orphaned entries are
+    // canceled directly.
+    local procedure CancelLeftoverApprovalEntries()
+    var
+        AppEntry: Record "Approval Entry";
+        AppEntryToUpdate: Record "Approval Entry";
+        WorkflowStepInstance: Record "Workflow Step Instance";
+        ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+        WorkflowManagement: Codeunit "Workflow Management";
+        RecRef: RecordRef;
+        InstanceIds: List of [Guid];
+        InstanceId: Guid;
+    begin
+        RecRef.GetTable(Rec);
+
+        AppEntry.SetRange("Table ID", Database::"Purchase Header");
+        AppEntry.SetRange("Record ID to Approve", Rec.RecordId);
+        AppEntry.SetFilter(Status, '%1|%2', AppEntry.Status::Created, AppEntry.Status::Open);
+
+        // Collect the workflow instances first: canceling changes the Status this loop filters on.
+        if AppEntry.FindSet() then
+            repeat
+                if (not IsNullGuid(AppEntry."Workflow Step Instance ID")) and
+                   (not InstanceIds.Contains(AppEntry."Workflow Step Instance ID"))
+                then
+                    InstanceIds.Add(AppEntry."Workflow Step Instance ID");
+            until AppEntry.Next() = 0;
+
+        foreach InstanceId in InstanceIds do begin
+            WorkflowStepInstance.Reset();
+            WorkflowStepInstance.SetRange(ID, InstanceId);
+            if WorkflowStepInstance.FindFirst() then begin
+                ApprovalsMgmt.CancelApprovalRequestsForRecord(RecRef, WorkflowStepInstance);
+                WorkflowManagement.ArchiveWorkflowInstance(WorkflowStepInstance);
+            end;
+        end;
+
+        // Whatever is still Created/Open had no live workflow instance (copied or orphaned entries).
+        if AppEntry.FindSet() then
+            repeat
+                AppEntryToUpdate := AppEntry;
+                AppEntryToUpdate.Validate(Status, AppEntryToUpdate.Status::Canceled);
+                AppEntryToUpdate.Modify(true);
+            until AppEntry.Next() = 0;
+    end;
+
     var
         PurchaseLine: Record "Purchase Line";
 
         ProcurementRequest: Record "Procurement Request";
         PurchaseHeader: Record "Purchase Header";
         QuotationBidders: Record "Quotation Bidders";
+        HasOpenApprovals: Boolean;
 
 }
 
