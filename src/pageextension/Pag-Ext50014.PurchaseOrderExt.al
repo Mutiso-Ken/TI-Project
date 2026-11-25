@@ -34,6 +34,10 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
         {
             Visible = false;
         }
+        modify(Release)
+        {
+            Visible = false;
+        }
         addbefore(SendApprovalRequest)
         {
             action("View Requisition")
