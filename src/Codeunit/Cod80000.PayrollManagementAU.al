@@ -755,9 +755,9 @@ Codeunit 80000 "Payroll Management_AU"
             EmployeeTransactions."Transaction Type" := EmployeeTransactions."transaction type"::Deduction;
             EmployeeTransactions."Payroll Period" := "Payroll Period";
             EmployeeTransactions."Transaction Name" := 'Housing Levy';
-            EmployeeTransactions.Amount := 0.015 * (EmpGrossPay - Pension);
-            EmployeeTransactions."Amount(LCY)" := 0.015 * (EmpGrossPay - Pension);
-            EmployeeTransactions."Original Amount" := 0.015 * (EmpGrossPay - Pension);
+            EmployeeTransactions.Amount := 0.015 * EmpGrossPay;
+            EmployeeTransactions."Amount(LCY)" := 0.015 * EmpGrossPay;
+            EmployeeTransactions."Original Amount" := 0.015 * EmpGrossPay;
             EmployeeTransactions.Insert(true);
         end;
 

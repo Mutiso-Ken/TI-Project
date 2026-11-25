@@ -222,10 +222,14 @@ Page 80007 "Payroll Employee Card_AU"
         {
             action("Process Payroll")
             {
+
+
+
+
+
                 ApplicationArea = Basic;
                 Image = Allocations;
                 Promoted = true;
-                PromotedCategory = Process;
                 PromotedIsBig = true;
 
                 trigger OnAction()
@@ -285,6 +289,7 @@ Page 80007 "Payroll Employee Card_AU"
                 ApplicationArea = Basic;
                 Image = Allocations;
                 Promoted = true;
+                PromotedCategory = Process;
                 PromotedIsBig = true;
 
                 trigger OnAction()
