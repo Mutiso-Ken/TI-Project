@@ -192,19 +192,10 @@ Page 80061 "Task Order Card"
 
                     trigger OnAction()
                     var
-                        AppEntry: Record "Approval Entry";
+                        CustomEvents: Codeunit CustomEvents;
                         ReleasePurchDoc: Codeunit "Release Purchase Document";
                     begin
-                        AppEntry.Reset();
-                        AppEntry.SetRange("Document No.", Rec."No.");
-                        AppEntry.SetRange("Table ID", Database::"Purchase Header");
-                        if not AppEntry.FindSet() then
-                            Error('This document cannot be released: it has not been sent for approval.');
-
-                        // Not "no Open entries" - that also lets a Rejected/Canceled entry through.
-                        AppEntry.SetFilter(Status, '<>%1', AppEntry.Status::Approved);
-                        if not AppEntry.IsEmpty() then
-                            Error('This document cannot be released: not every approval entry is Approved (some are still open, rejected, or canceled).');
+                        CustomEvents.CheckPurchDocFullyApproved(Rec);
 
                         ReleasePurchDoc.PerformManualRelease(Rec);
                     end;

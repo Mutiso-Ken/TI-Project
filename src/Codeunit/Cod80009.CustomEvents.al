@@ -123,23 +123,33 @@ codeunit 80009 CustomEvents
  
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeReleasePurchaseDoc', '', true, true)]
     local procedure BlockOrderReleaseWithoutFullApproval(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; var SkipCheckReleaseRestrictions: Boolean; var IsHandled: Boolean; SkipWhseRequestOperations: Boolean)
-    var
-        AppEntry: Record "Approval Entry";
     begin
         if PreviewMode then
             exit;
         if PurchaseHeader."Document Type" <> PurchaseHeader."Document Type"::Order then
             exit;
 
+        CheckPurchDocFullyApproved(PurchaseHeader);
+    end;
+
+    // Errors unless the document's CURRENT approval request is fully approved.
+    // Only the latest request (one Workflow Step Instance ID per "Send Approval Request") is checked:
+    // entries left Rejected/Canceled by an earlier request that was later re-sent must not block release.
+    procedure CheckPurchDocFullyApproved(PurchaseHeader: Record "Purchase Header")
+    var
+        AppEntry: Record "Approval Entry";
+    begin
         AppEntry.Reset();
-        AppEntry.SetRange("Document No.", PurchaseHeader."No.");
+        AppEntry.SetCurrentKey("Entry No.");
         AppEntry.SetRange("Table ID", Database::"Purchase Header");
-        if not AppEntry.FindSet() then
+        AppEntry.SetRange("Record ID to Approve", PurchaseHeader.RecordId);
+        if not AppEntry.FindLast() then
             Error('%1 %2 cannot be released or posted: it has not been sent for approval.', PurchaseHeader."Document Type", PurchaseHeader."No.");
 
+        AppEntry.SetRange("Workflow Step Instance ID", AppEntry."Workflow Step Instance ID");
         AppEntry.SetFilter(Status, '<>%1', AppEntry.Status::Approved);
         if not AppEntry.IsEmpty() then
-            Error('%1 %2 cannot be released or posted: not every approval entry is Approved (some are still open, rejected, or canceled).', PurchaseHeader."Document Type", PurchaseHeader."No.");
+            Error('%1 %2 cannot be released or posted: the current approval request is not fully approved (some entries are still open, rejected, or canceled).', PurchaseHeader."Document Type", PurchaseHeader."No.");
     end;
 
 
