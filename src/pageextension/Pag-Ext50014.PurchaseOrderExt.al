@@ -172,7 +172,7 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
                 PromotedIsBig = true;
                 Caption = 'Approvals';
                 Image = Approvals;
-                ToolTip = 'View every approval entry for this order, whatever stage it is at and whoever the approver is.';
+                ToolTip = 'View the approval entries of the latest approval request for this order. Entries from earlier requests that were rejected or canceled and then resent are hidden.';
                 ApplicationArea = All;
 
                 trigger OnAction()
@@ -180,12 +180,14 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
                     AppEntry: Record "Approval Entry";
                 begin
                     AppEntry.Reset();
+                    AppEntry.SetCurrentKey("Entry No.");
                     AppEntry.SetRange("Table ID", Database::"Purchase Header");
-                    AppEntry.SetRange("Document Type", AppEntry."Document Type"::Order);
-                    AppEntry.SetRange("Document No.", Rec."No.");
-                    if AppEntry.IsEmpty() then
+                    AppEntry.SetRange("Record ID to Approve", Rec.RecordId);
+                    if not AppEntry.FindLast() then
                         Error('There are no approval entries for order %1. Send it for approval first.', Rec."No.");
 
+                    // Only the latest request: every "Send Approval Request" gets its own Workflow Step Instance ID.
+                    AppEntry.SetRange("Workflow Step Instance ID", AppEntry."Workflow Step Instance ID");
                     Page.Run(Page::"Document Approval Entries", AppEntry);
                 end;
             }
@@ -199,6 +201,47 @@ pageextension 50014 "Purchase Order Ext" extends "Purchase Order"
                 UserSetup.Get(UserId);
                 if UserSetup."Procurement Officer" = false then error('You have not been granted the rights to perform this function');
             end;
+        }
+        addafter(Reopen)
+        {
+            // The standard Reopen refuses a Pending Approval order. This one cancels the pending
+            // approval request first (through the workflow, so its open entries are canceled and the
+            // workflow instance is closed), then reopens the order so it can be edited and resent.
+            action(ReopenDocument)
+            {
+                ApplicationArea = All;
+                Caption = 'Reopen Document';
+                Image = ReOpen;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Reopen the order so it can be edited and sent for approval again. A pending approval request is canceled first.';
+                Enabled = Rec.Status <> Rec.Status::Open;
+
+                trigger OnAction()
+                var
+                    UserSetup: Record "User Setup";
+                    ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+                    ReleasePurchDoc: Codeunit "Release Purchase Document";
+                begin
+                    if not UserSetup.Get(UserId) or not UserSetup."Procurement Officer" then
+                        Error('You have not been granted the rights to perform this function');
+                    if Rec.Status = Rec.Status::Open then
+                        exit;
+                    if not Confirm('Reopen order %1? Any pending approval request will be canceled.', false, Rec."No.") then
+                        exit;
+
+                    if Rec.Status = Rec.Status::"Pending Approval" then begin
+                        ApprovalsMgmt.OnCancelPurchaseApprovalRequest(Rec);
+                        Rec.Find();
+                    end;
+
+                    if Rec.Status <> Rec.Status::Open then
+                        ReleasePurchDoc.Reopen(Rec);
+
+                    CurrPage.Update(false);
+                end;
+            }
         }
         modify(SendApprovalRequest)
         {

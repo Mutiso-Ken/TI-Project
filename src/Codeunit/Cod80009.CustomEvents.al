@@ -121,17 +121,7 @@ codeunit 80009 CustomEvents
     end;
 
  
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeReleasePurchaseDoc', '', true, true)]
-    local procedure BlockOrderReleaseWithoutFullApproval(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; var SkipCheckReleaseRestrictions: Boolean; var IsHandled: Boolean; SkipWhseRequestOperations: Boolean)
-    begin
-        if PreviewMode then
-            exit;
-        if PurchaseHeader."Document Type" <> PurchaseHeader."Document Type"::Order then
-            exit;
-
-        CheckPurchDocFullyApproved(PurchaseHeader);
-    end;
-
+    // Used by the manual release actions ("Validate Approval" on the Purchase Order, Task Order Card release).
     // Errors unless the document's CURRENT approval request is fully approved.
     // Only the latest request (one Workflow Step Instance ID per "Send Approval Request") is checked:
     // entries left Rejected/Canceled by an earlier request that was later re-sent must not block release.
